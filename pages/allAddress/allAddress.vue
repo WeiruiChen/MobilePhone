@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink">
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">我的地址</view>
 		</cu-custom>
@@ -40,26 +40,11 @@
 	export default {
 		data() {
 			return {
-				sent: true,
-				address: {
-					neareast: "最近网点：北京市朝阳区三环到四环之间 东三环",
-					receive: "取件地址：北京市朝阳区三环到四环之间 东三环",
-					receiveTime: "取件时间",
-					sentTime: "送修时间",
-					name: "王xx",
-					radio: 'A',
-				},
-				switcha: false,
-				time: '12:01',
+				
 			}
 		},
 		methods: {
-			SwitchA(e) {
-				this.switch = e.detail.value
-			},
-			TimeChange(e) {
-				this.time = e.detail.value
-			}
+			
 		}
 	}
 </script>
@@ -69,11 +54,6 @@
 		padding-top: 10px;
 		padding-left: 10px;
 		padding-right: 10px;
-	}
-
-	.round-card {
-		margin-top: 10px;
-		border-radius: 8px;
 	}
 
 	.round-bottom-card {
@@ -87,41 +67,17 @@
 		border-top-left-radius: 8px;
 	}
 
-	.reverse_1 {
-		margin-top: 10px;
-		width: 100px;
-	}
-
 	.flex-container {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 	}
-
-	.text_right {
-		right: 0;
-	}
-
-	.ps-text {
-		color: #A6A6A6;
-		padding-top: 40px;
-		padding-bottom: 40px;
-	}
-
-	.text-grey {
-		color: #D9D9D9;
-	}
 	
 	.icon-color{
 		color: #A6A6A6;
 	}
 	
-	.submit-btn {
-		/* background-color: blue; */
-		color: #FFFFFF;
-	}
-
 	.btn-bottom {
 		position: fixed;
 		width: 100%;

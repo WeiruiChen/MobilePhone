@@ -3,6 +3,9 @@ import App from './App'
 import store from './store'
 import request from '@/utils/request.js'
 
+import nabBar from './pages/navBar/navBar.vue'
+Vue.component('nabBar',nabBar)
+
 import basics from './pages/basics/home.vue'
 Vue.component('basics',basics)
 

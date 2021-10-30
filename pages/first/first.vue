@@ -92,35 +92,17 @@
 		<view style="display:flex;align-items: center;justify-content: center;">
 			<text style="text-align: center;">24小时客服电话:xsxxxx</text>
 		</view>
-		<view class="box">
-			<view class="cu-bar tabbar bg-white">
-				<view class="action">
-					<view class="cuIcon-cu-image">
-						<image src="/static/bar/首页@3x.png"></image>
-					</view>
-					<view class="text-green">首页</view>
-				</view>
-				<view class="action">
-					<view class="cuIcon-cu-image">
-						<image src="@/static/bar/下单@3x.png"></image>
-					</view>
-					<view class="text-gray">下单</view>
-				</view>
-				<view class="action">
-					<view class="cuIcon-cu-image">
-						<image src="@/static/bar/我的@3x.png"></image>
-						<!-- <view class="cu-tag badge">99</view> -->
-					</view>
-					<view class="text-gray">我的</view>
-				</view>
-			</view>
-		</view>
+		<nabBar type="first" :isActive="true"></nabBar>
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'//引入mapState
+	import { navBar } from '../navBar/navBar.vue'
 	export default {
+		// components:{
+		// 	navBar
+		// },
 		data() {
 			return {
 				gridCol: 4,

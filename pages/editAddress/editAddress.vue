@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink">
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">新增/编辑地址</view>
 		</cu-custom>
@@ -100,11 +100,6 @@
 		padding-right: 10px;
 	}
 
-	.round-card {
-		margin-top: 10px;
-		border-radius: 8px;
-	}
-
 	.round-bottom-card {
 		border-bottom-right-radius: 8px;
 		border-bottom-left-radius: 8px;
@@ -116,11 +111,6 @@
 		border-top-left-radius: 8px;
 	}
 
-	.reverse_1 {
-		margin-top: 10px;
-		width: 100px;
-	}
-
 	.flex-container {
 		width: 100%;
 		display: flex;
@@ -128,28 +118,11 @@
 		justify-content: space-between;
 	}
 
-	.text_right {
-		right: 0;
-	}
-
-	.ps-text {
-		color: #A6A6A6;
-		padding-top: 40px;
-		padding-bottom: 40px;
-	}
-
-	.text-grey {
-		color: #D9D9D9;
-	}
-
-	.icon-color {
-		color: #A6A6A6;
-	}
-
 
 	button{
 		color: #04D4C6;
 	}
+	
 	.btn-bottom {
 		position: fixed;
 		width: 100%;

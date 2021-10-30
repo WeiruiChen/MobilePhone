@@ -1,15 +1,11 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink">
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">提交订单</view>
 		</cu-custom>
 
 		<view class="container">
-		<!-- 	<radio-group class="block">
-				
-			</radio-group> -->
-
 			<form>
 				<view class="cu-form-group flex-container round-card">
 					<view class="content">
@@ -176,11 +172,4 @@
 		/* background-color: blue; */
 		color: #FFFFFF;
 	}
-
-	/* .switch-sex::after{
-	content: "上门自取";
-}
-.switch-sex::after{
-	content: "上门自取";
-} */
 </style>

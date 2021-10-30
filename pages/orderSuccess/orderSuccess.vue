@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink">
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">下单成功</view>
 		</cu-custom>
@@ -38,9 +38,6 @@
 		text-align: center;
 	}
 
-	.text-grey {
-		color: #D9D9D9;
-	}
 
 	.btn-bottom {
 		position: fixed;

@@ -1,24 +1,14 @@
 <template>
-	<view>
+	<view class="background">
 
 		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<block slot="backText">返回</block>
-			<block slot="content">维修方案列表</block>
+			<block slot="content">设备型号</block>
 		</cu-custom>
 
-
 		<view class="VerticalBox container">
-
 			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop"
-				style="height:calc(100vh - 375upx)">
-
-				<view class="text-left margin-top-xl margin-left">
-					<view class="category-one"><text>苹果</text></view>
-					<view class="category-two margin-tb-sm"><text>iPhone12ProMax</text></view>
-					<view class="change-phone"><text>更换机型</text></view>
-					<view class="category-three">
-					</view>
-				</view>
+				style="height:calc(100vh)">
 
 				<view class="flex-vertical margin-top-xl">
 					<view class="nav-item" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
@@ -28,42 +18,23 @@
 				</view>
 			</scroll-view>
 
-			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
+			<scroll-view class="VerticalMain bg-white" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-
-				<view class="padding-top padding-lr" v-for="(item,index) in list" :key="index" :id="'main-'+index">
-					<form>
-						<view class="cu-form-group padding margin-bottom-sm round-card">
-							<view>
-								<view class="text-title"><text>更换手机屏幕</text></view>
-								<view class="text-gray margin-top"><text>适用于屏幕破碎，显示触摸异常，内屏老化等</text></view>
-								<view class="text-gray"><text>保修期:1年</text></view>
-								<view class="flex-container margin-top">
-									<view class="text-price"><text>889</text></view>
-									<button class="cu-btn cuIcon icon-move">
-										<text class="cuIcon-move"></text>
-									</button>
-								</view>
-							</view>
-						</view>
-
-						<view class="cu-form-group padding margin-bottom-sm round-card">
-							<view>
-								<view class="text-title"><text>更换手机屏幕</text></view>
-								<view class="text-gray margin-top"><text>适用于屏幕破碎，显示触摸异常，内屏老化等</text></view>
-								<view class="text-gray"><text>保修期:1年</text></view>
-								<view class="flex-container margin-top">
-									<view class="text-price"><text>889</text></view>
-									<button class="cu-btn cuIcon icon-add">
-										<text class="cuIcon-add"></text>
-									</button>
-								</view>
-							</view>
-						</view>
-
-					</form>
+				<view class="text-center margin">
+					<text>——iPhone 系列——</text>
 				</view>
-
+				
+				<view  v-for="(item,index) in list" :key="index" :id="'main-'+index">
+					<view>
+						<view class="grid margin-bottom text-center col-3">
+							<view class="padding-sm" v-for="(item,indexs) in 6" :key="indexs">
+									<image src="../../static/images/iphone13.png" mode="widthFix"></image>
+								<view class="text-sm"><text>iphone13 Pro</text></view>
+							</view>
+						</view>
+					</view>
+				</view>
+				
 			</scroll-view>
 		</view>
 	</view>
@@ -87,29 +58,21 @@
 			});
 			let list = [{}];
 			list = [{
-					name: "屏幕问题",
+					name: "苹果",
 					id: "0"
 				},
 				{
-					name: "电池充电",
+					name: "华为",
 					id: "1"
 				},
 				{
-					name: "后壳问题",
+					name: "小米",
 					id: "2"
 				},
 				{
-					name: "屏幕问题",
+					name: "魅族",
 					id: "3"
-				},
-				{
-					name: "屏幕问题",
-					id: "4"
-				},
-				{
-					name: "屏幕问题",
-					id: "5"
-				},
+				}
 			]
 			this.list = list;
 			this.listCur = list[0];
@@ -157,6 +120,10 @@
 </script>
 
 <style>
+	.background {
+		background-color: #FFFFFF;
+	}
+
 	.container {
 		padding-top: 10px;
 		padding-left: 10px;
@@ -165,39 +132,31 @@
 	}
 
 	.VerticalNav.nav {
-		width: 35%;
+		width: 20%;
 		white-space: initial;
 	}
 
 	.VerticalNav.nav .nav-item {
-		width: 100%;
+		/* width: 100%; */
 		text-align: center;
-		background-color: #D9D9D9;
-		color: #A6A6A6;
 		margin: 0;
 		border: none;
 		height: 50px;
-		/* position: relative; */
 	}
 
 	.VerticalNav.nav .nav-item.cur {
-		background-color: #04D4C6;
-		color: #FFFFFF;
+		color: #04D6C8;
 	}
 
 	.VerticalNav {
-		background-color: #FAFAFA;
 		border-radius: 8px;
 		text-align: center;
 
 	}
 
 	.VerticalNav.nav .nav-item.cur::after {
-		/* content: ""; */
 		width: 8upx;
 		height: 30upx;
-		/* border-radius: 10upx 0 0 10upx; */
-		/* position: absolute; */
 		background-color: currentColor;
 		top: 0;
 		right: 0upx;
@@ -206,32 +165,14 @@
 	}
 
 	.nav-item {
-		border-radius: 8px;
 		width: 80% !important;
-		font-size: 1.1rem;
 		line-height: 50px;
 	}
 
-	.category-one {
-		font-size: 1.2rem;
-	}
-
-	.category-two {}
-
-	.category-three {}
-
-	.change-phone {
-		color: #04D4C6;
-		text-decoration-line: underline;
-	}
-
 	.VerticalMain {
-		background-color: #f1f1f1;
+		width: 80%;
+		/* background-color: #f1f1f1; */
 		flex: 1;
-	}
-
-	.round-card {
-		border-radius: 8px;
 	}
 
 	.flex-container {
@@ -242,35 +183,10 @@
 	}
 
 	.flex-vertical {
-		height: 65%;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
 		align-items: center;
 	}
 
-	.text-left {
-		height: 13%;
-	}
-
-	.icon-add {
-		background-color: #04D4C6 !important;
-	}
-
-	.cuIcon-add,
-	.cuIcon-move {
-		color: #FFFFFF;
-	}
-
-	.icon-move {
-		background-color: #DD1717 !important;
-	}
-
-	.text-gray {
-		color: #A6A6A6;
-	}
-
-	.text-price {
-		font-size: 1.1rem;
-	}
 </style>
