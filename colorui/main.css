@@ -1433,7 +1433,7 @@ button.cuIcon.lg {
 .cu-list.grid>.cu-item [class*=cuIcon] {
 	position: relative;
 	display: block;
-	margin-top: 20upx;
+	margin-top: 10upx;
 	width: 100%;
 	font-size: 48upx
 }
@@ -1445,7 +1445,7 @@ button.cuIcon.lg {
 }
 
 .cu-list.grid {
-	background-color: #ffffff;
+	/* background-color: #ffffff; */
 	text-align: center
 }
 
@@ -2189,6 +2189,13 @@ button.cuIcon.lg {
 	overflow: hidden;
 	border-radius: 10upx;
 	margin: 30upx;
+}
+
+.cu-card>.cu-item-scroll {
+	display: block;
+	background-color: #ffffff;
+	overflow: hidden;
+	border-radius: 10upx;
 }
 
 .cu-card>.cu-item.shadow-blur {

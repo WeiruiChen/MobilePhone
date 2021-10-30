@@ -1,7 +1,31 @@
 <script>
 	import Vue from 'vue'
 	export default {
+		onLoad:function() {
+			
+			// 判断是否存在用户不存在则重新获取
+			// if(this.$store.user.state.id){
+			// 	console.log(this.$store.user.state)
+			// }
+			
+			// this.$request({
+			// 	url:'/phoneReparisServer/service/rest/nologin.customer.login/collection/login',
+			// 	methods:'GET',
+			// 	data:{
+			// 		openId:'opfA81LO4KG84eBUeulJ0WmvK198',
+			// 		loginType:"openId"
+			// 	}
+			// }).then(res=>{
+			// 	// 获取成功存储VUX
+			// 	// console.log('resres',res)
+			// 	// $store.user.state.dispatch('actionTrigger',{})
+			// 	console.log('resres',res)
+			// }).catch(error=>{
+			// 	console.log('error',error)
+			// })
+		},
 		onLaunch: function() {
+			
 			uni.getSystemInfo({
 				success: function(e) {
 					// console.log(e)
@@ -119,7 +143,6 @@
 		onHide: function() {
 			console.log('App Hide')
 		}
-
 	}
 </script>
 
