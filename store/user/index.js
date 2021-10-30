@@ -1,0 +1,36 @@
+	//存放用户小程序全局状态
+const state = {
+	"id":"xxx",
+	"clientVer":"0.0.0",
+	"loginName":"xxxx",
+	"deviceId":"xxx",
+	"cityId":"xxxx",
+	"sessionID":"xxxx",
+	"openId":"opfA81LO4KG84eBUeulJ0WmvK198"
+}
+
+const mutations = {
+	update(state,payload){
+		state[payload.key]  = payload.value
+	}
+}
+
+const actions = {
+	actionTrigger(context,paload){
+		context.commit('update',payload)
+	}
+}
+
+export default {
+	state,mutations,actions
+	// state:{
+	// 	//存放用户小程序全局状态
+	// 	"id":"xxx",
+	// 	"clientVer":"0.0.0",
+	// 	"loginName":"xxxx",
+	// 	"deviceId":"xxx",
+	// 	"cityId":"xxxx",
+	// 	"sessionID":"xxxx",
+	// 	"openId":"opfA81LO4KG84eBUeulJ0WmvK198"
+	// }
+}
