@@ -2,11 +2,11 @@
 	<view>
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		
-		<swiper class="card-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+		<swiper class="card-swiper"  :circular="true"
 		 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
 		 indicator-active-color="#0081ff">
 			<swiper-item v-for="(item,index) in swiperList" :key="index" :class="cardCur==index?'cur':''">
-				<view class="swiper-item">
+				<view class="swiper-item" @click="onClickHandler(item)">
 					<image :src="imageUrl+item.fileId" mode="aspectFill" ></image>
 				</view>
 			</swiper-item>
@@ -14,12 +14,12 @@
 		
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index<gridCol*2">
-					<image :src="imageUrl+item.fileId" style="width: 180rpx;height: 180rpx;"></image>
+					<image @click="onClickHandler(item)" :src="imageUrl+item.fileId" style="width: 180rpx;height: 180rpx;"></image>
 				<text>{{item.title}}</text>
 			</view>
 		</view>
 		
-		<view class="cu-bar solid-bottom" style="margin-top: 20rpx;">
+		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
 				<image style="width: 50rpx;height: 50rpx;" src="@/static/first/限时优惠icon@3x.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">限时优惠</text>
@@ -28,19 +28,19 @@
 		
 		<scroll-view scroll-x scroll-with-animation >
 			<view class="cu-card" style="display: inline-flex;">
-					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="item in 34">
-						<view style="display: flex;background-color: #E7F0F4;">
-							<view style="margin: 20rpx;width: 250rpx;">
-								<view style="font-weight: 900;">内存升级256G</view>
-								<view style="font-weight: 500;">升级后速度更快</view>
+					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList">
+						<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
+							<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
+								<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
+								<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
 								<view style="display: inline-flex;align-items: center;">
-									<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">168</view>
-									<view style="text-decoration:line-through;margin-left:10rpx;">33</view>
+									<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
+									<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
 								</view>
 							</view>
 							<view style="position: relative;">
-								<image src="../../static/first/立即抢购@3x.png" style="width: 50rpx;height: 100%;"></image>
-								<view style="position: absolute;top: 10rpx;left: 10rpx;color: #FFFFFF;font-weight: b;">立即抢购</view>
+								<image src="../../static/first/立即抢购@3x.png" style="width: 60rpx;height: 100%;"></image>
+								<view style="position: absolute;top: 30rpx;left: 10rpx;color: #FFFFFF;font-weight: 700;font-size: 35rpx;">立即抢购</view>
 							</view>
 						</view>
 						
@@ -49,7 +49,7 @@
 			</view>
 		</scroll-view>
 		
-		<view class="cu-bar solid-bottom" style="margin-top: 20rpx;">
+		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
 				<image style="width: 50rpx;height: 50rpx;" src="@/static/first/服务流程icon@3x.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">服务流程</text>
@@ -73,7 +73,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-bar solid-bottom" style="margin-top: 20rpx;">
+		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
 				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/服务优势icon@3x.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">服务优势</text>
@@ -88,17 +88,18 @@
 				</view>
 			</view>
 		</view>
-		
 		<view style="display:flex;align-items: center;justify-content: center;">
-			<text style="text-align: center;">24小时客服电话:xsxxxx</text>
+			<text style="text-align: center;">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<nabBar type="first" :isActive="true"></nabBar>
+		<view style="height:100rpx;"></view>
+		<nabBar type="first" :isActive="true"></nabBar>		
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'//引入mapState
 	import { navBar } from '../navBar/navBar.vue'
+	
 	export default {
 		// components:{
 		// 	navBar
@@ -131,6 +132,7 @@
 				],
 				dotStyle: false,
 				cardCur: 0,
+				cshPhone:'获取失败',
 				// 轮播图
 				swiperList: [
 				],
@@ -159,6 +161,26 @@
 			this.getUserData()
 		},
 		methods: {
+			onClickHandler(item){
+				const pathMap = {
+					'panelMy':'/pages/mine/mine',
+					'createOrder':'/pages/orderList/orderList',
+					'pageAddress':'/pages/allAddress/allAddress'
+				}
+				const clickMap = {
+					// gototype为ClientPage则跳转
+					'ClientPage':function(){
+						uni.navigateTo({
+						url:pathMap[item.gotoValue]
+					})
+					}
+				}
+				// 执行
+				// console.log('item.gotoType',item.gotoType)
+				// console.log(clickMap[item.gotoType])
+				clickMap[item.gotoType]()
+			
+			},
 			cardSwiper(e) {
 				this.cardCur = e.detail.current
 			},
@@ -172,6 +194,17 @@
 					console.log('resres',res)
 				}).catch(error=>{
 					console.log('error',error)
+				})
+			},
+			//获取客服电话
+			getCSHText(){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/nologin.locationService/collection/getDeliveryAddressList',
+					methods:'GET',
+				}).then(res=>{
+					this.cshPhone = res[0].phone
+				}).catch(e=>{
+					console.log('getDeliveryAddressList',e)
 				})
 			},
 			getHomeBannerData(){
@@ -234,6 +267,8 @@
 					this.getHomeBannerData()
 					// 获取Goods
 					this.getFastClick()
+					// 获取客户电话
+					this.getCSHText()
 					uni.hideLoading()
 				}).catch(error=>{
 					console.log('error',error)
@@ -244,5 +279,13 @@
 </script>
 
 <style>
-
+	.show-subTitle{
+		  color: rgba(0, 0, 0, 0.8);
+		  display: -webkit-box;
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		  word-break: break-all;
+		  -webkit-box-orient: vertical;
+		  -webkit-line-clamp: 3;
+	}
 </style>

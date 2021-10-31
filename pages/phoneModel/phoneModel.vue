@@ -6,13 +6,20 @@
 			<block slot="content">设备型号</block>
 		</cu-custom>
 
+		<scroll-view scroll-x class="bg-white nav">
+			<view class="flex text-center">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(item,index) in FirstMenu" :key="index" @tap="tabSelect" :data-item="{id:item.id,index}">
+					{{item.text}}
+				</view>
+			</view>
+		</scroll-view>
+		
 		<view class="VerticalBox container">
 			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop"
 				style="height:calc(100vh)">
-
 				<view class="flex-vertical margin-top-xl">
 					<view class="nav-item" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
-						:key="index" @tap="TabSelect" :data-id="index">
+						:key="index" @tap="TabSelect" :data-item="{id:item.id,index}">
 						{{item.name}}
 					</view>
 				</view>
@@ -20,27 +27,25 @@
 
 			<scroll-view class="VerticalMain bg-white" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-				<view class="text-center margin">
-					<text>——iPhone 系列——</text>
-				</view>
-				
-				<view  v-for="(item,index) in list" :key="index" :id="'main-'+index">
-					<view>
+					<view  v-for="(item,indexs) in deviceList">
+					<view class="text-center margin">
+				      <text>——{{item.groupName}}—</text>
+				     </view>
 						<view class="grid margin-bottom text-center col-3">
-							<view class="padding-sm" v-for="(item,indexs) in 6" :key="indexs">
-									<image src="../../static/images/iphone13.png" mode="widthFix"></image>
-								<view class="text-sm"><text>iphone13 Pro</text></view>
+							<view class="padding-sm" v-for="(item,indexs) in item.goodsList" :key="indexs">
+									<image :src="imageUrl+item.pictureId" mode="widthFix"></image>
+								<view class="text-sm"><text>{{item.name}}</text></view>
 							</view>
 						</view>
 					</view>
-				</view>
-				
 			</scroll-view>
 		</view>
+		<nabBar type="phoneModel" :isActive="true"></nabBar>		
 	</view>
 </template>
 
 <script>
+import { mapState } from 'vuex'//引入mapState
 	export default {
 		data() {
 			return {
@@ -48,43 +53,84 @@
 				tabCur: 0,
 				mainCur: 0,
 				verticalNavTop: 0,
-				load: true
+				load: true,
+				TabCur: 0,
+				FirstMenu:[],
+				deviceList:[]
 			};
 		},
+		computed: mapState({
+					// 从state中拿到数据 
+			imageUrl:state => state.user.imageBaseUrl
+		}),
 		onLoad() {
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
 			});
-			let list = [{}];
-			list = [{
-					name: "苹果",
-					id: "0"
-				},
-				{
-					name: "华为",
-					id: "1"
-				},
-				{
-					name: "小米",
-					id: "2"
-				},
-				{
-					name: "魅族",
-					id: "3"
-				}
-			]
-			this.list = list;
-			this.listCur = list[0];
+			this.$request({
+				url:'/phoneReparisServer/service/rest/login.customerService/collection/getCategoryOne',
+				methods:'GET'
+			}).then(res=>{
+				this.FirstMenu = res
+				this.getSecondMenu(this.FirstMenu.filter(item=>
+					item.text ==='手机'
+				)[0].id)
+			}).catch(e=>{
+				console.log('getCategoryOne',e)
+			})
+			
 		},
 		onReady() {
 			uni.hideLoading()
 		},
 		methods: {
+			tabSelect(e) {
+				this.TabCur = e.currentTarget.dataset.item.index;
+				console.log('e.currentTarget.dataset',e.currentTarget.dataset)
+				this.getSecondMenu(e.currentTarget.dataset.item.id)
+			},
 			TabSelect(e) {
-				this.tabCur = e.currentTarget.dataset.id;
-				this.mainCur = e.currentTarget.dataset.id;
-				this.verticalNavTop = (e.currentTarget.dataset.id - 1) * 50
+				this.tabCur = e.currentTarget.dataset.item.index;
+				this.mainCur = e.currentTarget.dataset.item.index;
+				this.getThirdMenu(e.currentTarget.dataset.item.id)
+				// this.verticalNavTop = (e.currentTarget.dataset.id - 1) * 50
+			},
+			getSecondMenu(id){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.customerService/collection/getCategoryTwo',
+					methods:'GET',
+					data:{categoryId:id}
+				}).then(res=>{
+					console.log('getCategoryTwo',res)
+					this.list = res
+					this.getThirdMenu(this.list.filter(item=>
+						item.name === '苹果'
+					)[0].id)
+				}).catch(e=>{
+					console.log('getCategoryTwo',e)
+				})
+			},
+			getThirdMenu(id){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.customerService/collection/getCategoryTwo',
+					methods:'POST',
+					data:{categoryId:id,needGroup:true}
+				}).then(res=>{
+					this.deviceList = []
+					const keys = Object.keys(res);
+					if(keys.length > 0)
+					for (let key of keys) {
+						this.deviceList.push({
+							groupName:key,
+							goodsList:res[key]
+						})
+					}
+					console.log('getCategoryThree',res)
+					// this.list = res
+				}).catch(e=>{
+					console.log('getCategoryThree',e)
+				})
 			},
 			VerticalMain(e) {
 				// #ifdef MP-ALIPAY

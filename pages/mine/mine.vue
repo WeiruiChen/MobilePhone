@@ -1,10 +1,8 @@
 <template>
-	<view>
-		<view style="position: relative;">
-			<image src="@/static/mine/我的-背景@3x.png"></image>
-			
-		</view>
-		
+	<view >
+			<view  style="position: relative;width: 100%">
+				<image style="width: 100%"  src="@/static/mine/background.jpg"></image>
+			</view>
 		<view class="cu-card article">
 			<view class="cu-item shadow">
 				<view style="display: flex;justify-content: space-between;">
@@ -49,6 +47,8 @@
 			</view>
 			
 		</view>
+		<view style="height:100rpx;"></view>
+		<nabBar  type="mine" :isActive="true"></nabBar>
 	</view>
 </template>
 
@@ -86,5 +86,9 @@
 </script>
 
 <style>
+	.mine-background{
+		background-image: url(../../static/mine/background.jpg);
+		background-repeat:no-repeat;
+	}
 
 </style>
