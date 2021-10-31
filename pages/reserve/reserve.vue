@@ -106,7 +106,15 @@
 				},
 				switcha: false,
 				time: '12:01',
+				goodsList:[]
 			}
+		},
+		onLoad(option){
+				if(Object.keys(option).length > 0){
+					const navigateParams = JSON.parse(decodeURIComponent(option.goods));
+					console.log('navigateParams',navigateParams)
+					this.goodsList = [navigateParams]
+				}
 		},
 		methods: {
 			SwitchA(e) {

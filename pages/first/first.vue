@@ -14,7 +14,7 @@
 		
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index<gridCol*2">
-					<image @click="onClickHandler(item)" :src="imageUrl+item.fileId" style="width: 180rpx;height: 180rpx;"></image>
+					<image @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 180rpx;height: 180rpx;"></image>
 				<text>{{item.title}}</text>
 			</view>
 		</view>
@@ -28,7 +28,7 @@
 		
 		<scroll-view scroll-x scroll-with-animation >
 			<view class="cu-card" style="display: inline-flex;">
-					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList">
+					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" @click="onClickHandler(item)">
 						<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
 							<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
 								<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
@@ -143,11 +143,7 @@
 				serviceProfitList:[],
 				// 手机选项
 				cuIconList: [{
-					// cuIcon: '../../static/show/苹果手机@3x.png',
-					// // color: 'red',
-					// // badge: 120,
-					// name: '苹果手机',
-					}]
+				}]
 			}
 		},
 		computed: mapState({
@@ -161,7 +157,7 @@
 			this.getUserData()
 		},
 		methods: {
-			onClickHandler(item){
+			onClickHandler(item,index=0){
 				const pathMap = {
 					'panelMy':'/pages/mine/mine',
 					'createOrder':'/pages/orderList/orderList',
@@ -173,6 +169,23 @@
 						uni.navigateTo({
 						url:pathMap[item.gotoValue]
 					})
+					},
+					'Category':function(){
+						if(index > 3){
+							uni.navigateTo({
+							url:'../maintenanceList/maintenanceList'
+						})
+						}else{
+							uni.navigateTo({
+							url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
+						})
+						}
+					},
+					'Goods':function(){
+						console.log(JSON.stringify(item))
+						uni.navigateTo({
+							url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
+						})
 					}
 				}
 				// 执行

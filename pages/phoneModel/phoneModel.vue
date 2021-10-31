@@ -29,10 +29,10 @@
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
 					<view  v-for="(item,indexs) in deviceList">
 					<view class="text-center margin">
-				      <text>——{{item.groupName}}—</text>
+				      <text>——{{item.groupName}}—-</text>
 				     </view>
 						<view class="grid margin-bottom text-center col-3">
-							<view class="padding-sm" v-for="(item,indexs) in item.goodsList" :key="indexs">
+							<view class="padding-sm" v-for="(item,indexs) in item.goodsList" :key="indexs" @click="fixPhone(item)">
 									<image :src="imageUrl+item.pictureId" mode="widthFix"></image>
 								<view class="text-sm"><text>{{item.name}}</text></view>
 							</view>
@@ -56,14 +56,38 @@ import { mapState } from 'vuex'//引入mapState
 				load: true,
 				TabCur: 0,
 				FirstMenu:[],
-				deviceList:[]
+				deviceList:[],
+				oneMeneText:'手机',
+				twoMeneText:'苹果'
 			};
 		},
 		computed: mapState({
 					// 从state中拿到数据 
 			imageUrl:state => state.user.imageBaseUrl
 		}),
-		onLoad() {
+		onLoad(option) {
+			if(Object.keys(option).length > 0){
+				const navigateParams = JSON.parse(decodeURIComponent(option.category));
+				// this.on
+				if(navigateParams.title === '苹果手机' || navigateParams.title === '其他机型'){
+					this.oneMeneText = '手机'
+					this.twoMeneText = '苹果'
+					this.TabCur = 0
+					this.tabCur = 0
+				}
+				if(navigateParams.title === '华为手机'){
+					this.oneMeneText = '手机'
+					this.twoMeneText = '华为'
+					this.TabCur = 0
+					this.tabCur = 1
+				}
+				if(navigateParams.title === '小米手机'){
+					this.oneMeneText = '手机'
+					this.twoMeneText = '小米'
+					this.TabCur = 0
+					this.tabCur = 2
+				}
+			}
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
@@ -74,7 +98,7 @@ import { mapState } from 'vuex'//引入mapState
 			}).then(res=>{
 				this.FirstMenu = res
 				this.getSecondMenu(this.FirstMenu.filter(item=>
-					item.text ==='手机'
+					item.text === this.oneMeneText
 				)[0].id)
 			}).catch(e=>{
 				console.log('getCategoryOne',e)
@@ -85,6 +109,18 @@ import { mapState } from 'vuex'//引入mapState
 			uni.hideLoading()
 		},
 		methods: {
+			// 维修页面跳转
+			fixPhone(item){
+				const titleMap = {
+					0:'苹果',
+					1:'华为',
+					2:'小米'
+				}
+				console.log()
+				uni.navigateTo({
+					url:'../maintenanceList/maintenanceList?title='+titleMap[this.tabCur]+'&phone='+encodeURIComponent(JSON.stringify(item))
+				})
+			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.item.index;
 				console.log('e.currentTarget.dataset',e.currentTarget.dataset)
@@ -105,7 +141,7 @@ import { mapState } from 'vuex'//引入mapState
 					console.log('getCategoryTwo',res)
 					this.list = res
 					this.getThirdMenu(this.list.filter(item=>
-						item.name === '苹果'
+						item.name === this.twoMeneText
 					)[0].id)
 				}).catch(e=>{
 					console.log('getCategoryTwo',e)

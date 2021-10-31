@@ -13,9 +13,9 @@
 				style="height:calc(100vh - 375upx)">
 
 				<view class="text-left margin-top-xl margin-left">
-					<view class="category-one"><text>苹果</text></view>
-					<view class="category-two margin-tb-sm"><text>iPhone12ProMax</text></view>
-					<view class="change-phone"><text>更换机型</text></view>
+					<view class="category-one"><text>{{phone.title}}</text></view>
+					<view class="category-two margin-tb-sm"><text>{{phone.name}}</text></view>
+					<view class="change-phone" @click="changePhone"><text>更换机型</text></view>
 					<view class="category-three">
 					</view>
 				</view>
@@ -31,31 +31,17 @@
 			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
 
-				<view class="padding-top padding-lr" v-for="(item,index) in list" :key="index" :id="'main-'+index">
+				<view class="padding-top padding-lr" v-for="(item,index) in goodsList" :key="index" :id="'main-'+index">
 					<form>
 						<view class="cu-form-group padding margin-bottom-sm round-card">
 							<view>
-								<view class="text-title"><text>更换手机屏幕</text></view>
-								<view class="text-gray margin-top"><text>适用于屏幕破碎，显示触摸异常，内屏老化等</text></view>
-								<view class="text-gray"><text>保修期:1年</text></view>
+								<view class="text-title"><text>{{item.title}}</text></view>
+								<view class="text-gray margin-top"><text>{{item.subTitle}}</text></view>
+								<view class="text-gray"><div v-html="item.description"></div></view>
 								<view class="flex-container margin-top">
-									<view class="text-price"><text>889</text></view>
+									<view class="text-price"><text>{{item.salePrice}}</text></view>
 									<button class="cu-btn cuIcon icon-move">
 										<text class="cuIcon-move"></text>
-									</button>
-								</view>
-							</view>
-						</view>
-
-						<view class="cu-form-group padding margin-bottom-sm round-card">
-							<view>
-								<view class="text-title"><text>更换手机屏幕</text></view>
-								<view class="text-gray margin-top"><text>适用于屏幕破碎，显示触摸异常，内屏老化等</text></view>
-								<view class="text-gray"><text>保修期:1年</text></view>
-								<view class="flex-container margin-top">
-									<view class="text-price"><text>889</text></view>
-									<button class="cu-btn cuIcon icon-add">
-										<text class="cuIcon-add"></text>
 									</button>
 								</view>
 							</view>
@@ -77,14 +63,41 @@
 				tabCur: 0,
 				mainCur: 0,
 				verticalNavTop: 0,
-				load: true
+				load: true,
+				phone:{
+					title:'苹果',
+					name:'iphone12ProMax'
+				},
+				goodsList:[
+				]
 			};
 		},
-		onLoad() {
+		onLoad(option) {
+			// 获取维修参数
+			if(Object.keys(option).length > 0){
+				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
+				navigateParams['title'] = option.title
+				console.log(navigateParams)
+				this.phone = navigateParams
+			}
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
 			});
+			this.$request({
+				url:'/phoneReparisServer/service/rest/login.customerService/collection/getAllServiceGoods',
+				methods:'GET',
+				data:{
+					page:1,
+					rows:20
+					// categoryId:'a937e38a4f554c36b31c836ebd9b1725',
+					// sort:'createTime',
+					// order:'desc'
+				}
+			}).then(res=>{
+				this.goodsList = res
+				console.log('this.goodlist',this.goodsList)
+			})
 			let list = [{}];
 			list = [{
 					name: "屏幕问题",
@@ -118,6 +131,11 @@
 			uni.hideLoading()
 		},
 		methods: {
+			changePhone(){
+				uni.navigateTo({
+					url:'../phoneModel/phoneModel'
+				})
+			},
 			TabSelect(e) {
 				this.tabCur = e.currentTarget.dataset.id;
 				this.mainCur = e.currentTarget.dataset.id;
