@@ -34,7 +34,7 @@
 			</view>
 			<view class="cu-card article" style="margin-top: -40rpx;">
 				<view class="cu-item shadow">
-					<view style="display: flex;justify-content: space-between;margin-top: 30rpx;">
+					<view style="display: flex;justify-content: space-between;margin-top: 30rpx;" @click="navigateToMyAddress">
 						<text style="margin:15rpx;font-weight: 500;font-size: 30rpx;">我的地址</text>
 						<view style="margin:15rpx;font-weight: 500;">
 							<text class="lg text-gray cuIcon-right"></text>
@@ -47,7 +47,7 @@
 					<view style="display: flex;justify-content: space-between;;margin-top: 30rpx;">
 						<text style="margin:15rpx;font-weight: 500;font-size: 30rpx;">客服电话</text>
 						<view style="margin:15rpx;font-weight: 500;">
-							xxxx
+							{{gmPhone}}
 						</view>
 					</view>
 				</view>
@@ -90,12 +90,18 @@ import { mapState } from 'vuex'//引入mapState
 		computed: mapState({
 			// 从state中拿到数据 
 			loginName: state => state.user.loginName,
+			gmPhone: state => state.user.gmPhone,
 		}),
 		methods: {
 			navigateToOrderList(title){
 				console.log('title',title)
 				uni.navigateTo({
 					url:'../orderList/orderList?title='+title
+				})
+			},
+			navigateToMyAddress(){
+				uni.navigateTo({
+					url:'../allAddress/allAddress'
 				})
 			}
 		}

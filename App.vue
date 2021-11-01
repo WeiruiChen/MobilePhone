@@ -2,6 +2,25 @@
 	import Vue from 'vue'
 	export default {
 		onLoad:function() {
+			// 需要用户授权
+			uni.login({
+			  provider: 'weixin',
+			  success: function (loginRes) {
+			    console.log(loginRes.authResult);
+			    // 获取用户信息
+			    uni.getUserInfo({
+			      provider: 'weixin',
+			      success: function (infoRes) {
+					// this.$store.state.user
+					this.$store.dispatch('actionTrigger',{
+						key:'loginName',value:infoRes.userInfo.nickName || '',
+					})
+			        console.log('用户昵称为：' + infoRes.userInfo.nickName);
+			      }
+			    });
+			  }
+			});
+			
 			// 判断是否存在用户不存在则重新获取
 			// if(this.$store.user.state.id){
 			// 	console.log(this.$store.user.state)
@@ -24,7 +43,6 @@
 			// })
 		},
 		onLaunch: function() {
-			
 			uni.getSystemInfo({
 				success: function(e) {
 					// console.log(e)

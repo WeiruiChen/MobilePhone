@@ -216,6 +216,10 @@
 					methods:'POST',
 				}).then(res=>{
 					this.cshPhone = res[0].phone
+					this.$store.dispatch('actionTrigger',{
+						key:'gmPhone',
+						value: this.cshPhone
+					})
 				}).catch(e=>{
 					console.log('getDeliveryAddressList',e)
 				})

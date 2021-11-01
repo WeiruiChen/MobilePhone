@@ -82,9 +82,17 @@ import { mapState } from 'vuex'//引入mapState
 		},
 		onLoad(option) {
 			// 获取维修参数
+			console.log('option',option)
 			if(Object.keys(option).length > 0){
 				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
 				navigateParams['title'] = option.title
+				console.log('navigateParams',navigateParams)
+				console.log('navigateParams',navigateParams)
+				console.log('navigateParams',navigateParams)
+				console.log('navigateParams',navigateParams)
+				console.log('navigateParams',navigateParams)
+				console.log('navigateParams',navigateParams)
+				
 				this.phone = navigateParams
 			}
 			uni.showLoading({
@@ -142,29 +150,26 @@ import { mapState } from 'vuex'//引入mapState
 			},
 			addShopping(item,status){
 				// this.forkMaintenance = JSON.parse(JSON.stringify(this.maintenanceList));
-				console.log('status',status)
+				// console.log('status',status)
 				// 判断是否重复 重复的话则删除 下一步再添加
-				if(this.forkMaintenance.length > 0){
-					for (let index in this.forkMaintenance) {
-						if((this.forkMaintenance[index].title === item.title)){
-							// 删除旧数据
-							if(index === 0) this.forkMaintenance.pop()
-							else this.forkMaintenance.splice(index,1)
-						}
+				this.forkMaintenance = this.judgeRepeat(this.maintenanceList,[
+					{
+						...item,
+						selected:status
 					}
-				}
-				this.forkMaintenance.push({
-					...item,
-					selected:status
-				})
+				],true);
+				// this.forkMaintenance.push({
+				// 	...item,
+				// 	selected:status
+				// })
 				// 同步全局
-				this.$store.dispatch('shoppingTrigger',{
-					key:'maintenanceList',
-					value:this.forkMaintenance
-				})
+				// this.$store.dispatch('shoppingTrigger',{
+				// 	key:'maintenanceList',
+				// 	value:this.judgeRepeat(this.maintenanceList,item)
+				// })
 			},
 			changePhone(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'../phoneModel/phoneModel'
 				})
 			},
@@ -175,37 +180,103 @@ import { mapState } from 'vuex'//引入mapState
 				this.currentGoodId = e.currentTarget.dataset.item.id
 				this.getGoods(this.currentGoodId)
 			},
+			judgeRepeat(Old,New,isCover = true){
+				let resuleArray = JSON.parse(JSON.stringify(Old))
+				let showForkData = JSON.parse(JSON.stringify(New))
+				// 如果Old不存在则覆盖并返回
+				console.log('全局状态是否为0',resuleArray.length === 0)
+				if(resuleArray.length === 0){
+					resuleArray = Array.isArray(showForkData) ?  resuleArray.concat(showForkData) : [showForkData]
+					console.log('全局更新后的值',resuleArray)
+					this.$store.dispatch('shoppingTrigger',{
+						key:'maintenanceList',
+						value:resuleArray
+					})
+					return resuleArray;
+				}
+				console.log('showForkDatashowForkData',Array.isArray(showForkData))
+				if(Array.isArray(showForkData)){
+					// 首先判断如果全局里面没有当前goods则增加 合并两个对象数组并去重
+					let midArray=[...resuleArray,...showForkData];
+					//根据id去重
+					let map=new Map();
+					for(let item of midArray){
+					    if(!map.has(item.id)){
+					        map.set(item.id,item)
+					    }
+					}
+					resuleArray = [...map.values()];
+					for (let oValueIndex in resuleArray) {
+						for (let nValueIndex in showForkData) {
+							if(resuleArray[oValueIndex].id === showForkData[nValueIndex].id){
+								if(isCover){
+									console.log('覆盖原始数据')
+									// 删除旧数据
+									resuleArray.splice(oValueIndex,1)
+									// 增加增加新数据
+									resuleArray.push(showForkData[nValueIndex])
+									console.log('覆盖原始数据value',resuleArray)
+								}else{
+									console.log('取值判断')
+									//不覆盖的话则取出本地购物车的商品状态
+									// console.log('更新前对比',showForkData[nValueIndex])
+									if(showForkData[nValueIndex].selected !== resuleArray[oValueIndex].selected){
+										console.log('不相等则替换数据')
+										showForkData[nValueIndex] = resuleArray[oValueIndex]
+									}
+								}
+							}
+						}
+					}
+				}else{
+					for (let index in resuleArray) {
+						if(resuleArray[index].id === showForkData.id){
+							if(isCover){
+								// 删除旧数据
+								resuleArray.splice(index,1)
+								// 增加增加新数据
+								resuleArray.push(showForkData)
+							}else{
+								//不覆盖的话则取出本地购物车的商品状态
+								showForkData = resuleArray[index]
+							}
+						}
+					}
+				}
+				// 同步本地购物车
+				this.$store.dispatch('shoppingTrigger',{
+					key:'maintenanceList',
+					value:resuleArray
+				})
+				return Array.isArray(showForkData) ? showForkData : [showForkData]
+			},
 			getGoods(id){
+				// console.log('ididididi',id)
 				this.$request({
 					url:'/phoneReparisServer/service/rest/login.customerService/collection/getAllServiceGoods',
 					methods:'POST',
 					data:{
 						page:1,
 						rows:20,
-						categoryId:'0136673507f5442a820c2742ee7e5c37'
+						categoryId:id
+						// categoryId:'0136673507f5442a820c2742ee7e5c37'
 						// sort:'createTime',
 						// order:'desc'
 					}
 				}).then(res=>{
 					// mockshuju
-					const mockData = {"message":"成功","totalCount":7,"page":1,"pageSize":20,"data":"[{\"id\":\"2ca6245c588640b4a0e7748a282d84af\",\"createTime\":\"2021-10-27 20:14:50\",\"subTitle\":\"摄像头问题\",\"title\":\"摄像头问题\",\"price\":100,\"description\":\"<strong>保修一年<\\/strong>\",\"salePrice\":80,\"code\":\"00006140\",\"pictureId\":\"70e94e91c1e343529f6e3129a95d1fdf\"}]","javaClass":"com.caomei.xinxikeji.util.ResultInfo","code":0,"totalPage":1}
-					this.goodsList = JSON.parse(mockData.data)
-					// console.log('this.goodsList',this.goodsList)
+					// const mockData = {"message":"成功","totalCount":7,"page":1,"pageSize":20,"data":"[{\"id\":\"2ca6245c588640b4a0e7748a282d84af\",\"createTime\":\"2021-10-27 20:14:50\",\"subTitle\":\"摄像头问题\",\"title\":\"摄像头问题\",\"price\":100,\"description\":\"<strong>保修一年<\\/strong>\",\"salePrice\":80,\"code\":\"00006140\",\"pictureId\":\"70e94e91c1e343529f6e3129a95d1fdf\"}]","javaClass":"com.caomei.xinxikeji.util.ResultInfo","code":0,"totalPage":1}
+					this.goodsList = res
+					// console.log('LOAD.....this.goodsListthis.goodsList',this.goodsList);
+					if(this.goodsList.length > 0) this.goodsList = this.goodsList.map(element => {
+						return {
+							...element,
+							selected:false,
+						}
+					})
+					this.forkMaintenance = this.judgeRepeat(this.maintenanceList,this.goodsList,false);
+					console.log('LOAD.....this.forkMaintenancethis.forkMaintenance',this.forkMaintenance)
 					// 如果购物车里面本地存在数据则拿购物车的数据 不更新数据
-					if(this.maintenanceList.length === 0){
-						this.forkMaintenance = this.goodsList.map(element => {
-								return {
-									...element,
-									selected:false
-								}
-						});
-						this.$store.dispatch('shoppingTrigger',{
-							key:'maintenanceList',
-							value: this.forkMaintenance
-						})
-					}else{
-						this.forkMaintenance = this.maintenanceList
-					}
 				})
 			},
 			VerticalMain(e) {

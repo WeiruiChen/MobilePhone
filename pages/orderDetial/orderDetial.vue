@@ -9,9 +9,9 @@
 			<form>
 				<view class="cu-form-group flex-container round-card">
 					<view class="content">
-						<view>订单编号：3458766374004400</view>
-						<view>下单时间：202123-23 14：08</view>
-						<view>订单状态：已下单</view>
+						<view>订单编号：{{orderDetail.code}}</view>
+						<view>下单时间：{{orderDetail.createTime}}</view>
+						<view>订单状态：{{NavMap[orderDetail.orderState]}}</view>
 					</view>
 				</view>
 
@@ -36,7 +36,7 @@
 						<view class="">
 							<text>维修方案</text>
 						</view>
-						<image src="/static/BasicsBg.png" class="reverse_1" mode='widthFix'></image>
+						<!-- <image :src="imageUrl + item.pictureId" class="reverse_1" mode='widthFix'></image> -->
 					</view>
 					<view class="">
 						<view class="">
@@ -82,10 +82,30 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'//引入mapState
 	export default {
+		onLoad(option) {
+			if(option.id){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
+					methods:'POST',
+					data:{
+						orderId:option.id
+					}
+				}).then(res=>{
+					this.orderDetail = res
+				}).catch(e=>{
+					console.log(e)
+				})
+			}
+		},
+		computed: mapState({
+			imageUrl:state => state.user.imageBaseUrl
+		}),
 		data() {
 			return {
 				sent: true,
+				orderDetail:{},
 				address: {
 					neareast: "最近网点：北京市朝阳区三环到四环之间 东三环",
 					receive: "取件地址：北京市朝阳区三环到四环之间 东三环",
@@ -95,6 +115,15 @@
 				},
 				switcha: false,
 				time: '12:01',
+				NavMap : {
+					'ALL':'全部',
+					'Confirm':'已下单',
+					'Packaged':'已接单',
+					'Shipped':'已送达',
+					'Check':'维修中',
+					'Canceled':'已取消',
+					'Completed':'已完成'
+				}
 			}
 		},
 		methods: {

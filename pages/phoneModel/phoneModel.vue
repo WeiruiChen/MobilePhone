@@ -116,7 +116,7 @@ import { mapState } from 'vuex'//引入mapState
 					2:'小米'
 				}
 				console.log()
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'../maintenanceList/maintenanceList?title='+titleMap[this.tabCur]+'&phone='+encodeURIComponent(JSON.stringify(item))
 				})
 			},

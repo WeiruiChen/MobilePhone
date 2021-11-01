@@ -1,6 +1,6 @@
 import store from "@/store/index.js"
 
-const request = function({url='',methods='GET',data={}}){
+const request = function({url='',methods='POST',data={}}){
 	// 判断是是否为登陆接口
 	let isLogin = url.indexOf('login') !== -1
 	const reqData = {
@@ -14,12 +14,19 @@ const request = function({url='',methods='GET',data={}}){
 		reqData['cityId'] =  store.state.user.cityId || '';
 		reqData['clientVer'] =  store.state.user.clientVer || '';
 	}
+	let reqUrl = 'http://pow6rm42.dongtaiyuming.net:29203' +  url;
+	if(store.state.user.sessionID)
+	{
+		reqUrl += ";jsessionid=" +store.state.user.sessionID;
+	}
 	const requestObj = {
-			url:'http://pow6rm42.dongtaiyuming.net:29203' +  url,
-			method:methods || 'GET',
-			header:{
-				'content-type':'application/x-www-form-urlencoded'
-			},
+			url:reqUrl,
+			method:'POST',
+			//post提交的时候加上这个header
+				header: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'X-Requested-With': 'xmlhttprequest'
+				},
 			data:reqData
 	}
 	return  new Promise((resolve,reject)=>{

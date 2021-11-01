@@ -13,51 +13,60 @@
 					</view>
 				</view>
 			</scroll-view>
-			<form>
-				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
+			<view v-for="(item,index) in showOrderList">
+				<view :key="index+'showOrder'" @click="gotoDetail(item.id)" class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
 						<view>
-							<text>订单编号：338485977574939</text>
+							<text>订单编号：{{item.code}}</text>
 						</view>
 						<image src="/static/BasicsBg.png" class="reverse_1" mode='widthFix'></image>
 					</view>
 					<view>
 						<view>
-							<text>iPhone12pro max</text>
+							<text>{{item.goodsList[0].phoneType}}</text>
 						</view>
-						<view>
-							<text>更换屏幕 x1</text>
+						<view v-for="(subItem,index) in item.goodsList" :key="index+'good'" >
+							<text>{{subItem.title}}x{{subItem.count}}</text>
 						</view>
-						<view>
-							<text>上门取件 x1</text>
-						</view>
+						
 					</view>
 				</view>
 
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
-						<view>共2项 合计：889</view>
-						<button class="cu-btn round sm">取消订单</button>
+						<view>共2项 合计：{{item.totalMoney}}</view>
+						<button class="cu-btn round sm">{{item.orderStateName}}</button>
 					</view>
 				</view>
-			</form>
+			</view>
 
 		</view>
 	</view>
 </template>
 
 <script>
+	const NavMap = {
+		'全部':'ALL',
+		'已下单':'Confirm',
+		'已接单':'Packaged',
+		'已送达':'Shipped',
+		'维修中':'Check',
+		'已取消':'Canceled',
+		'已完成':'Completed'
+	}
 	export default {
 		onLoad(option){
 			if(Object.keys(option).length>0){
 				console.log(option)
 				this.TabCur = option.title
 			}
+			this.getOrderList()
 		},
 		data() {
 			return {
 				TabCur: '全部',
 				scrollLeft: 0,
+				showOrderList:[],
 				navList:[
 					{
 						title:'全部',
@@ -81,6 +90,27 @@
 			};
 		},
 		methods: {
+			gotoDetail(id){
+				uni.redirectTo({
+					url: '../orderDetial/orderDetial?id='+id
+				})
+			},
+			getOrderList(type='ALL'){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.orderService/collection/getPagingOrder',
+					methods:'POST',
+					data:{
+						rows:999,
+						page:1,
+						status:type
+					}
+				}).then(res=>{
+					this.showOrderList = res
+					console.log(res)
+				}).catch(e=>{
+					console.log('e')
+				})
+			},
 			backToMine(){
 				uni.navigateTo({
 					url:'../mine/mine'
@@ -89,6 +119,7 @@
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id;
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
+				this.getOrderList(NavMap[this.TabCur])
 			}
 		}
 	}
