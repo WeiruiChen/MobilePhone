@@ -13,7 +13,7 @@
 		</view>
 		
 		<view class="btn-bottom">
-			<button class="cu-btn  block lg round">查看订单</button>
+			<button @click="navigateDetail" class="cu-btn  block lg round">查看订单</button>
 		</view>
 	</view>
 </template>
@@ -26,7 +26,11 @@
 			}
 		},
 		methods: {
-
+			navigateDetail(){
+				uni.navigateTo({
+					url:'../orderDetial/orderDetial'
+				})
+			}
 		}
 	}
 </script>

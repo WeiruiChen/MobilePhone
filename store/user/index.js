@@ -14,7 +14,6 @@ const state = {
 
 const mutations = {
 	update(state,payload){
-		console.log(payload)
 		state[payload.key]  = payload.value
 	}
 }

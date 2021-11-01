@@ -2,20 +2,27 @@
 	<view >
 			<view  style="position: relative;width: 100%">
 				<image style="width: 100%"  src="@/static/mine/background.jpg"></image>
+				<view style="display: flex;flex-direction: column;position:absolute;top:150rpx;left:300rpx;">
+					<view class='cu-avatar xl radius' >
+						<!-- <view class='cu-tag badge'>99</view> -->
+						<text class='cuIcon-people'></text>
+					</view>
+					<view>{{loginName}}</view>
+				</view>
 			</view>
 		<view class="cu-card article">
 			<view class="cu-item shadow">
 				<view style="display: flex;justify-content: space-between;">
 					<text style="margin:10rpx;font-weight: 500;font-size: 30rpx;">我的订单</text>
 					<view style="margin:10rpx;font-weight: 500;">
-						<text style="font-size: 30rpx;">全部</text>
+						<text style="font-size: 30rpx;" @click="navigateToOrderList('全部')">全部</text>
 						<text class="lg text-gray cuIcon-right"></text>
 					</view>
 				</view>
 				
 				<view style="display: flex;justify-content: space-around;">
 					<view v-for="(item,index) in optionList" :key="index">
-						<view style="display: flex;margin: 0rpx 0 0 16rpx;margin-top: 20rpx;">
+						<view style="display: flex;margin: 0rpx 0 0 16rpx;margin-top: 20rpx;" @click="navigateToOrderList(item.name)">
 							<view style="position: relative;">
 								<view class='cu-tag badge'></view>
 								<image style="width: 50rpx;height: 50rpx;" :src="item.cuIcon"></image>
@@ -53,6 +60,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'//引入mapState
 	export default {
 		data() {
 			return {
@@ -79,8 +87,17 @@
 				}]
 			}
 		},
+		computed: mapState({
+			// 从state中拿到数据 
+			loginName: state => state.user.loginName,
+		}),
 		methods: {
-			
+			navigateToOrderList(title){
+				console.log('title',title)
+				uni.navigateTo({
+					url:'../orderList/orderList?title='+title
+				})
+			}
 		}
 	}
 </script>

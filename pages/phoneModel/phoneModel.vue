@@ -27,7 +27,7 @@
 
 			<scroll-view class="VerticalMain bg-white" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-					<view  v-for="(item,indexs) in deviceList">
+					<view  v-for="(item,indexs) in deviceList" :key="indexs">
 					<view class="text-center margin">
 				      <text>——{{item.groupName}}—-</text>
 				     </view>
@@ -68,7 +68,6 @@ import { mapState } from 'vuex'//引入mapState
 		onLoad(option) {
 			if(Object.keys(option).length > 0){
 				const navigateParams = JSON.parse(decodeURIComponent(option.category));
-				// this.on
 				if(navigateParams.title === '苹果手机' || navigateParams.title === '其他机型'){
 					this.oneMeneText = '手机'
 					this.twoMeneText = '苹果'
@@ -94,7 +93,7 @@ import { mapState } from 'vuex'//引入mapState
 			});
 			this.$request({
 				url:'/phoneReparisServer/service/rest/login.customerService/collection/getCategoryOne',
-				methods:'GET'
+				methods:'POST'
 			}).then(res=>{
 				this.FirstMenu = res
 				this.getSecondMenu(this.FirstMenu.filter(item=>
@@ -135,7 +134,7 @@ import { mapState } from 'vuex'//引入mapState
 			getSecondMenu(id){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/login.customerService/collection/getCategoryTwo',
-					methods:'GET',
+					methods:'POST',
 					data:{categoryId:id}
 				}).then(res=>{
 					console.log('getCategoryTwo',res)

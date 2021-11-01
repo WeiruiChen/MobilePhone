@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="position: relative;">
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		
 		<swiper class="card-swiper"  :circular="true"
@@ -28,7 +28,7 @@
 		
 		<scroll-view scroll-x scroll-with-animation >
 			<view class="cu-card" style="display: inline-flex;">
-					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" @click="onClickHandler(item)">
+					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
 						<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
 							<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
 								<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
@@ -80,7 +80,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-card case" v-for="(item,index) in serviceProfitList">
+		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="index+'profit'">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
@@ -91,8 +91,8 @@
 		<view style="display:flex;align-items: center;justify-content: center;">
 			<text style="text-align: center;">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<view style="height:100rpx;"></view>
-		<nabBar type="first" :isActive="true"></nabBar>		
+		<view style="height: 100rpx;"></view>
+		<nabBar style="height: 100rpx;" type="first" :isActive="true"></nabBar>		
 	</view>
 </template>
 
@@ -200,7 +200,7 @@
 			getFastClick(){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.homeService/collection/getFastClick',
-					methods:'GET',
+					methods:'POST',
 					data:{}
 				}).then(res=>{
 					this.cuIconList = res
@@ -213,7 +213,7 @@
 			getCSHText(){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.locationService/collection/getDeliveryAddressList',
-					methods:'GET',
+					methods:'POST',
 				}).then(res=>{
 					this.cshPhone = res[0].phone
 				}).catch(e=>{
@@ -223,7 +223,7 @@
 			getHomeBannerData(){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.homeService/collection/getHomeBanner',
-					methods:'GET',
+					methods:'POST',
 					data:{
 						rows:6,
 						page:1
@@ -242,7 +242,7 @@
 							this.serviceProfitList = data.itemList
 						}
 					}
-					console.log('resre',res)
+					// console.log('resre',res)
 				}).catch(e=>{
 					console.log('getHomeBanner',e)
 				})
@@ -253,7 +253,7 @@
 				});
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.customer.login/collection/login',
-					methods:'GET',
+					methods:'POST',
 					data:{
 						openId:'opfA81LO4KG84eBUeulJ0WmvK198',
 						loginType:"openId"

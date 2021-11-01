@@ -1,16 +1,15 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink">
-			<view slot="backText">返回</view>
-			<view slot="content">新增/编辑地址</view>
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+			<view slot="backText" @click="backToMine">返回</view>
+			<view slot="content">我的订单</view>
 		</cu-custom>
-
 		<view class="container">
 			<scroll-view scroll-x class="nav">
 				<view class="flex text-center">
-					<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(item,index) in 6"
-						:key="index" @tap="tabSelect" :data-id="index">
-						Tab{{index}}
+					<view class="cu-item flex-sub" :class="item.title==TabCur?'text-nav cur':''" v-for="(item,index) in navList"
+						:key="item.title" @tap="tabSelect" :data-id="item.title">
+						{{item.title}}
 					</view>
 				</view>
 			</scroll-view>
@@ -49,13 +48,44 @@
 
 <script>
 	export default {
+		onLoad(option){
+			if(Object.keys(option).length>0){
+				console.log(option)
+				this.TabCur = option.title
+			}
+		},
 		data() {
 			return {
-				TabCur: 0,
-				scrollLeft: 0
+				TabCur: '全部',
+				scrollLeft: 0,
+				navList:[
+					{
+						title:'全部',
+					},
+					{
+						title:'已下单',
+					},
+					{
+						title:'已送达',
+					},
+					{
+						title:'维修中',
+					},
+					{
+						title:'待验收',
+					},
+					{
+						title:'待支付',
+					}
+				]
 			};
 		},
 		methods: {
+			backToMine(){
+				uni.navigateTo({
+					url:'../mine/mine'
+				})
+			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id;
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60

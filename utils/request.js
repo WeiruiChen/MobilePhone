@@ -16,7 +16,10 @@ const request = function({url='',methods='GET',data={}}){
 	}
 	const requestObj = {
 			url:'http://pow6rm42.dongtaiyuming.net:29203' +  url,
-			methods:methods || 'GET',
+			method:methods || 'GET',
+			header:{
+				'content-type':'application/x-www-form-urlencoded'
+			},
 			data:reqData
 	}
 	return  new Promise((resolve,reject)=>{

@@ -2,7 +2,6 @@
 	import Vue from 'vue'
 	export default {
 		onLoad:function() {
-			
 			// 判断是否存在用户不存在则重新获取
 			// if(this.$store.user.state.id){
 			// 	console.log(this.$store.user.state)

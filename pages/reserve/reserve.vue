@@ -46,14 +46,14 @@
 						<button class="cu-btn bg-grey shadow">黑色</button>
 					</view>
 				</view>
-
+				
 				<view class="cu-form-group ">
 					<view class="flex-container">
 						<view>更换屏幕方案1</view>
 						<view class="text_right">188</view>
 					</view>
 				</view>
-
+				
 				<view class="cu-form-group">
 					<view class="flex-container">
 						<view>上门取件费用1</view>
@@ -84,7 +84,7 @@
 						<view class="text-grey"> 免费预约 修好付款 </view>
 					</view>
 					<view>
-						<button class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
+						<button @click="navigateOrderDetail" class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
 					</view>
 				</view>
 			</form>
@@ -117,6 +117,11 @@
 				}
 		},
 		methods: {
+			navigateOrderDetail(){
+				uni.navigateTo({
+					url:'../orderSuccess/orderSuccess'
+				})
+			},
 			SwitchA(e) {
 				this.switch = e.detail.value
 			},

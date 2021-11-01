@@ -3840,6 +3840,12 @@ scroll-view.cu-steps .cu-item {
 	color: #f37b1d;
 }
 
+.text-nav,
+.line-nav,
+.lines-nav {
+	color: #04D4C6;
+}
+
 .text-yellow,
 .line-yellow,
 .lines-yellow {
