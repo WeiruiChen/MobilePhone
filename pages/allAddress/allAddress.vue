@@ -7,31 +7,31 @@
 
 		<view class="container">
 			<form>
-				<view class="cu-form-group padding-top padding-bottom round-top-card">
-					<view class="content">
-						<view>大名 125635414878</view>
-						<view>北京市朝阳区三环到四环之间 东三环</view>
+				<view v-for="(item,index) in addressList">
+					<view class="cu-form-group padding-top padding-bottom round-top-card">
+						<view class="content">
+							<view>{{item.name}} {{item.phone}}</view>
+							<view>{{item.address}}</view>
+						</view>
 					</view>
-				</view>
 
-				<view class="cu-form-group round-bottom-card">
-					<view class="flex-container icon-color">
-						<view>
-							<!-- <radio :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A"></radio> -->
-							<text class="cuIcon-round">设为默认</text>
-						</view>
-						<view>
-							<text class="cuIcon-edit margin-right">编辑</text>
-							<text class="cuIcon-delete">删除</text>
+					<view class="cu-form-group round-bottom-card">
+						<view class="flex-container icon-color">
+							<view>
+								<text class="cuIcon-round" @click="setDefaultAddress(item)">设为默认</text>
+							</view>
+							<view>
+								<text class="cuIcon-edit margin-right" @click="editAddress(item)">编辑</text>
+								<text class="cuIcon-delete" @click="deleteAddress(item)">删除</text>
+							</view>
 						</view>
 					</view>
 				</view>
-				
 			</form>
 		</view>
-		
+
 		<view class="btn-bottom">
-			<button class="cu-btn  block lg round"><text class="cuIcon-add"></text>新增地址</button>
+			<button class="cu-btn  block lg round" @click="addAddress"><text class="cuIcon-add"></text>新增地址</button>
 		</view>
 	</view>
 </template>
@@ -40,11 +40,111 @@
 	export default {
 		data() {
 			return {
-				
+				addressList: []
 			}
 		},
+		onLoad() {
+			// 获取地址列表
+			this.getAddList()
+		},
 		methods: {
-			
+			getAddList() {
+				this.$request({
+					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
+					methods: 'GET',
+				}).then(res => {
+					console.log("addressList:"+JSON.stringify(res));
+					this.addressList = res
+				}).catch(e => {
+					console.log('addressList', e)
+				})
+			},
+			addAddress() {
+				uni.navigateTo({
+					url: '../editAddress/editAddress'
+				})
+			},
+			editAddress(item) {
+				uni.navigateTo({
+					url: '../editAddress/editAddress?param=' + encodeURIComponent(JSON.stringify(item))
+				})
+			},
+			setDefaultAddress(item) {
+				item.isDefault = true;
+				let that = this;
+				uni.showModal({
+					title: '确认',
+					content: '确认设置默认',
+					success: function(e) {
+						if (e.confirm) {
+							that.$request({
+								url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/setAddressById',
+								methods: 'POST',
+								data:item
+							}).then(res => {
+								console.log("setDefaultAddress:"+JSON.stringify(res));
+								
+							}).catch(e => {
+								console.log('setDefaultAddress', e)
+								uni.showToast({
+								    title: "设置失败",
+								    icon: "none"
+								})
+							})
+							uni.redirectTo({
+								url:'../allAddress/allAddress'
+							})
+							uni.showToast({
+							    title: "设置成功",
+							    icon: "none"
+							})
+						} else if (e.cancel) {
+							uni.showToast({
+							    title: "取消设置",
+							    icon: "none"
+							})
+						}
+					}
+				});
+				
+				
+			},
+			deleteAddress(item) {
+				let that = this;
+				uni.showModal({
+					title: '确认',
+					content: '确认删除地址',
+					success: function(e) {
+						if (e.confirm) {
+							that.$request({
+								url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/delAddress',
+								methods: 'POST',
+								data:{
+									id:item.id
+								}
+							}).then(res => {
+								console.log("setDefaultAddress:"+JSON.stringify(res));
+								
+							}).catch(e => {
+								console.log('setDefaultAddress', e)
+								uni.showToast({
+								    title: "删除失败",
+								    icon: "none"
+								})
+							})
+							uni.redirectTo({
+								url:'../allAddress/allAddress'
+							})
+						} else if (e.cancel) {
+							uni.showToast({
+							    title: "取消删除",
+							    icon: "none"
+							})
+						}
+					}
+				});
+				
+			}
 		}
 	}
 </script>
@@ -73,11 +173,11 @@
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
-	.icon-color{
+
+	.icon-color {
 		color: #A6A6A6;
 	}
-	
+
 	.btn-bottom {
 		position: fixed;
 		width: 100%;
@@ -86,7 +186,9 @@
 		bottom: 30px;
 		text-align: center;
 	}
+
 	button{
-		color: #04D4C6;
+		color: #FFFFFF;
+		background-color: #04D4C6 !important;
 	}
 </style>

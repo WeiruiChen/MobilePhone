@@ -32,7 +32,7 @@
 						<view class="">
 							<text>维修方案</text>
 						</view>
-						<image src="/static/BasicsBg.png" class="reverse_1" mode='widthFix'></image>
+						<image src="../../static/first/其他机型@3x.png" class="reverse_1" mode='widthFix'></image>
 					</view>
 					<view class="">
 						<view class="">
@@ -181,8 +181,8 @@
 		color: #D9D9D9;
 	}
 
-	.submit-btn {
-		/* background-color: blue; */
+	button {
 		color: #FFFFFF;
+		background-color: #04D4C6 !important;
 	}
 </style>

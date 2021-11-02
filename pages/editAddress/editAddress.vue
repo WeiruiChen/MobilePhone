@@ -7,67 +7,69 @@
 
 		<view class="container">
 			<form>
-				
+
 				<view class="cu-form-group round-top-card ">
-							<view class="title">收货人</view>
-							<input placeholder="大名" name="name"></input>
-						<!-- <view> -->
-							<radio :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A"></radio><text>先生</text>
-							<radio :class="radio=='B'?'checked':''" :checked="radio=='B'?true:false" value="B"></radio><text>女士</text>
-						<!-- </view> -->
+					<view class="title">收货人</view>
+					<input placeholder="大名" name="name" v-model="address.name"></input>
+					<!-- <view>
+								<radio class='green radio' :class="radio=='C'?'checked':''" :checked="radio=='C'?true:false" value="C"></radio>
+								<text>先生</text>
+								<radio class='green radio' :class="radio=='D'?'checked':''" :checked="radio=='D'?true:false" value="D"></radio>
+								<text>女士</text>
+							</view> -->
 				</view>
-				
+
 				<view class="cu-form-group ">
-							<view class="title">手机号</view>
-							<input placeholder="1234566788" name="phonenumber"></input>
+					<view class="title">手机号</view>
+					<input placeholder="1234566788" name="phonenumber" v-model="address.phone"></input>
 				</view>
-				
-			<!-- #ifndef H5 || APP-PLUS || MP-ALIPAY -->
-			<view class="cu-form-group">
-				<view class="title">地址选择</view>
-				<picker mode="region" @change="RegionChange" :value="region">
-					<view class="picker">
-						{{region[0]}}，{{region[1]}}，{{region[2]}}
-					</view>
-				</picker>
-			</view>
-			<!-- #endif -->
-			
-			<view class="cu-form-group ">
-						<view class="title">详细地址</view>
-						<input placeholder="四季星城2期附近" name="addressDetial"></input>
-			</view>
-			
-			<view class="cu-form-group round-bottom-card ">
-						<view class="title">门牌号</view>
-						<input placeholder="307" name="doorNumber"></input>
-			</view>
-	
-				
-				
+
+				<!-- #ifndef H5 || APP-PLUS || MP-ALIPAY -->
+				<view class="cu-form-group">
+					<view class="title">地址选择</view>
+					<picker mode="region" @change="RegionChange" :value="region">
+						<view class="picker">
+							{{region[0]}}，{{region[1]}}，{{region[2]}}
+						</view>
+					</picker>
+				</view>
+				<!-- #endif -->
+
+				<view class="cu-form-group ">
+					<view class="title">详细地址</view>
+					<input placeholder="四季星城2期附近" name="addressDetial" v-model="address.address"></input>
+				</view>
+
+				<view class="cu-form-group round-bottom-card ">
+					<view class="title">门牌号</view>
+					<input placeholder="307" name="address" v-model="address.houseNumber"></input>
+				</view>
+
+
+
 				<view class="cu-form-group padding-top padding-bottom round-top-card flex-container">
-						<view>
-							<text>标签</text>
-						</view>
-						<view class="tag-group">
-							<view class='cu-tag round'>学校</view>
-							<view class='cu-tag round'>家</view>
-							<view class='cu-tag round'>公司</view>
-							<view class='cu-tag round'>其他</view>
-						</view>
+					<view>
+						<text>标签</text>
+					</view>
+					<view class="tag-group">
+						<view class='cu-tag round'>学校</view>
+						<view class='cu-tag round'>家</view>
+						<view class='cu-tag round'>公司</view>
+						<view class='cu-tag round'>其他</view>
+					</view>
 				</view>
 
 				<view class="cu-form-group round-bottom-card flex-container icon-color">
-						<radio :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A"></radio>
-						<text>设为默认</text>
-						<!-- <text class="cuIcon-round">设为默认</text> -->
+					<checkbox v-model="address.isDefault" class='round' :class="checkbox.checked?'checked':''"
+						:value="checkbox.checked?true:false"></checkbox>
+					<text>设为默认</text>
 				</view>
 
 			</form>
 		</view>
 
 		<view class="btn-bottom">
-			<button class="cu-btn  block lg round">保存</button>
+			<button class="cu-btn  block lg round" @click="addNewAddress">保存</button>
 		</view>
 	</view>
 </template>
@@ -77,17 +79,77 @@
 		data() {
 			return {
 				region: ['广东省', '广州市', '海珠区'],
+				address: {},
+				isedit:false,
+				checkbox: {
+					checked: true,
+					value: '1'
+				},
+				radio: 'A'
 			}
 		},
+		onLoad(option) {
+			if (Object.keys(option).length > 0) {
+				const navigateParams = JSON.parse(decodeURIComponent(option.param));
+				this.address = navigateParams;
+				this.isedit = true;
+				console.log(navigateParams);
+			}
+
+		},
 		methods: {
-			SwitchA(e) {
-				this.switch = e.detail.value
-			},
-			TimeChange(e) {
-				this.time = e.detail.value
-			},
 			RegionChange(e) {
 				this.region = e.detail.value
+			},
+			addNewAddress() {
+				this.address.region = this.region;
+				this.address.label = '学校';
+				this.address.isDefault = false;
+				// this.address.cityId='16d7615a4332c473f9dc0b1be46b717d0'
+				console.log(JSON.stringify(this.address));
+	
+				
+				//新增
+				let url = '/phoneReparisServer/service/rest/login.customer.addressService/collection/addAddress'
+				//编辑
+				if(this.isedit){
+					url = '/phoneReparisServer/service/rest/login.customer.addressService/collection/setAddressById'
+				}
+				let that = this;
+				uni.showModal({
+					title: '确认',
+					content: '确认提交地址',
+					success: function(e) {
+						if (e.confirm) {
+							that.$request({
+								url: url,
+								methods: 'POST',
+								data: that.address
+							}).then(res => {
+								console.log("addNewAddress:" + JSON.stringify(res));
+								uni.navigateTo({
+									url:'../allAddress/allAddress'
+								})
+								uni.showToast({
+								    title: "提交成功",
+								    icon: "none"
+								})
+							}).catch(e => {
+								console.log('addNewAddress', e)
+								uni.showToast({
+								    title: "提交失败",
+								    icon: "none"
+								})
+							})
+						} else if (e.cancel) {
+							uni.showToast({
+							    title: "取消提交",
+							    icon: "none"
+							})
+						}
+					}
+				});
+				
 			}
 		}
 	}
@@ -118,11 +180,11 @@
 		justify-content: space-between;
 	}
 
-
-	button{
-		color: #04D4C6;
+	button {
+		color: #FFFFFF;
+		background-color: #04D4C6 !important;
 	}
-	
+
 	.btn-bottom {
 		position: fixed;
 		width: 100%;
@@ -131,9 +193,8 @@
 		bottom: 30px;
 		text-align: center;
 	}
-	
+
 	.cu-form-group .title {
 		min-width: calc(4em + 15px);
 	}
-	
 </style>

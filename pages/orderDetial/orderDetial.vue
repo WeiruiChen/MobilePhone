@@ -17,16 +17,16 @@
 
 				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
-						<view>上门信息</view>
-						<view>大名 125635414878</view>
-						<view>北京市朝阳区三环到四环之间 东三环</view>
+						<view>{{orderDetail.needPickup ? '上门信息' : '最近网店'}}</view>
+						<view> {{orderDetail.receiverName || '暂无'}}</view>
+						<view>{{orderDetail.needPickup ? orderDetail.address || '' : orderDetail.deliveryName+' '+orderDetail.deliveryAdress}}</view>
 					</view>
 				</view>
 
-				<view class="cu-form-group round-bottom-card">
+				<view class="cu-form-group round-bottom-card"  v-if="orderDetail.needPickup">
 					<view class="content">
 						<view>上门时间</view>
-						<view>2021-12-12 12：00</view>
+						<view>{{orderDetail.appointmentTime}}</view>
 					</view>
 				</view>
 
@@ -36,44 +36,42 @@
 						<view class="">
 							<text>维修方案</text>
 						</view>
-						<!-- <image :src="imageUrl + item.pictureId" class="reverse_1" mode='widthFix'></image> -->
-					</view>
-					<view class="">
-						<view class="">
-							<text>iPhone12pro max</text>
+						<view style="display: flex;justify-content: center;align-items: center;">
+							<image :src="imageUrl + orderDetail.goodsList[0].pictureId" class="reverse_1" mode='widthFix'></image>
+							<view>
+								<view class="">
+									<text>{{orderDetail.goodsList[0].phoneType}}</text>
+								</view>
+								<view style="display: flex;align-items: center;">
+									<view>颜色：</view>
+									<view class="bg-white solid-bottom">
+										<view class='cu-tag'>{{orderDetail.goodsList[0].quickMemo}}</view>
+									</view>
+								</view>
+								
+							</view>
 						</view>
-						<view class="">
-							<!-- <text>颜色</text> -->
+					</view>
+					
+				</view>
+				<view v-for="(item,index) in orderDetail.goodsList">
+					<view class="cu-form-group ">
+						<view class="flex-container">
+							<view>{{item.title}}</view>
+							<view class="text_right">{{item.price}}</view>
 						</view>
-						<button class="cu-btn bg-blue shadow">白色</button>
-						<button class="cu-btn bg-grey shadow">灰色</button>
-						<button class="cu-btn bg-grey shadow">黑色</button>
-					</view>
-				</view>
-
-				<view class="cu-form-group ">
-					<view class="flex-container">
-						<view>更换屏幕方案1</view>
-						<view class="text_right">188</view>
-					</view>
-				</view>
-
-				<view class="cu-form-group">
-					<view class="flex-container">
-						<view>上门取件费用1</view>
-						<view class="text_right">20</view>
 					</view>
 				</view>
 
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
 						<view>合计</view>
-						<view class="text_right">208</view>
+						<view class="text_right">{{orderDetail.totalMoney}}</view>
 					</view>
 				</view>
 
 				<view class="cancle">
-					<button class="cu-btn  shadow lg submit-btn round">取消订单</button>
+					<button class="cu-btn shadow lg submit-btn round" @click="deleteOrder">取消订单</button>
 				</view>
 
 			</form>
@@ -84,6 +82,7 @@
 <script>
 	import { mapState } from 'vuex'//引入mapState
 	export default {
+		// 这里跳转会穿optionID
 		onLoad(option) {
 			if(option.id){
 				this.$request({
@@ -105,7 +104,9 @@
 		data() {
 			return {
 				sent: true,
-				orderDetail:{},
+				orderDetail:{
+					goodsList:[{}]
+				},
 				address: {
 					neareast: "最近网点：北京市朝阳区三环到四环之间 东三环",
 					receive: "取件地址：北京市朝阳区三环到四环之间 东三环",
@@ -132,6 +133,41 @@
 			},
 			TimeChange(e) {
 				this.time = e.detail.value
+			},
+			deleteOrder() {
+				let that = this;
+				uni.showModal({
+					title: '确认',
+					content: '确认删除订单?',
+					success: function(e) {
+						if (e.confirm) {
+							that.$request({
+								url: '/phoneReparisServer/service/rest/login.orderService/collection/cancelOrder',
+								methods: 'POST',
+								data:{
+									orderId:that.orderDetail.id
+								}
+							}).then(res => {
+								console.log("setDefaultAddress:"+JSON.stringify(res));
+								
+							}).catch(e => {
+								console.log('setDefaultAddress', e)
+								uni.showToast({
+								    title: "删除失败",
+								    icon: "none"
+								})
+							})
+							uni.redirectTo({
+								url:'../orderList/orderList'
+							})
+						} else if (e.cancel) {
+							uni.showToast({
+							    title: "取消删除",
+							    icon: "none"
+							})
+						}
+					}
+				});
 			}
 		}
 	}
@@ -188,6 +224,7 @@
 
 	.submit-btn {
 		/* background-color: blue; */
+		background-color: #04D4C6;
 		color: #FFFFFF;
 	}
 	

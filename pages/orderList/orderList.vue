@@ -13,23 +13,26 @@
 					</view>
 				</view>
 			</scroll-view>
-			<view v-for="(item,index) in showOrderList">
-				<view :key="index+'showOrder'" @click="gotoDetail(item.id)" class="cu-item cu-form-group padding-top padding-bottom round-top-card">
+            <view v-for="(item,index) in showOrderList">
+				<view :key="item.code" @click="gotoDetail(item.id)" class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
 						<view>
 							<text>订单编号：{{item.code}}</text>
 						</view>
-						<image src="/static/BasicsBg.png" class="reverse_1" mode='widthFix'></image>
-					</view>
-					<view>
-						<view>
-							<text>{{item.goodsList[0].phoneType}}</text>
-						</view>
-						<view v-for="(subItem,index) in item.goodsList" :key="index+'good'" >
-							<text>{{subItem.title}}x{{subItem.count}}</text>
+						<view style="display: flex;justify-content: center;align-items: center;">
+							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'></image>
+							<view >
+								<view>
+									<text>{{item.goodsList[0].phoneType}}</text>
+								</view>
+								<view v-for="(subItem,index) in item.goodsList" :key="index+'good'" >
+									<text>{{subItem.title}}x{{subItem.count}}</text>
+								</view>
+							</view>
 						</view>
 						
 					</view>
+					
 				</view>
 
 				<view class="cu-form-group round-bottom-card">
@@ -38,14 +41,14 @@
 						<button class="cu-btn round sm">{{item.orderStateName}}</button>
 					</view>
 				</view>
-			</view>
-
+		</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	const NavMap = {
+import { mapState } from 'vuex'//引入mapState
+const NavMap = {
 		'全部':'ALL',
 		'已下单':'Confirm',
 		'已接单':'Packaged',
@@ -54,19 +57,19 @@
 		'已取消':'Canceled',
 		'已完成':'Completed'
 	}
-	export default {
+    	export default {
 		onLoad(option){
 			if(Object.keys(option).length>0){
 				console.log(option)
 				this.TabCur = option.title
 			}
-			this.getOrderList()
+            this.getOrderList()
 		},
 		data() {
 			return {
 				TabCur: '全部',
 				scrollLeft: 0,
-				showOrderList:[],
+                showOrderList:[],
 				navList:[
 					{
 						title:'全部',
@@ -89,8 +92,12 @@
 				]
 			};
 		},
+		computed: mapState({
+			// 从state中拿到数据 
+			imageUrl:state => state.user.imageBaseUrl
+		}),
 		methods: {
-			gotoDetail(id){
+            gotoDetail(id){
 				uni.redirectTo({
 					url: '../orderDetial/orderDetial?id='+id
 				})
@@ -119,7 +126,7 @@
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id;
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-				this.getOrderList(NavMap[this.TabCur])
+                this.getOrderList(NavMap[this.TabCur])
 			}
 		}
 	}
@@ -151,7 +158,7 @@
 
 	.reverse_1 {
 		margin-top: 10px;
-		width: 100px;
+		width: 200rpx;
 	}
 
 	.flex-container {
@@ -177,7 +184,7 @@
 	}
 
 	.submit-btn {
-		/* background-color: blue; */
+		background-color: #04D4C6;
 		color: #FFFFFF;
 	}
 

@@ -263,7 +263,7 @@
 						loginType:"openId"
 					}
 				}).then(res=>{
-					const resFormat = res
+					const resFormat = res;
 					// 获取信息存储到全局
 					this.$store.dispatch('actionTrigger',{
 						key:'cityId',value:resFormat['cityId'] || '',
@@ -279,6 +279,9 @@
 					})
 					this.$store.dispatch('actionTrigger',{
 						key:'loginName',value:resFormat['loginName'] || '',
+					})
+					this.$store.dispatch('actionTrigger',{
+						key:'sessionID',value:resFormat['sessionID'] || '',
 					})
 					// 获取轮播图等信息
 					this.getHomeBannerData()
