@@ -19,16 +19,26 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'//引入mapState
+	
 	export default {
+		onLoad(option) {
+			if (Object.keys(option).length > 0) {
+				const navigateParams = JSON.parse(decodeURIComponent(option.param));
+				this.orderId = navigateParams;
+				console.log("navigateParams:"+navigateParams);
+			}
+		},
 		data() {
 			return {
-
+				orderId:{},
+				fanganlist:[]
 			}
 		},
 		methods: {
 			navigateDetail(){
 				uni.navigateTo({
-					url:'../orderDetial/orderDetial'
+					url:'../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(this.orderId))
 				})
 			}
 		}
@@ -52,7 +62,8 @@
 		text-align: center;
 	}
 	button{
-		color: #04D4C6;
+		color: #FFFFFF;
+		background-color: #04D4C6 !important;
 	}
 	
 	.order-success-icon{

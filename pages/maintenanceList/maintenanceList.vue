@@ -52,11 +52,20 @@
 				</view>
 			</scroll-view>
 		</view>
-		<view style="position: fixed;buttom:0;width: 100%;">
-			<view style="display: flex;align-items: center;">
-				<button @click="navigateOrderSuccess" style="background-color: #04D4C6">预约下单</button>
+		
+		<view class="btn-bottom">
+		<view class="round-left" >
+			<view style="color: #FFFFFF;"> 预估费用： 199
+				<text class="margin-left" style=" text-decoration: line-through">3999</text> 
+			</view>
+			<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
+		</view>
+			
+			<view class="round-right">
+				<button class="cu-btn  block lg submit-button" @click="navigateOrderSuccess"><text></text>预约下单</button>
 			</view>
 		</view>
+	
 	</view>
 </template>
 
@@ -130,7 +139,7 @@ import { mapState } from 'vuex'//引入mapState
 				for (let good of this.maintenanceList) {
 					if(good.selected) selectedFlag = true
 				}
-				// if(this.maintenanceList)
+				
 				if(selectedFlag)
 					uni.navigateTo({
 						url:'../reserve/reserve'
@@ -149,8 +158,7 @@ import { mapState } from 'vuex'//引入mapState
 					});
 			},
 			addShopping(item,status){
-				// this.forkMaintenance = JSON.parse(JSON.stringify(this.maintenanceList));
-				// console.log('status',status)
+				
 				// 判断是否重复 重复的话则删除 下一步再添加
 				this.forkMaintenance = this.judgeRepeat(this.maintenanceList,[
 					{
@@ -158,15 +166,7 @@ import { mapState } from 'vuex'//引入mapState
 						selected:status
 					}
 				],true);
-				// this.forkMaintenance.push({
-				// 	...item,
-				// 	selected:status
-				// })
-				// 同步全局
-				// this.$store.dispatch('shoppingTrigger',{
-				// 	key:'maintenanceList',
-				// 	value:this.judgeRepeat(this.maintenanceList,item)
-				// })
+				console.log('maintasds',this.maintenanceList)
 			},
 			changePhone(){
 				uni.redirectTo({
@@ -428,5 +428,39 @@ import { mapState } from 'vuex'//引入mapState
 
 	.text-price {
 		font-size: 1.1rem;
+	}
+	
+	.btn-bottom {
+		position: fixed;
+		width: 100%;
+		padding-left: 2%;
+		padding-right: 2%;
+		bottom: 30px;
+		text-align: center;
+		display: flex;
+	}
+	
+	.submit-button{
+		color: #FFFFFF;
+		background-color: #04D4C6 !important;
+		margin-top: 1px;
+		margin-right: 12px;
+	}
+	
+	.round-left {
+		width: 60%;
+		height: 46px; 
+		border-top-left-radius: 23px;
+		border-bottom-left-radius: 23px;
+		background-color: #000000;
+		text-align: right;
+	}
+	
+	.round-right {
+		width: 40%;
+		height: 46px; 
+		background-color: #04D4C6;
+		border-top-right-radius: 23px;
+		border-bottom-right-radius: 23px;
 	}
 </style>

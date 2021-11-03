@@ -8,18 +8,27 @@
 		<view class="container">
 			<form>
 				<view class="cu-form-group flex-container round-card">
-					<view class="content">
-						<view>取件地址：湖南省长沙市长沙县XXX路XXX写字楼</view>
-						<view>姓名 17600000000</view>
+					<view class="content margin-tb">
+						<!-- {{defaultAddress}} -->
+						<view>{{chooseAddress.label}}:{{chooseAddress.address}}</view>
+						<view>{{name}} {{phone}}</view>
 					</view>
 					<view>
-						<switch class='orange radius' @change="SwitchA" :class="switcha?'checked':''"
-							:checked="switcha?true:false"></switch>
+						<view class="outer round"
+							style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
+							<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'" @click="sentBySelf">
+								<text style="width: 59px;line-height: 34px;">立即送修</text>
+							</view>
+							<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'" @click="getByDelivery">
+								<text style="width: 59px;line-height: 34px;">上门取件</text>
+							</view>
+						</view>
 					</view>
 				</view>
-				
+
 				<view class="cu-form-group round-card">
 					<view class="title">取件时间：</view>
+
 					<picker mode="time" :value="time" start="09:01" end="21:01" @change="TimeChange">
 						<view class="picker">
 							{{time}}
@@ -32,31 +41,48 @@
 						<view class="">
 							<text>维修方案</text>
 						</view>
-						<image src="../../static/first/其他机型@3x.png" class="reverse_1" mode='widthFix'></image>
+						<view style="display:flex;align-items:flex-end">
+							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix'></image>
+							<view>
+								<view class="margin-lr-sm"><text>iPhone12pro max</text></view>
+								<view class="flex">
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">白色</view>
+									</view>
+
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">黑色</view>
+									</view>
+
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">金色</view>
+									</view>
+								</view>
+						</view>
 					</view>
-					<view class="">
-						<view class="">
-							<text>iPhone12pro max</text>
-						</view>
-						<view class="">
-							<!-- <text>颜色</text> -->
-						</view>
-						<button class="cu-btn bg-blue shadow">白色</button>
-						<button class="cu-btn bg-grey shadow">灰色</button>
-						<button class="cu-btn bg-grey shadow">黑色</button>
+				
 					</view>
 				</view>
-				
-				<view class="cu-form-group ">
+
+				<view class="cu-form-group " v-for="(item) in fanganList" :key="item.title">
 					<view class="flex-container">
-						<view>更换屏幕方案1</view>
-						<view class="text_right">188</view>
+						<view>{{item.title}}</view>
+						<view class="text_right">{{item.salePrice}}</view>
 					</view>
 				</view>
-				
+
 				<view class="cu-form-group">
 					<view class="flex-container">
-						<view>上门取件费用1</view>
+						<view>上门取件费用</view>
 						<view class="text_right">20</view>
 					</view>
 				</view>
@@ -64,7 +90,7 @@
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
 						<view>合计</view>
-						<view class="text_right">208</view>
+						<view class="text_right">{{totalSalePrice}}</view>
 					</view>
 				</view>
 
@@ -80,11 +106,12 @@
 
 				<view class="cu-form-group padding-top padding-bottom">
 					<view>
-						<view> 预估费用：2008 2888 </view>
+						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
+								style="text-decoration: line-through">{{totalPrice}}</text> </view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
 					</view>
 					<view>
-						<button @click="navigateOrderDetail" class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
+						<button @click="submitOrder" class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
 					</view>
 				</view>
 			</form>
@@ -93,40 +120,133 @@
 </template>
 
 <script>
+	import {
+		mapState
+	} from 'vuex' //引入mapState
+
 	export default {
 		data() {
 			return {
 				sent: true,
-				address: {
-					neareast: "最近网点：北京市朝阳区三环到四环之间 东三环",
-					receive: "取件地址：北京市朝阳区三环到四环之间 东三环",
-					receiveTime: "取件时间",
-					sentTime: "送修时间",
-					name: "王xx"
+				chooseAddress:{
+					label:"",
+					address:""
 				},
-				switcha: false,
+				phone:"",
+				name:"",
 				time: '12:01',
-				goodsList:[]
+				goodsList: [],
+				fanganList: [],
+				totalPrice: 2199,
+				totalSalePrice: 0,
+				deliveryPrice:20,
+				defaultAddress: {},
+				changeType:true
+				// imageUrl: ''
 			}
 		},
-		onLoad(option){
-				if(Object.keys(option).length > 0){
-					const navigateParams = JSON.parse(decodeURIComponent(option.goods));
-					console.log('navigateParams',navigateParams)
-					this.goodsList = [navigateParams]
-				}
+		onLoad(option) {
+			if (Object.keys(option).length > 0) {
+				const navigateParams = JSON.parse(decodeURIComponent(option.goods));
+				console.log('navigateParams', navigateParams);
+				this.goodsList = [navigateParams];
+			}
+			//从本地获取方案列表和图片url
+			this.fanganList = this.maintenanceList.filter(item => item.selected == true);
+			console.log("fanganList" + JSON.stringify(this.fanganList));
+			// this.imageUrl = this.baseImageUrl;
+			console.log(this.imageUrl);
+			//计算合计
+			let total = 0;
+			for(let item in this.fanganList){
+				total += this.fanganList[item].salePrice;
+			}
+			this.totalSalePrice = total + this.deliveryPrice;
+			//获取默认联系人
+			this.$request({
+				url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
+				methods: 'GET',
+			}).then(res => {
+				this.defaultAddress = res[0] || {};
+				
+				//加载地址，默认选中上门取件
+				this.getByDelivery();
+				console.log(JSON.stringify(res));
+			}).catch(e => {
+				console.log(e)
+			})
 		},
+		computed: mapState({
+			// 从state中拿到数据 
+			maintenanceList: state => state.goods.maintenanceList,
+			baseImageUrl: state => state.user.imageBaseUrl
+		}),
 		methods: {
-			navigateOrderDetail(){
-				uni.navigateTo({
-					url:'../orderSuccess/orderSuccess'
-				})
-			},
-			SwitchA(e) {
-				this.switch = e.detail.value
-			},
 			TimeChange(e) {
 				this.time = e.detail.value
+			},
+			sentBySelf(){
+				this.chooseAddress.label = "最近网点" ;
+				//默认最近网点只有一个固定值，主页已经拿到
+				this.chooseAddress.address = "雨花区xxx街道xxx1号";
+				this.phone = "188888888";
+				this.name = "大名";
+				this.changeType = false;
+			},
+			getByDelivery(){
+				this.chooseAddress.label = "取件地址" ;
+				this.chooseAddress.address = (this.defaultAddress.region||'') + (this.defaultAddress.address || '') + (this.defaultAddress.houseNumber||'') ;
+				this.phone = this.defaultAddress.phone || '';
+				this.name = this.defaultAddress.name || '';
+				this.changeType = true;
+			},
+			submitOrder() {
+				let param_orderParams = {};
+				param_orderParams["receiverId"] = this.defaultAddress.id || ''; //地址id
+				param_orderParams["points"] = 0; //暂时固定 0
+				param_orderParams["balance"] = 0; //暂时固定 0
+				param_orderParams["payType"] = "WeiXin"; //暂时固定 WeiXin
+				param_orderParams["orderType"] = "Order"; //暂时固定 Order
+				param_orderParams["remark"] = "..."; //用户备注
+				param_orderParams["predetermine"] = "2021-10-23 08:00-11:00" //预订上门时间
+				param_orderParams["isForced"] = true; //暂时固定 true
+				//param_orderParams["cityId"] = "" //登录返回的cityId
+				param_orderParams["needPickUp"] = true; //是否上门取件 ，true  是，false  自行送修
+				//获取最近网点和快递费getDeliveryAddressList接口返回的id，目前只有一个
+				param_orderParams["deliveryId"] ="66a88b5cbc434905875ac6c8a3aff86c"; 
+				console.log("param_orderParams:"+JSON.stringify(param_orderParams));
+				
+				let param_goodsList = [];
+				for(let item in this.fanganList){
+					let tempObject = {};
+					tempObject["price"] = this.fanganList[item].salePrice;
+					tempObject["goodsId"] = this.fanganList[item].id;//商品id
+					tempObject["count"] = 1;//暂时固定 1
+					tempObject["quickMemo"] = "红色";//颜色备注， getShopCart接口会返回，做出选择后传入
+					param_goodsList.push(tempObject);
+				}
+				console.log("param_goodsList:"+JSON.stringify(param_goodsList));
+				
+				this.$request({
+					url: '/phoneReparisServer/service/rest/login.orderService/collection/createOrder',
+					methods: 'POST',
+					data:{
+						orderParams: JSON.stringify(param_orderParams),
+						goodsList: JSON.stringify(param_goodsList)
+					}
+				}).then(res => {
+					// console.log("create order success:"+JSON.stringify(res));
+					//跳转到下单成功页面
+					let order = {};
+					order["orderId"] = res[0]["orderId"];
+					console.log("create order success:"+JSON.stringify(res[0]));
+					uni.navigateTo({
+						url: '../orderSuccess/orderSuccess?param='+encodeURIComponent(JSON.stringify(order))
+						// url: '../orderSuccess/orderSucces'
+					})
+				}).catch(e => {
+					console.log(e)
+				})
 			}
 		}
 	}
@@ -156,7 +276,6 @@
 	}
 
 	.reverse_1 {
-		margin-top: 10px;
 		width: 100px;
 	}
 
@@ -181,6 +300,39 @@
 		color: #D9D9D9;
 	}
 
+	.phone-color-border {
+		border: 1px solid #04D4C6;
+		width: 26px;
+		height: 26px;
+	}
+
+	.phone-color {
+		width: 20px;
+		height: 20px;
+		margin: 2px;
+		background-color: #CCE6FF;
+		/* border: 1px solid #04D4C6; */
+	}
+
+	.round-left {
+		border-top-left-radius: 17px;
+		border-bottom-left-radius: 17px;
+		background-color: #FFFFFF;
+		width: 59px;
+		height: 34px;
+		text-align: center;
+	}
+	.round-right {
+		border-top-right-radius: 17px;
+		border-bottom-right-radius: 17px;
+		background-color: #FFFFFF;
+		width: 59px;
+		height: 34px;
+		text-align: center;
+	}
+	.active {
+		background-color: #04D4C6;
+	}
 	button {
 		color: #FFFFFF;
 		background-color: #04D4C6 !important;

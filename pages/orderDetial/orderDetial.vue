@@ -1,25 +1,28 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue">
-			<view slot="backText">返回</view>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<view slot="backText" >返回</view>
 			<view slot="content">订单详情</view>
 		</cu-custom>
 
 		<view class="container">
 			<form>
-				<view class="cu-form-group flex-container round-card">
-					<view class="content">
+				<view class="cu-form-group flex-container padding-tb round-card">
+					<view class="content ">
 						<view>订单编号：{{orderDetail.code}}</view>
 						<view>下单时间：{{orderDetail.createTime}}</view>
 						<view>订单状态：{{NavMap[orderDetail.orderState]}}</view>
 					</view>
 				</view>
 
-				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
+				<view class="cu-item cu-form-group padding-tb round-card">
 					<view class="content">
-						<view>{{orderDetail.needPickup ? '上门信息' : '最近网店'}}</view>
-						<view> {{orderDetail.receiverName || '暂无'}}</view>
-						<view>{{orderDetail.needPickup ? orderDetail.address || '' : orderDetail.deliveryName+' '+orderDetail.deliveryAdress}}</view>
+						<view>{{orderDetail.needPickup==true ? '上门信息' : '最近网点'}}</view>
+						<view>
+							{{orderDetail.needPickup==true? orderDetail.deliveryName||'' : orderDetail.receiverName||''}} 
+							{{orderDetail.needPickup==true? orderDetail.receiverPhone||'' : orderDetail.companyPhone||''}} 
+						</view>
+						<view>{{orderDetail.needPickup==true ? orderDetail.deliveryAdress || '' : orderDetail.address||''}}</view>
 					</view>
 				</view>
 
@@ -32,29 +35,42 @@
 
 
 				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
-					<view class="content">
-						<view class="">
-							<text>维修方案</text>
-						</view>
-						<view style="display: flex;justify-content: center;align-items: center;">
+						<view class="content">
+							<view class="">
+								<text>维修方案</text>
+							</view>
+							<view style="display:flex;align-items:flex-end">
 							<image :src="imageUrl + orderDetail.goodsList[0].pictureId" class="reverse_1" mode='widthFix'></image>
 							<view>
-								<view class="">
-									<text>{{orderDetail.goodsList[0].phoneType}}</text>
-								</view>
-								<view style="display: flex;align-items: center;">
-									<view>颜色：</view>
-									<view class="bg-white solid-bottom">
-										<view class='cu-tag'>{{orderDetail.goodsList[0].quickMemo}}</view>
+								<view class="margin-lr-sm">	<text>{{orderDetail.goodsList[0].phoneType}}</text></view>
+								<view class="flex">
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">白色</view>
+									</view>
+
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">黑色</view>
+									</view>
+
+									<view class="margin-tb-sm margin-left-sm">
+										<view class="round phone-color-border">
+											<view class="round phone-color"></view>
+										</view>
+										<view class="margin-tb-sm">金色</view>
 									</view>
 								</view>
-								
-							</view>
 						</view>
+							</view>
 					</view>
 					
 				</view>
-				<view v-for="(item,index) in orderDetail.goodsList">
+				<view v-for="(item,index) in orderDetail.goodsList" :key="item.title">
 					<view class="cu-form-group ">
 						<view class="flex-container">
 							<view>{{item.title}}</view>
@@ -82,16 +98,18 @@
 <script>
 	import { mapState } from 'vuex'//引入mapState
 	export default {
-		// 这里跳转会穿optionID
+		//
 		onLoad(option) {
-			if(option.id){
+			if (Object.keys(option).length > 0) {
+				const navigateParams = JSON.parse(decodeURIComponent(option.param));
 				this.$request({
 					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
 					methods:'POST',
 					data:{
-						orderId:option.id
+						orderId:navigateParams["orderId"]
 					}
 				}).then(res=>{
+					console.log("orderdetial res" + JSON.stringify(res))
 					this.orderDetail = res
 				}).catch(e=>{
 					console.log(e)
@@ -106,13 +124,6 @@
 				sent: true,
 				orderDetail:{
 					goodsList:[{}]
-				},
-				address: {
-					neareast: "最近网点：北京市朝阳区三环到四环之间 东三环",
-					receive: "取件地址：北京市朝阳区三环到四环之间 东三环",
-					receiveTime: "取件时间",
-					sentTime: "送修时间",
-					name: "王xx"
 				},
 				switcha: false,
 				time: '12:01',
@@ -226,6 +237,20 @@
 		/* background-color: blue; */
 		background-color: #04D4C6;
 		color: #FFFFFF;
+	}
+	
+	.phone-color-border {
+		border: 1px solid #04D4C6;
+		width: 26px;
+		height: 26px;
+	}
+	
+	.phone-color {
+		width: 20px;
+		height: 20px;
+		margin: 2px;
+		background-color: #CCE6FF;
+		/* border: 1px solid #04D4C6; */
 	}
 	
 	button{

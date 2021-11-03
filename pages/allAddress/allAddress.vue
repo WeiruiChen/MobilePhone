@@ -65,6 +65,7 @@
 				})
 			},
 			editAddress(item) {
+				console.log("item"+item);
 				uni.navigateTo({
 					url: '../editAddress/editAddress?param=' + encodeURIComponent(JSON.stringify(item))
 				})
@@ -73,7 +74,7 @@
 				item.isDefault = true;
 				let that = this;
 				uni.showModal({
-					title: '确认',
+					// title: '确认',
 					content: '确认设置默认',
 					success: function(e) {
 						if (e.confirm) {
@@ -112,7 +113,7 @@
 			deleteAddress(item) {
 				let that = this;
 				uni.showModal({
-					title: '确认',
+					// title: '确认',
 					content: '确认删除地址',
 					success: function(e) {
 						if (e.confirm) {

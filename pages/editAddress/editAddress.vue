@@ -11,12 +11,6 @@
 				<view class="cu-form-group round-top-card ">
 					<view class="title">收货人</view>
 					<input placeholder="大名" name="name" v-model="address.name"></input>
-					<!-- <view>
-								<radio class='green radio' :class="radio=='C'?'checked':''" :checked="radio=='C'?true:false" value="C"></radio>
-								<text>先生</text>
-								<radio class='green radio' :class="radio=='D'?'checked':''" :checked="radio=='D'?true:false" value="D"></radio>
-								<text>女士</text>
-							</view> -->
 				</view>
 
 				<view class="cu-form-group ">
@@ -117,7 +111,7 @@
 				}
 				let that = this;
 				uni.showModal({
-					title: '确认',
+					// title: '确认',
 					content: '确认提交地址',
 					success: function(e) {
 						if (e.confirm) {

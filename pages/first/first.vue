@@ -80,7 +80,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="index+'profit'">
+		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="item.fileId">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
@@ -101,9 +101,6 @@
 	import { navBar } from '../navBar/navBar.vue'
 	
 	export default {
-		// components:{
-		// 	navBar
-		// },
 		data() {
 			return {
 				gridCol: 4,
@@ -216,6 +213,7 @@
 					methods:'POST',
 				}).then(res=>{
 					this.cshPhone = res[0].phone
+					// console.log('getDeliveryAddressList:',JSON.stringify(res))
 					this.$store.dispatch('actionTrigger',{
 						key:'gmPhone',
 						value: this.cshPhone
