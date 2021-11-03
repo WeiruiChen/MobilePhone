@@ -80,7 +80,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="index+'profit'">
+		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="item.fileId">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"

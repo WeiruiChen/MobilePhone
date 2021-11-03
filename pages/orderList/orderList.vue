@@ -25,7 +25,7 @@
 								<view>
 									<text>{{item.goodsList[0].phoneType}}</text>
 								</view>
-								<view v-for="(subItem,index) in item.goodsList" :key="index+'good'" >
+								<view v-for="(subItem,index) in item.goodsList" :key="subItem.title" >
 									<text>{{subItem.title}}x{{subItem.count}}</text>
 								</view>
 							</view>
