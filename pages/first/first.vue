@@ -101,9 +101,6 @@
 	import { navBar } from '../navBar/navBar.vue'
 	
 	export default {
-		// components:{
-		// 	navBar
-		// },
 		data() {
 			return {
 				gridCol: 4,
@@ -216,6 +213,7 @@
 					methods:'POST',
 				}).then(res=>{
 					this.cshPhone = res[0].phone
+					// console.log('getDeliveryAddressList:',JSON.stringify(res))
 					this.$store.dispatch('actionTrigger',{
 						key:'gmPhone',
 						value: this.cshPhone

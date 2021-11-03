@@ -7,32 +7,34 @@
 		<view class="container">
 			<scroll-view scroll-x class="nav">
 				<view class="flex text-center">
-					<view class="cu-item flex-sub" :class="item.title==TabCur?'text-nav cur':''" v-for="(item,index) in navList"
-						:key="item.title" @tap="tabSelect" :data-id="item.title">
+					<view class="cu-item flex-sub" :class="item.title==TabCur?'text-nav cur':''"
+						v-for="(item) in navList" :key="item.title" @tap="tabSelect" :data-id="item.title">
 						{{item.title}}
 					</view>
 				</view>
 			</scroll-view>
-            <view v-for="(item,index) in showOrderList">
-				<view :key="item.code" @click="gotoDetail(item.id)" class="cu-item cu-form-group padding-top padding-bottom round-top-card">
+			<view v-for="(item) in showOrderList"  :key="item.code">
+				<view @click="gotoDetail(item.id)"
+					class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
 						<view>
 							<text>订单编号：{{item.code}}</text>
 						</view>
 						<view style="display: flex;justify-content: center;align-items: center;">
-							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'></image>
-							<view >
+							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'>
+							</image>
+							<view>
 								<view>
 									<text>{{item.goodsList[0].phoneType}}</text>
 								</view>
-								<view v-for="(subItem,index) in item.goodsList" :key="subItem.title" >
+								<view v-for="(subItem,index) in item.goodsList" :key="index+'good'">
 									<text>{{subItem.title}}x{{subItem.count}}</text>
 								</view>
 							</view>
 						</view>
-						
+
 					</view>
-					
+
 				</view>
 
 				<view class="cu-form-group round-bottom-card">
@@ -41,92 +43,98 @@
 						<button class="cu-btn round sm">{{item.orderStateName}}</button>
 					</view>
 				</view>
-		</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-import { mapState } from 'vuex'//引入mapState
-const NavMap = {
-		'全部':'ALL',
-		'已下单':'Confirm',
-		'已接单':'Packaged',
-		'已送达':'Shipped',
-		'维修中':'Check',
-		'已取消':'Canceled',
-		'已完成':'Completed'
+	import {
+		mapState
+	} from 'vuex' //引入mapState
+	const NavMap = {
+		'全部': 'ALL',
+		'已下单': 'Confirm',
+		'已接单': 'Packaged',
+		'已送达': 'Shipped',
+		'维修中': 'Check',
+		'已取消': 'Canceled',
+		'已完成': 'Completed'
 	}
-    	export default {
-		onLoad(option){
-			if(Object.keys(option).length>0){
+	export default {
+		onLoad(option) {
+			if (Object.keys(option).length > 0) {
 				console.log(option)
 				this.TabCur = option.title
 			}
-            this.getOrderList()
+			this.getOrderList()
 		},
 		data() {
 			return {
 				TabCur: '全部',
 				scrollLeft: 0,
-                showOrderList:[],
-				navList:[
-					{
-						title:'全部',
+				showOrderList: [],
+				navList: [{
+						title: '全部',
 					},
 					{
-						title:'已下单',
+						title: '已下单',
 					},
 					{
-						title:'已送达',
+						title: '已送达',
 					},
 					{
-						title:'维修中',
+						title: '维修中',
 					},
 					{
-						title:'待验收',
+						title: '待验收',
 					},
 					{
-						title:'待支付',
+						title: '待支付',
 					}
 				]
 			};
 		},
 		computed: mapState({
 			// 从state中拿到数据 
-			imageUrl:state => state.user.imageBaseUrl
+			imageUrl: state => state.user.imageBaseUrl
 		}),
 		methods: {
-            gotoDetail(id){
-				uni.redirectTo({
-					url: '../orderDetial/orderDetial?id='+id
+			gotoDetail(id) {
+				let order={};
+				order["orderId"] = id;
+				uni.navigateTo({
+					url:'../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
 				})
+				// uni.redirectTo({
+				// 	url: '../orderDetial/orderDetial?id=' + id
+				// })
 			},
-			getOrderList(type='ALL'){
+			getOrderList(type = 'ALL') {
 				this.$request({
-					url:'/phoneReparisServer/service/rest/login.orderService/collection/getPagingOrder',
-					methods:'POST',
-					data:{
-						rows:999,
-						page:1,
-						status:type
+					url: '/phoneReparisServer/service/rest/login.orderService/collection/getPagingOrder',
+					methods: 'POST',
+					data: {
+						rows: 999,
+						page: 1,
+						status: type
 					}
-				}).then(res=>{
+				}).then(res => {
 					this.showOrderList = res
 					console.log(res)
-				}).catch(e=>{
+				}).catch(e => {
 					console.log('e')
 				})
 			},
-			backToMine(){
+			backToMine() {
 				uni.navigateTo({
-					url:'../mine/mine'
+					url: '../mine/mine'
 				})
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id;
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-                this.getOrderList(NavMap[this.TabCur])
+				this.getOrderList(NavMap[this.TabCur])
 			}
 		}
 	}
