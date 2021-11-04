@@ -17,19 +17,13 @@
 
 				<view class="cu-item cu-form-group padding-tb round-card">
 					<view class="content">
-						<view>{{orderDetail.needPickup==true ? '上门信息' : '最近网点'}}</view>
+						<view>{{orderDetail.needPickup==true?'上门信息':'最近网点'}}</view>
 						<view>
-							{{orderDetail.needPickup==true? orderDetail.deliveryName||'' : orderDetail.receiverName||''}} 
-							{{orderDetail.needPickup==true? orderDetail.receiverPhone||'' : orderDetail.companyPhone||''}} 
+							{{orderDetail.needPickUp==true?orderDetail.deliveryName||'':orderDetail.receiverName||''}} 
+							{{orderDetail.needPickUp==true?orderDetail.receiverPhone||'':orderDetail.companyPhone||''}} 
 						</view>
-						<view>{{orderDetail.needPickup==true ? orderDetail.deliveryAdress || '' : orderDetail.address||''}}</view>
-					</view>
-				</view>
-
-				<view class="cu-form-group round-bottom-card"  v-if="orderDetail.needPickup">
-					<view class="content">
-						<view>上门时间</view>
-						<view>{{orderDetail.appointmentTime}}</view>
+						<view>{{orderDetail.needPickUp==true?orderDetail.deliveryAdress||'':orderDetail.address||''}}</view>
+						<view v-if="orderDetail.needPickUp">上门时间： {{orderDetail.appointmentTime}}</view>
 					</view>
 				</view>
 
@@ -255,6 +249,7 @@
 	
 	button{
 		color: #04D4C6;
+		background-color: #04D4C6 !important;
 	}
 	.cancle {
 		margin-top: 60px;

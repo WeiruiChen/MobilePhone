@@ -21,7 +21,7 @@
 		
 		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
-				<image style="width: 50rpx;height: 50rpx;" src="@/static/first/限时优惠icon@3x.png"></image>
+				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">限时优惠</text>
 			</view>
 		</view>
@@ -39,19 +39,18 @@
 								</view>
 							</view>
 							<view style="position: relative;">
-								<image src="../../static/first/立即抢购@3x.png" style="width: 60rpx;height: 100%;"></image>
+								<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
 								<view style="position: absolute;top: 30rpx;left: 10rpx;color: #FFFFFF;font-weight: 700;font-size: 35rpx;">立即抢购</view>
 							</view>
 						</view>
 						
 					</view>
-					
 			</view>
 		</scroll-view>
 		
 		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
-				<image style="width: 50rpx;height: 50rpx;" src="@/static/first/服务流程icon@3x.png"></image>
+				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">服务流程</text>
 			</view>
 		</view>
@@ -75,7 +74,8 @@
 		
 		<view class="cu-bar" style="margin-top: 20rpx;">
 			<view class="action">
-				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/服务优势icon@3x.png"></image>
+				<!-- src="../../static/first/服务优势icon@3x.png" -->
+				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
 				<text style="margin-left: 10rpx;font-weight: 900;">服务优势</text>
 			</view>
 		</view>

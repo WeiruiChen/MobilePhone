@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
-			<view slot="backText" @click="backToMine">返回</view>
+		<cu-custom  bgColor="bg-gradual-blue" :isBack="true">
+			<view slot="backText">返回</view>
 			<view slot="content">我的订单</view>
 		</cu-custom>
 		<view class="container">
