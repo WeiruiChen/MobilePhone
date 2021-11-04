@@ -54,8 +54,8 @@
 				</view>
 
 				<view class="cu-form-group round-bottom-card flex-container icon-color">
-					<checkbox v-model="address.isDefault" class='round' :class="checkbox.checked?'checked':''"
-						:value="checkbox.checked?true:false"></checkbox>
+					<checkbox class='round' :data-value="address.isDefault" :class="address.isDefault?'checked':''"
+						@click="checkHaddler"></checkbox>
 					<text>设为默认</text>
 				</view>
 
@@ -73,12 +73,14 @@
 		data() {
 			return {
 				region: ['广东省', '广州市', '海珠区'],
-				address: {},
-				isedit:false,
-				checkbox: {
-					checked: true,
-					value: '1'
+				address: {
+					isDefault:false
 				},
+				isedit:false,
+				// checkbox: {
+				// 	checked: true,
+				// 	value: '1'
+				// },
 				radio: 'A'
 			}
 		},
@@ -95,14 +97,17 @@
 			RegionChange(e) {
 				this.region = e.detail.value
 			},
+			checkHaddler(e){
+				console.log(e.target.dataset)
+				this.address.isDefault = !e.target.dataset.value
+				// this.address.isDefault = event.de
+			},
 			addNewAddress() {
 				this.address.region = this.region;
 				this.address.label = '学校';
 				this.address.isDefault = false;
 				// this.address.cityId='16d7615a4332c473f9dc0b1be46b717d0'
 				console.log(JSON.stringify(this.address));
-	
-				
 				//新增
 				let url = '/phoneReparisServer/service/rest/login.customer.addressService/collection/addAddress'
 				//编辑
