@@ -26,9 +26,8 @@
 				</view>
 			</scroll-view>
 
-			<scroll-view class="VerticalMain bg-white" scroll-y scroll-with-animation
-				style="height:calc(100vh - 375upx)" :scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-				<view v-for="(item,indexs) in deviceList" :key="indexs">
+			<scroll-view  class="VerticalMain bg-white" scroll-y>
+				<view v-if="flag" v-for="(item,indexs) in deviceList" :key="indexs">
 					<view class="text-center margin">
 						<text>——{{item.groupName}}—-</text>
 					</view>
@@ -62,7 +61,9 @@
 				FirstMenu: [],
 				deviceList: [],
 				oneMeneText: '手机',
-				twoMeneText: '苹果'
+				twoMeneText: '苹果',
+				// 加载闪屏
+				flag:true
 			};
 		},
 		computed: mapState({
@@ -95,6 +96,7 @@
 				title: '加载中...',
 				mask: true
 			});
+			this.flag = false
 			this.$request({
 				url: '/phoneReparisServer/service/rest/login.customerService/collection/getCategoryOne',
 				methods: 'POST'
@@ -103,6 +105,7 @@
 				this.getSecondMenu(this.FirstMenu.filter(item =>
 					item.text === this.oneMeneText
 				)[0].id)
+				this.flag = true
 			}).catch(e => {
 				console.log('getCategoryOne', e)
 			})

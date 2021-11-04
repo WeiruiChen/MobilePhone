@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/first/first",
+    "pages/maintenanceList/maintenanceList",
+    "pages/orderList/orderList",
+    "pages/phoneModel/phoneModel",
+    "pages/orderSuccess/orderSuccess",
+    "pages/editAddress/editAddress",
+    "pages/allAddress/allAddress",
+    "pages/reserve/reserve",
+    "pages/orderDetial/orderDetial",
+    "pages/mine/mine"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarBackgroundColor": "#0081ff",
+    "navigationBarTitleText": "ColorUi for UniApp",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white"
+  },
+  "usingComponents": {
+    "nab-bar": "/pages/navBar/navBar",
+    "cu-custom": "/colorui/components/cu-custom"
+  },
+  "sitemapLocation": "sitemap.json"
+}

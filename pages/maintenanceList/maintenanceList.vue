@@ -54,11 +54,21 @@
 		</view>
 		
 		<view class="btn-bottom">
+			
 		<view class="round-left" >
-			<view style="color: #FFFFFF;"> 预估费用： 199
-				<text class="margin-left" style=" text-decoration: line-through">3999</text> 
+			<!-- <view></view> -->
+			<view style="display: flex;justify-content: space-between;">
+				<view style="position: relative;z-index: 999;">
+					<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">{{selectedCount}}</view>
+					<image style="width: 50rpx;height: 50rpx;" :src="imageIcon"></image>
+				</view>
+				<view style="flex-direction: column;">
+					<view style="color: #FFFFFF;"> 预估费用： 199
+						<text class="margin-left" style=" text-decoration: line-through">3999</text> 
+					</view>
+					<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
+				</view>
 			</view>
-			<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
 		</view>
 			
 			<view class="round-right">
@@ -75,6 +85,7 @@ import { mapState } from 'vuex'//引入mapState
 		data() {
 			return {
 				list: [],
+				imageIcon: require("@/static/mine/已下单@3x.png"),
 				tabCur: 0,
 				mainCur: 0,
 				verticalNavTop: 0,
@@ -94,14 +105,7 @@ import { mapState } from 'vuex'//引入mapState
 			console.log('option',option)
 			if(Object.keys(option).length > 0){
 				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
-				navigateParams['title'] = option.title
-				console.log('navigateParams',navigateParams)
-				console.log('navigateParams',navigateParams)
-				console.log('navigateParams',navigateParams)
-				console.log('navigateParams',navigateParams)
-				console.log('navigateParams',navigateParams)
-				console.log('navigateParams',navigateParams)
-				
+				navigateParams['title'] = option.title		
 				this.phone = navigateParams
 			}
 			uni.showLoading({
@@ -131,6 +135,9 @@ import { mapState } from 'vuex'//引入mapState
 		computed: mapState({
 			// 从state中拿到数据 
 			maintenanceList: state => state.goods.maintenanceList,
+			selectedCount(){
+				return this.maintenanceList.filter(item=>item.selected === true).length;
+			}
 		}),
 		methods: {
 			navigateOrderSuccess(){
@@ -452,7 +459,7 @@ import { mapState } from 'vuex'//引入mapState
 		height: 46px; 
 		border-top-left-radius: 23px;
 		border-bottom-left-radius: 23px;
-		background-color: #000000;
+		background-color: #002B38;
 		text-align: right;
 	}
 	

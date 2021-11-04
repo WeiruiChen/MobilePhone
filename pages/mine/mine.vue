@@ -25,7 +25,7 @@
 						<view style="display: flex;margin: 0rpx 0 0 16rpx;margin-top: 20rpx;"
 							@click="navigateToOrderList(item.name)">
 							<view style="position: relative;">
-								<view class='cu-tag badge'></view>
+								<view v-if="typeCount[item.type]" class='cu-tag badge' style="font-size:20rpx;z-index:999">{{typeCount[item.type]}}</view>
 								<image style="width: 50rpx;height: 50rpx;" :src="item.cuIcon"></image>
 							</view>
 						</view>
@@ -66,23 +66,55 @@
 		mapState
 	} from 'vuex' //引入mapState
 	export default {
+		onLoad(){
+			// 获取全部订单信息
+			this.$request({
+				url:'/phoneReparisServer/service/rest/login.orderService/collection/getPagingOrder',
+				methods:'POST',
+				data:{
+					row:999,
+					page:1,
+					status:'ALL'
+				}
+			}).then(res=>{
+				console.log(JSON.stringify(res));
+				if(res.length >0){
+					for (const order of res) {
+						this.typeCount[order.orderState] ?  this.typeCount[order.orderState] += 1 : this.typeCount[order.orderState] = 1
+					}
+				}
+				// console.log(JSON.stringify(this.typeCount))
+			}).catch(e=>{
+				console.log(e)
+			})
+		},
 		data() {
 			return {
+				typeCount:{
+					New:null,
+					Confirm:null,
+					Packaged:null,
+					Check:null
+				},
 				optionList: [{
 						cuIcon: require("@/static/mine/已下单@3x.png"),
-						name: "已下单"
+						name: "已下单",
+						type:"New"
 					},
 					{
 						cuIcon: require("@/static/mine/已送达@3x.png"),
-						name: "已送达"
+						name: "已送达",
+						type:"Confirm"
 					},
 					{
 						cuIcon: require("@/static/mine/维修中@3x.png"),
-						name: "维修中"
+						name: "维修中",
+						type:"Packaged"
 					},
 					{
 						cuIcon: require("@/static/mine/待验收@3x.png"),
-						name: "待验收"
+						name: "待验收",
+						type:"Check"
 					},
 					{
 						cuIcon: require("@/static/mine/待支付@3x.png"),

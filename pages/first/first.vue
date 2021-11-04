@@ -19,65 +19,69 @@
 			</view>
 		</view>
 		
-		<view class="cu-bar" style="margin-top: 20rpx;">
-			<view class="action">
-				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
-				<text style="margin-left: 10rpx;font-weight: 900;">限时优惠</text>
-			</view>
-		</view>
-		
-		<scroll-view scroll-x scroll-with-animation >
-			<view class="cu-card" style="display: inline-flex;">
-					<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
-						<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
-							<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
-								<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
-								<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
-								<view style="display: inline-flex;align-items: center;">
-									<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
-									<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
-								</view>
-							</view>
-							<view style="position: relative;">
-								<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
-								<view style="position: absolute;top: 30rpx;left: 10rpx;color: #FFFFFF;font-weight: 700;font-size: 35rpx;">立即抢购</view>
-							</view>
-						</view>
-						
-					</view>
-			</view>
-		</scroll-view>
-		
-		<view class="cu-bar" style="margin-top: 20rpx;">
-			<view class="action">
-				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
-				<text style="margin-left: 10rpx;font-weight: 900;">服务流程</text>
-			</view>
-		</view>
-		
-		<view class="cu-card">
-			<view class="cu-item shadow">
-				<view class="content" style="display: flex;justify-content: space-around;margin: 15rpx;">
-					<view v-for="(item,index) in preferentialList" :key="index">
-						<view style="display: flex;margin: 0rpx 0 0 28rpx;">
-							<image style="width: 50rpx;height: 50rpx;" :src="item.cuIcon"></image>
-							<view style="display: absolute;">
-								<image v-if="index <4" style="left: 15rpx;top:5rpx;width: 50rpx;height: 10rpx;" src="../../static/first/线@3x.png"></image>
-							</view>
-						</view>
-						<view style="font-weight: bold;">{{item.name}}</view>
-					</view>
-
+		<view v-show="">
+			
+			<view class="cu-bar" style="margin-top: 20rpx;">
+				<view class="action">
+					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
+					<text style="margin-left: 10rpx;font-weight: 900;">限时优惠</text>
 				</view>
 			</view>
-		</view>
 		
-		<view class="cu-bar" style="margin-top: 20rpx;">
-			<view class="action">
-				<!-- src="../../static/first/服务优势icon@3x.png" -->
-				<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
-				<text style="margin-left: 10rpx;font-weight: 900;">服务优势</text>
+			<scroll-view scroll-x scroll-with-animation >
+				<view class="cu-card" style="display: inline-flex;">
+						<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
+							<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
+								<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
+									<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
+									<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
+									<view style="display: inline-flex;align-items: center;">
+										<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
+										<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
+									</view>
+								</view>
+								<view style="position: relative;">
+									<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
+									<view style="position: absolute;top: 30rpx;left: 10rpx;color: #FFFFFF;font-weight: 700;font-size: 35rpx;">立即抢购</view>
+								</view>
+							</view>
+							
+						</view>
+				</view>
+			</scroll-view>
+			
+			<view class="cu-bar" style="margin-top: 20rpx;">
+				<view class="action">
+					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
+					<text style="margin-left: 10rpx;font-weight: 900;">服务流程</text>
+				</view>
 			</view>
+		
+			<view class="cu-card">
+				<view class="cu-item shadow">
+					<view class="content" style="display: flex;justify-content: space-around;margin: 15rpx;">
+						<view v-for="(item,index) in preferentialList" :key="index">
+							<view style="display: flex;margin: 0rpx 0 0 28rpx;">
+								<image style="width: 50rpx;height: 50rpx;" :src="item.cuIcon"></image>
+								<view style="display: absolute;">
+									<image v-if="index <4" style="left: 15rpx;top:5rpx;width: 50rpx;height: 10rpx;" src="../../static/first/线@3x.png"></image>
+								</view>
+							</view>
+							<view style="font-weight: bold;">{{item.name}}</view>
+						</view>
+
+					</view>
+				</view>
+			</view>
+		
+			<view class="cu-bar" style="margin-top: 20rpx;">
+				<view class="action">
+					<!-- src="../../static/first/服务优势icon@3x.png" -->
+					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
+					<text style="margin-left: 10rpx;font-weight: 900;">服务优势</text>
+				</view>
+			</view>
+			
 		</view>
 		
 		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="item.fileId">
@@ -140,7 +144,9 @@
 				serviceProfitList:[],
 				// 手机选项
 				cuIconList: [{
-				}]
+				}],
+				// 静态图等资源加载完后再限时
+				showStatic:false
 			}
 		},
 		computed: mapState({
@@ -223,6 +229,7 @@
 				})
 			},
 			getHomeBannerData(){
+				this.showStatic = false
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.homeService/collection/getHomeBanner',
 					methods:'POST',
@@ -244,6 +251,7 @@
 							this.serviceProfitList = data.itemList
 						}
 					}
+					this.showStatic = true
 					// console.log('resre',res)
 				}).catch(e=>{
 					console.log('getHomeBanner',e)
