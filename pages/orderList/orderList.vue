@@ -21,7 +21,7 @@
 							<text>订单编号：{{item.code}}</text>
 						</view>
 						<view style="display: flex;justify-content: center;align-items: center;">
-							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'>
+							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix' style="height: auto;">
 							</image>
 							<view>
 								<view>

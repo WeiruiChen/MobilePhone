@@ -55,16 +55,16 @@
 		
 		<view class="btn-bottom">
 			
-		<view class="round-left" >
+		<view class="round-left" style="position:sticky;bottom:0">
 			<!-- <view></view> -->
 			<view style="display: flex;justify-content: space-between;">
 				<view style="position: relative;z-index: 999;">
 					<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">{{selectedCount}}</view>
-					<image style="width: 50rpx;height: 50rpx;" :src="imageIcon"></image>
+					<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
 				</view>
 				<view style="flex-direction: column;">
-					<view style="color: #FFFFFF;"> 预估费用： 199
-						<text class="margin-left" style=" text-decoration: line-through">3999</text> 
+					<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
+						<text class="margin-left" style=" text-decoration: line-through">{{totalPrice}}</text> 
 					</view>
 					<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
 				</view>
@@ -85,7 +85,7 @@ import { mapState } from 'vuex'//引入mapState
 		data() {
 			return {
 				list: [],
-				imageIcon: require("@/static/mine/已下单@3x.png"),
+				imageIcon: require("@/static/images/shopcart.png"),
 				tabCur: 0,
 				mainCur: 0,
 				verticalNavTop: 0,
@@ -137,6 +137,22 @@ import { mapState } from 'vuex'//引入mapState
 			maintenanceList: state => state.goods.maintenanceList,
 			selectedCount(){
 				return this.maintenanceList.filter(item=>item.selected === true).length;
+			},
+			totalPrice(){
+				let list = this.maintenanceList.filter(item=>item.selected === true);
+				let total = 0
+				for(let item in list){
+					total += list[item].price;
+				}
+				return total;
+			},
+			totalSalePrice(){
+				let list = this.maintenanceList.filter(item=>item.selected === true);
+				let totalSale = 0;
+				for(let item in list){
+					totalSale += list[item].salePrice;
+				}
+				return totalSale;
 			}
 		}),
 		methods: {
@@ -379,7 +395,10 @@ import { mapState } from 'vuex'//引入mapState
 	}
 
 	.category-two {
-		font-size: 20rpx;
+		font-size: 0.9rem;
+	}
+	.text-title{
+		font-size: 0.9rem;
 	}
 
 	.category-three {}
@@ -460,7 +479,7 @@ import { mapState } from 'vuex'//引入mapState
 		border-top-left-radius: 23px;
 		border-bottom-left-radius: 23px;
 		background-color: #002B38;
-		text-align: right;
+		text-align: left;
 	}
 	
 	.round-right {

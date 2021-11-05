@@ -2633,7 +2633,7 @@ swiper.round-dot .uni-swiper-dot.uni-swiper-dot-active {
 
 .tower-swiper .tower-item {
 	position: absolute;
-	width: 300upx;
+	width: 100%!important;
 	height: 380upx;
 	top: 0;
 	bottom: 0;

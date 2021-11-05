@@ -9,9 +9,9 @@
 			<form>
 				<view class="cu-form-group flex-container padding-tb round-card">
 					<view class="content ">
-						<view>订单编号：{{orderDetail.code}}</view>
-						<view>下单时间：{{orderDetail.createTime}}</view>
-						<view>订单状态：{{NavMap[orderDetail.orderState]}}</view>
+						<view>订单编号：{{orderDetail.code||''}}</view>
+						<view>下单时间：{{orderDetail.createTime||''}}</view>
+						<view>订单状态：{{NavMap[orderDetail.orderState||'']}}</view>
 					</view>
 				</view>
 
@@ -34,7 +34,7 @@
 								<text>维修方案</text>
 							</view>
 							<view style="display:flex;align-items:flex-end">
-							<image :src="imageUrl + orderDetail.goodsList[0].pictureId" class="reverse_1" mode='widthFix'></image>
+							<image :src="imageUrl + orderDetail.goodsList[0].pictureId" class="reverse_1" mode='widthFix' style="height: auto;"></image>
 							<view>
 								<view class="margin-lr-sm">	<text>{{orderDetail.goodsList[0].phoneType}}</text></view>
 								<view class="flex">
@@ -68,7 +68,7 @@
 					<view class="cu-form-group ">
 						<view class="flex-container">
 							<view>{{item.title}}</view>
-							<view class="text_right">{{item.price}}</view>
+							<view class="text_right">{{item.salePrice}}</view>
 						</view>
 					</view>
 				</view>
@@ -122,6 +122,7 @@
 				switcha: false,
 				time: '12:01',
 				NavMap : {
+					'New':'新订单',
 					'ALL':'全部',
 					'Confirm':'已下单',
 					'Packaged':'已接单',
@@ -153,14 +154,10 @@
 									orderId:that.orderDetail.id
 								}
 							}).then(res => {
-								console.log("setDefaultAddress:"+JSON.stringify(res));
+								console.log("deleteOrder:"+JSON.stringify(res));
 								
 							}).catch(e => {
-								console.log('setDefaultAddress', e)
-								uni.showToast({
-								    title: "删除失败",
-								    icon: "none"
-								})
+								console.log('deleteOrder', e)
 							})
 							uni.redirectTo({
 								url:'../orderList/orderList'

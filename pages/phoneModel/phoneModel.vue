@@ -29,12 +29,12 @@
 			<scroll-view  class="VerticalMain bg-white" scroll-y>
 				<view v-if="flag" v-for="(item,indexs) in deviceList" :key="indexs">
 					<view class="text-center margin">
-						<text>——{{item.groupName}}—-</text>
+						<text>——{{item.groupName}}——</text>
 					</view>
 					<view class="grid margin-bottom text-center col-3">
 						<view class="padding-sm" v-for="(item,indexs) in item.goodsList" :key="indexs"
 							@click="fixPhone(item)">
-							<image :src="imageUrl+item.pictureId" mode="widthFix"></image>
+							<image :src="imageUrl+item.pictureId" mode="widthFix" style="height: auto;"></image>
 							<view class="text-sm"><text>{{item.name}}</text></view>
 						</view>
 					</view>

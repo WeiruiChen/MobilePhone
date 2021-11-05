@@ -18,11 +18,13 @@
 					<view class="cu-form-group round-bottom-card">
 						<view class="flex-container icon-color">
 							<view>
-								<text class="cuIcon-round" @click="setDefaultAddress(item)">设为默认</text>
+								<text class="cuIcon-round" @click="setDefaultAddress(item)" v-if="!item.isDefault">设为默认</text>
+								<!-- <text class="l"  v-if="item.isDefault">默认地址</text> -->
+								<view class='cu-tag round' v-if="item.isDefault">默认地址</view>
 							</view>
 							<view>
 								<text class="cuIcon-edit margin-right" @click="editAddress(item)">编辑</text>
-								<text class="cuIcon-delete" @click="deleteAddress(item)">删除</text>
+								<text class="cuIcon-delete" @click="deleteAddress(item)" v-if="!item.isDefault">删除</text>
 							</view>
 						</view>
 					</view>
@@ -53,8 +55,13 @@
 					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
 					methods: 'GET',
 				}).then(res => {
+					
+					this.addressList = res;
+					this.addressList.sort((a,b)=>{
+					    if(a.isDefault===b.isDefault) return 0
+					    return a.isDefault ? -1 : 1
+					})
 					console.log("addressList:"+JSON.stringify(res));
-					this.addressList = res
 				}).catch(e => {
 					console.log('addressList', e)
 				})
@@ -84,20 +91,19 @@
 								data:item
 							}).then(res => {
 								console.log("setDefaultAddress:"+JSON.stringify(res));
-								
+								uni.redirectTo({
+									url:'../allAddress/allAddress'
+								})
+								uni.showToast({
+								    title: "设置成功",
+								    icon: "none"
+								})
 							}).catch(e => {
 								console.log('setDefaultAddress', e)
 								uni.showToast({
 								    title: "设置失败",
 								    icon: "none"
 								})
-							})
-							uni.redirectTo({
-								url:'../allAddress/allAddress'
-							})
-							uni.showToast({
-							    title: "设置成功",
-							    icon: "none"
 							})
 						} else if (e.cancel) {
 							uni.showToast({

@@ -74,7 +74,7 @@
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image src="../../static/show/服务优势图1@3x.png"
-					 mode="widthFix"></image>
+					 mode="widthFix" style="height: auto;"></image>
 				</view>
 					<view style="display:flex;align-items: center;justify-content: center;">
 					</view>

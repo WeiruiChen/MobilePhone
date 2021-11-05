@@ -105,8 +105,7 @@
 			addNewAddress() {
 				this.address.region = this.region;
 				this.address.label = '学校';
-				this.address.isDefault = false;
-				// this.address.cityId='16d7615a4332c473f9dc0b1be46b717d0'
+				
 				console.log(JSON.stringify(this.address));
 				//新增
 				let url = '/phoneReparisServer/service/rest/login.customer.addressService/collection/addAddress'

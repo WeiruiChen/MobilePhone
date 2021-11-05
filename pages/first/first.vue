@@ -2,15 +2,23 @@
 	<view style="position: relative;">
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		
-		<swiper class="card-swiper"  :circular="true"
+		<swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
 		 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
-		 indicator-active-color="#0081ff">
-			<swiper-item v-for="(item,index) in swiperList" :key="index" :class="cardCur==index?'cur':''">
+		 indicator-active-color="#04D4C6">
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="width:100%!important" :class="cardCur==index?'cur':''">
 				<view class="swiper-item" @click="onClickHandler(item)">
 					<image :src="imageUrl+item.fileId" mode="aspectFill" ></image>
 				</view>
 			</swiper-item>
 		</swiper>
+
+		<!-- <swiper class="screen-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+		 :autoplay="true" interval="5000" duration="500">
+			<swiper-item v-for="(item,index) in swiperList" :key="index">
+				<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
+				<video :src="item.url" autoplay loop muted :show-play-btn="false" :controls="false" objectFit="cover" v-if="item.type=='video'"></video>
+			</swiper-item>
+		</swiper> -->
 		
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index<gridCol*2">
@@ -19,7 +27,7 @@
 			</view>
 		</view>
 		
-		<view v-show="">
+		<view v-show="showStatic">
 			
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
@@ -88,11 +96,11 @@
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
-					 mode="widthFix"></image>
+					 mode="widthFix" style="height: auto;"></image>
 				</view>
 			</view>
 		</view>
-		<view style="display:flex;align-items: center;justify-content: center;">
+		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;">
 			<text style="text-align: center;">24小时客服电话:{{cshPhone}}</text>
 		</view>
 		<view style="height: 100rpx;"></view>
