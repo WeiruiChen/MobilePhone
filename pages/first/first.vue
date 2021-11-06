@@ -170,13 +170,14 @@
 			// 从state中拿到数据 
 			loginName: state => state.user.loginName,
 			cityId: state => state.user.cityId,
-			imageUrl:state => state.user.imageBaseUrl
+			imageUrl:state => state.user.imageBaseUrl,
+			openId:state => state.user.openId
 		}),
 		onLoad(){
 			// 获取微信用户信息
 			// console.log('login')
-			// this.wxLogin()
-			this.getUserData()
+			this.wxLogin()
+			// this.getUserData()
 		},
 		methods: {
 			// 微信登陆
@@ -199,11 +200,11 @@
 									}
 								}).then(res=>{
 									console.log('openiddrequest',res)
-									this.$store.dispatch('actionTrigger',{
+									that.$store.dispatch('actionTrigger',{
 										key:'openId',value:res['openId'] || '',
 									})
 									// 获取用户登陆信息
-									this.getUserData()
+									that.getUserData()
 								}).catch(err=>{
 									console.log('err',err)
 								})
@@ -214,12 +215,12 @@
 							provider: 'weixin',
 							success: function (infoRes) {
 								// console.log('用户昵称为：' + JSON.stringify(infoRes));
-								// console.log('loginName' + infoRes.userInfo.loginName);
-								// console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
-									this.$store.dispatch('actionTrigger',{
+								console.log('loginName' + infoRes.userInfo.loginName);
+								console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
+									that.$store.dispatch('actionTrigger',{
 										key:'loginName',value:infoRes.userInfo.nickName || '',
 									})
-									this.$store.dispatch('actionTrigger',{
+									that.$store.dispatch('actionTrigger',{
 										key:'avatarUrl',value:infoRes.userInfo.avatarUrl || '',
 									})
 							}
@@ -332,7 +333,7 @@
 					url:'/phoneReparisServer/service/rest/nologin.customer.login/collection/login',
 					methods:'POST',
 					data:{
-						openId:'opfA81LO4KG84eBUeulJ0WmvK198',
+						openId:this.openId,
 						loginType:"openId"
 					}
 				}).then(res=>{
