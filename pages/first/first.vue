@@ -174,9 +174,9 @@
 		}),
 		onLoad(){
 			// 获取微信用户信息
-			console.log('login')
+			// console.log('login')
 			// this.wxLogin()
-				this.getUserData()
+			this.getUserData()
 		},
 		methods: {
 			// 微信登陆

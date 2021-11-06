@@ -32,7 +32,7 @@
 
 			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-				<view class="padding-top padding-lr" v-for="(item,index) in forkMaintenance" :key="index" :id="'main-'+index">
+				<view v-if="showNull" class="padding-top padding-lr" v-for="(item,index) in forkMaintenance" :key="index" :id="'main-'+index">
 					<form>
 						<view class="cu-form-group padding margin-bottom-sm round-card">
 							<view style="width: 100%;">
@@ -52,6 +52,12 @@
 						</view>
 
 					</form>
+				</view>
+				<view v-else class="padding margin-bottom-sm round-card">
+					<view style="display:flex;flex-direction:column;align-items:center">
+						<image style="width:100%;"  src="../../static/maintenance/null.png"></image>
+					<view style="color:#D9D9D9">暂无数据</view>
+					</view>
 				</view>
 			</scroll-view>
 		</view>
@@ -100,7 +106,8 @@ import { mapState } from 'vuex'//引入mapState
 				goodsList:[
 				],
 				currentGoodId:'',
-				forkMaintenance:[]
+				forkMaintenance:[],
+				showNull:false
 			};
 		},
 		onLoad(option) {
@@ -291,6 +298,10 @@ import { mapState } from 'vuex'//引入mapState
 					}
 				}).then(res=>{
 					// mockshuju
+					if(res.length === 0){
+						this.showNull = true;
+						return;
+					}
 					// const mockData = {"message":"成功","totalCount":7,"page":1,"pageSize":20,"data":"[{\"id\":\"2ca6245c588640b4a0e7748a282d84af\",\"createTime\":\"2021-10-27 20:14:50\",\"subTitle\":\"摄像头问题\",\"title\":\"摄像头问题\",\"price\":100,\"description\":\"<strong>保修一年<\\/strong>\",\"salePrice\":80,\"code\":\"00006140\",\"pictureId\":\"70e94e91c1e343529f6e3129a95d1fdf\"}]","javaClass":"com.caomei.xinxikeji.util.ResultInfo","code":0,"totalPage":1}
 					this.goodsList = res
 					// console.log('LOAD.....this.goodsListthis.goodsList',this.goodsList);
