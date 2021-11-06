@@ -33,30 +33,19 @@
 							<view class="">
 								<text>维修方案</text>
 							</view>
-							<view style="display:flex;align-items:flex-end">
+							<view style="display:flex;align-items:center">
 							<image :src="imageUrl + orderDetail.goodsList[0].pictureId" class="reverse_1" mode='widthFix' style="height: auto;"></image>
 							<view>
 								<view class="margin-lr-sm">	<text>{{orderDetail.goodsList[0].phoneType}}</text></view>
 								<view class="flex">
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
+									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList" :key="item.color" >
+										<template v-if="orderDetail.goodsList[0].quickMemo === item.name">
+											<view class="round phone-color-border" >
+											<view class="round phone-color cuIcon-check"  :style="'background-color:'+item.color"></view>
 										</view>
-										<view class="margin-tb-sm">白色</view>
-									</view>
-
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
-										</view>
-										<view class="margin-tb-sm">黑色</view>
-									</view>
-
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
-										</view>
-										<view class="margin-tb-sm">金色</view>
+										<view class="margin-tb-sm">{{item.name}}</view>
+										</template>
+										
 									</view>
 								</view>
 						</view>
@@ -64,7 +53,7 @@
 					</view>
 					
 				</view>
-				<view v-for="(item,index) in orderDetail.goodsList" :key="item.title">
+				<view v-for="(item) in orderDetail.goodsList" :key="item.title">
 					<view class="cu-form-group ">
 						<view class="flex-container">
 							<view>{{item.title}}</view>
@@ -105,6 +94,7 @@
 				}).then(res=>{
 					console.log("orderdetial res" + JSON.stringify(res))
 					this.orderDetail = res
+					// alert(JSON.stringify(this.orderDetail))
 				}).catch(e=>{
 					console.log(e)
 				})
@@ -130,7 +120,24 @@
 					'Check':'维修中',
 					'Canceled':'已取消',
 					'Completed':'已完成'
-				}
+				},
+				phoneColorList:[
+					{
+						name:'白色',
+						color:'#FFFFFF',
+						isCheck:true,
+					},
+					{
+						name:'黑色',
+						color:'#000000',
+						isCheck:false
+					},
+						{
+						name:'金色',
+						color:'#D9D919',
+						isCheck:false
+					}
+				],
 			}
 		},
 		methods: {

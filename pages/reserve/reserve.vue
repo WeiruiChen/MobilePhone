@@ -23,12 +23,15 @@
 						<view style="margin-top:20rpx">
 							<view style="display:flex;justify-content:space-between;align-items:flex-end;">
 									<view style="display:flex;flex-direction:column;;width:100%" v-if="haveDefaultAddress">
-											<view >
+											<view v-if="changeType">
 												<picker @change="PickerChange" :value="index" :range="addressList">
 													<view>
 														{{chooseAddress.label}}:{{index>-1?addressList[index]:'暂无地址'}}
 													</view>
 												</picker>
+											</view>
+											<view v-if="!changeType">
+												{{chooseAddress.label}}:{{chooseAddress.address}}
 											</view>
 												<view>{{name}} {{phone}}</view>								
 									</view>
@@ -62,7 +65,7 @@
 					</view>
 				</picker>
 			</view> -->
-
+				<view v-if="changeType">
 				<view class="cu-form-group round-card">
 					<view class="title">取件日期：</view>
 
@@ -82,7 +85,12 @@
 						</view>
 					</picker>
 				</view>
-
+				</view>
+				
+				<view class="cu-form-group round-card" v-if="!changeType">
+					<view class="title">送修日期：无特殊要求</view>
+				</view>
+				
 				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
 						<view class="">
@@ -142,7 +150,7 @@
 				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:0">
 					<view>
 						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
-								style="text-decoration: line-through">{{totalPrice}}</text> </view>
+								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text> </view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
 					</view>
 					<view>
@@ -342,9 +350,9 @@
 			sentBySelf(){
 				this.chooseAddress.label = "最近网点" ;
 				//默认最近网点只有一个固定值，主页已经拿到
-				this.chooseAddress.address = "雨花区xxx街道xxx1号";
-				this.phone = "188888888";
-				this.name = "大名";
+				this.chooseAddress.address = "雨花区**商务楼101";
+				this.phone = "123456";
+				this.name = "金牌手机维修";
 				this.changeType = false;
 			},
 			getByDelivery(){
@@ -377,9 +385,10 @@
 				param_orderParams["payType"] = "WeiXin"; //暂时固定 WeiXin
 				param_orderParams["orderType"] = "Order"; //暂时固定 Order
 				param_orderParams["remark"] = "..."; //用户备注
-				param_orderParams["predetermine"] = "2021-10-23 08:00-11:00" //预订上门时间
+				// param_orderParams["predetermine"] = "2021-10-23 08:00-11:00" //预订上门时间
+				param_orderParams["predetermine"] = this.date +" "+this.time; //预订上门时间
 				param_orderParams["isForced"] = true; //暂时固定 true
-				//param_orderParams["cityId"] = "" //登录返回的cityId
+				//param_orderParams["cityId"] = ""; //登录返回的cityId
 				param_orderParams["needPickUp"] = true; //是否上门取件 ，true  是，false  自行送修
 				//获取最近网点和快递费getDeliveryAddressList接口返回的id，目前只有一个
 				param_orderParams["deliveryId"] ="66a88b5cbc434905875ac6c8a3aff86c"; 
