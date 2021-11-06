@@ -14,7 +14,7 @@
 
 			<swiper class="screen-swiper" style="margin-top:10rpx" :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:40rpx;heigth:50rpx">
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx">
 				<image :src="imageUrl+item.fileId" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>

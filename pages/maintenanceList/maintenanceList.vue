@@ -65,17 +65,17 @@
 					<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">{{selectedCount}}</view>
 					<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
 				</view>
-				<view style="flex-direction: column;">
+				<view style="flex-direction: column; margin-right:10px">
 					<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
-						<text class="margin-left" style=" text-decoration: line-through">{{totalPrice}}</text> 
+						<text class="margin-left" style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text> 
 					</view>
 					<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
 				</view>
 			</view>
 		</view>
 			
-			<view class="round-right">
-				<button class="cu-btn  block lg submit-button" @click="navigateOrderSuccess"><text></text>预约下单</button>
+			<view class="round-right" :style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'">
+				<button class="cu-btn  block lg submit-button" @click="navigateOrderSuccess" :style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'"><text>{{selectedCount==0?'未选方案':'预约下单'}}</text></button>
 			</view>
 		</view>
 	
@@ -471,7 +471,6 @@ import { mapState } from 'vuex'//引入mapState
 	
 	.submit-button{
 		color: #FFFFFF;
-		background-color: #04D4C6 !important;
 		margin-top: 1px;
 		margin-right: 12px;
 	}
