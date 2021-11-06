@@ -6,7 +6,7 @@
 		
 		<view style="text-align: center;">
 			<view style="margin-top:150rpx;text-align: center;">
-				<view class="cu-avatar xl round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg);"></view>
+				<view class="cu-avatar xl round" :style="'background-image:url('+avatarUrl+');'"></view>
 				<view>{{loginName}}</view>
 			</view>
 		</view>
@@ -103,23 +103,24 @@
 					},
 					{
 						cuIcon: require("@/static/mine/已送达@3x.png"),
-						name: "已送达",
+						name: "已接单",
 						type:"Confirm"
 					},
 					{
 						cuIcon: require("@/static/mine/维修中@3x.png"),
-						name: "维修中",
+						name: "已送达",
 						type:"Packaged"
 					},
 					{
 						cuIcon: require("@/static/mine/待验收@3x.png"),
-						name: "待验收",
-						type:"Check"
+						name: "维修中",
+						type:"Shipped"
 					},
 					{
 						cuIcon: require("@/static/mine/待支付@3x.png"),
-						name: "待支付"
-					}
+						name: "待支付",
+						type:"isPay"
+					},
 				]
 			}
 		},
@@ -127,6 +128,7 @@
 			// 从state中拿到数据 
 			loginName: state => state.user.loginName,
 			gmPhone: state => state.user.gmPhone,
+			avatarUrl:state=>state.user.avatarUrl
 		}),
 		methods: {
 			navigateToOrderList(title) {

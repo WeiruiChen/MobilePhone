@@ -15,10 +15,9 @@
 			</view>
 		</scroll-view>
 
-		<view class="VerticalBox container">
-			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop"
-				style="height:calc(100vh)">
-				<view class="flex-vertical margin-top-xl">
+		<view class="VerticalBox container visualHeight">
+			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop">
+				<view class="flex-vertical margin-top-xl" style="overflow:scroll;">
 					<view class="nav-item" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
 						:key="index" @tap="TabSelect" :data-item="{id:item.id,index}">
 						{{item.name}}
@@ -27,17 +26,19 @@
 			</scroll-view>
 
 			<scroll-view  class="VerticalMain bg-white" scroll-y>
-				<view v-if="flag" v-for="(item,indexs) in deviceList" :key="indexs">
+				<view  v-if="flag">
+				<view v-for="(item,indexs) in deviceList" :key="indexs">
 					<view class="text-center margin">
 						<text>——{{item.groupName}}——</text>
 					</view>
 					<view class="grid margin-bottom text-center col-3">
-						<view class="padding-sm" v-for="(item,indexs) in item.goodsList" :key="indexs"
+						<view class="padding-sm" v-for="(item) in item.goodsList" :key="item.pictureId"
 							@click="fixPhone(item)">
 							<image :src="imageUrl+item.pictureId" mode="widthFix" style="height: auto;"></image>
 							<view class="text-sm"><text>{{item.name}}</text></view>
 						</view>
 					</view>
+				</view>
 				</view>
 			</scroll-view>
 		</view>
@@ -63,7 +64,8 @@
 				oneMeneText: '手机',
 				twoMeneText: '苹果',
 				// 加载闪屏
-				flag:true
+				flag:true,
+				titleMap:{}
 			};
 		},
 		computed: mapState({
@@ -117,14 +119,12 @@
 		methods: {
 			// 维修页面跳转
 			fixPhone(item) {
-				const titleMap = {
-					0: '苹果',
-					1: '华为',
-					2: '小米'
-				}
-				console.log()
+				console.log('this.tabCur');
+				console.log('this.titleMap[this.tabCur] ',this.titleMap[this.tabCur] )
+				console.log('item',this.item )
+
 				uni.redirectTo({
-					url: '../maintenanceList/maintenanceList?title=' + titleMap[this.tabCur] + '&phone=' +
+					url: '../maintenanceList/maintenanceList?title=' + this.titleMap[this.tabCur] + '&phone=' +
 						encodeURIComponent(JSON.stringify(item))
 				})
 			},
@@ -147,11 +147,16 @@
 						categoryId: id
 					}
 				}).then(res => {
-					console.log('getCategoryTwo', res)
+					console.log('getCategoryTwo 手机型号', res)
 					this.list = res
+					// 初始化titlemap
+					for (const index in this.list) {
+						this.titleMap[index] = this.list[index].name
+					}
 					this.getThirdMenu(this.list.filter(item =>
 						item.name === this.twoMeneText
 					)[0].id)
+					
 				}).catch(e => {
 					console.log('getCategoryTwo', e)
 				})
@@ -223,6 +228,10 @@
 		padding-left: 10px;
 		padding-right: 10px;
 		display: flex;
+	}
+
+	.visualHeight{
+		height: calc(100vh - 280upx);
 	}
 
 	.VerticalNav.nav {

@@ -2,13 +2,20 @@
 	<view style="position: relative;">
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		
-		<swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
+		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
 		 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
 		 indicator-active-color="#04D4C6">
 			<swiper-item v-for="(item,index) in swiperList" :key="index" style="width:100%!important" :class="cardCur==index?'cur':''">
 				<view class="swiper-item" @click="onClickHandler(item)">
 					<image :src="imageUrl+item.fileId" mode="aspectFill" ></image>
 				</view>
+			</swiper-item>
+		</swiper> -->
+
+			<swiper class="screen-swiper" style="margin-top:10rpx" :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+		 :autoplay="true" interval="5000" duration="500">
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:40rpx;heigth:50rpx">
+				<image :src="imageUrl+item.fileId" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 
@@ -21,9 +28,11 @@
 		</swiper> -->
 		
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
-			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index<gridCol*2">
-					<image @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 180rpx;height: 180rpx;"></image>
-				<text>{{item.title}}</text>
+			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index < gridCol*2">
+				<view style="display:flex;flex-direction:column;align-items:center">
+					<image @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 120rpx;height: 120rpx;"></image>
+					<view >{{item.title}}</view>
+				</view>
 			</view>
 		</view>
 		
@@ -32,7 +41,7 @@
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
-					<text style="margin-left: 10rpx;font-weight: 900;">限时优惠</text>
+					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">限时优惠</text>
 				</view>
 			</view>
 		
@@ -61,7 +70,7 @@
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
-					<text style="margin-left: 10rpx;font-weight: 900;">服务流程</text>
+					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务流程</text>
 				</view>
 			</view>
 		
@@ -86,7 +95,7 @@
 				<view class="action">
 					<!-- src="../../static/first/服务优势icon@3x.png" -->
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
-					<text style="margin-left: 10rpx;font-weight: 900;">服务优势</text>
+					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务优势</text>
 				</view>
 			</view>
 			
@@ -164,10 +173,60 @@
 			imageUrl:state => state.user.imageBaseUrl
 		}),
 		onLoad(){
-			// 获取用户登陆信息
-			this.getUserData()
+			// 获取微信用户信息
+			console.log('login')
+			// this.wxLogin()
+				this.getUserData()
 		},
 		methods: {
+			// 微信登陆
+			wxLogin(){
+				let that = this;
+				uni.login({
+						provider: 'weixin',
+						onlyAuthorize:true,
+						success: function (loginRes) {
+							// console.log('code',loginRes.authResult);
+							console.log('code',loginRes.code);
+							if(loginRes.code){
+							// 拿到code获取用户openid
+								that.$request({
+									url:'/phoneReparisServer/service/rest/nologin.productService/collection/getMiniOpenid',
+									methods:'POST',
+									data:{
+										code:loginRes.code,
+										payTypeStr:"WxSmallProgramReaders"
+									}
+								}).then(res=>{
+									console.log('openiddrequest',res)
+									this.$store.dispatch('actionTrigger',{
+										key:'openId',value:res['openId'] || '',
+									})
+									// 获取用户登陆信息
+									this.getUserData()
+								}).catch(err=>{
+									console.log('err',err)
+								})
+							}
+							// loginName
+							// 获取用户信息
+							uni.getUserInfo({
+							provider: 'weixin',
+							success: function (infoRes) {
+								// console.log('用户昵称为：' + JSON.stringify(infoRes));
+								// console.log('loginName' + infoRes.userInfo.loginName);
+								// console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
+									this.$store.dispatch('actionTrigger',{
+										key:'loginName',value:infoRes.userInfo.nickName || '',
+									})
+									this.$store.dispatch('actionTrigger',{
+										key:'avatarUrl',value:infoRes.userInfo.avatarUrl || '',
+									})
+							}
+							});
+						}
+					});
+			},
 			onClickHandler(item,index=0){
 				const pathMap = {
 					'panelMy':'/pages/mine/mine',
@@ -287,9 +346,6 @@
 					})
 					this.$store.dispatch('actionTrigger',{
 						key:'deviceId',value:resFormat['deviceId'] || '',
-					})
-					this.$store.dispatch('actionTrigger',{
-						key:'openId',value:resFormat['openId'] || '',
 					})
 					this.$store.dispatch('actionTrigger',{
 						key:'loginName',value:resFormat['loginName'] || '',

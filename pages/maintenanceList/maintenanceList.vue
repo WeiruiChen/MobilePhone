@@ -10,6 +10,7 @@
 
 			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop"
 				style="height:calc(100vh - 375upx)">
+				<view style="display:flex;flex-direction:column;">
 
 				<view class="text-left margin-top-xl margin-left">
 					<view class="category-one"><text>{{phone.title}}</text></view>
@@ -25,7 +26,9 @@
 						{{item.name}}
 					</view>
 				</view>
+					</view>
 			</scroll-view>
+		
 
 			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
@@ -105,7 +108,7 @@ import { mapState } from 'vuex'//引入mapState
 			console.log('option',option)
 			if(Object.keys(option).length > 0){
 				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
-				navigateParams['title'] = option.title		
+				navigateParams['title'] = option.title
 				this.phone = navigateParams
 			}
 			uni.showLoading({

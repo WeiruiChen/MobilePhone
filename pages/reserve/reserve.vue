@@ -7,15 +7,6 @@
 
 		<view class="container">
 			<form>
-				<!-- <view class="outer round"
-							style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
-							<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'" @click="sentBySelf">
-								<text style="width: 59px;line-height: 34px;">立即送修</text>
-							</view>
-							<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'" @click="getByDelivery">
-								<text style="width: 59px;line-height: 34px;">上门取件</text>
-							</view>
-						</view> -->
 				<view class="cu-form-group margin-top">
 					<view style="display:flex;flex-direction:column;width:100%;;margin-top:20rpx;margin-bottom:20rpx">
 								<view style="display:flex;justify-content:flex-end">
@@ -63,6 +54,24 @@
 						
 					</view>
 				</view> -->
+				<!-- <view class="cu-form-group">
+				<view class="title">日期选择</view>
+				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="DateChange">
+					<view class="picker">
+						{{date}}
+					</view>
+				</picker>
+			</view> -->
+
+				<view class="cu-form-group round-card">
+					<view class="title">取件日期：</view>
+
+					<picker mode="date" :value="date" :start="startTime" :end="endTime">
+						<view class="picker">
+							{{date}}
+						</view>
+					</picker>
+				</view>
 
 				<view class="cu-form-group round-card">
 					<view class="title">取件时间：</view>
@@ -81,28 +90,16 @@
 						</view>
 						<view style="display:flex;align-items:flex-end">
 							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix' style="height: auto;"></image>
-							<view>
+							<view >
 								<view class="margin-lr-sm"><text>iPhone12pro max</text></view>
 								<view class="flex">
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
+									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList" :key="item.color">
+										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
+											<!-- <text> </text> --> 
+												<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
+											<view class="round phone-color"  :class="item.isCheck ? 'cuIcon-check' : ''" :style="'background-color:'+item.color"></view>
 										</view>
-										<view class="margin-tb-sm">白色</view>
-									</view>
-
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
-										</view>
-										<view class="margin-tb-sm">黑色</view>
-									</view>
-
-									<view class="margin-tb-sm margin-left-sm">
-										<view class="round phone-color-border">
-											<view class="round phone-color"></view>
-										</view>
-										<view class="margin-tb-sm">金色</view>
+										<view class="margin-tb-sm">{{item.name}}</view>
 									</view>
 								</view>
 						</view>
@@ -162,6 +159,11 @@
 		mapState
 	} from 'vuex' //引入mapState
 
+	import {
+		formatDateTime,
+		getNextDayDate,
+		formatTime
+	} from '../../utils/time'
 	export default {
 		data() {
 			return {
@@ -174,7 +176,8 @@
 				haveDefaultAddress:true,
 				phone:"",
 				name:"",
-				time: '12:01',
+				time: '',
+				date: '',
 				goodsList: [],
 				fanganList: [],
 				deliveryPrice:20,
@@ -183,9 +186,34 @@
 				addressList:[],
 				index:-1,
 				orginList:[],
+				phoneColorList:[
+					{
+						name:'白色',
+						color:'#FFFFFF',
+						isCheck:true,
+					},
+					{
+						name:'黑色',
+						color:'#000000',
+						isCheck:false
+					},
+						{
+						name:'金色',
+						color:'#D9D919',
+						isCheck:false
+					}
+				],
+				selectedMemo:'',
+				startTime:'',
+				endTime:''
 				// 地址跟索引的
 				// imageUrl: ''
 			}
+		},
+		onLoad(){
+			// alert(JSON.stringify(this.time))
+			// alert(JSON.stringify(this.startTime))
+			// alert(JSON.stringify(this.endTime))
 		},
 		onShow() {
 			// if (Object.keys(option).length > 0) {
@@ -193,6 +221,12 @@
 			// 	console.log('navigateParams', navigateParams);
 			// 	this.goodsList = [navigateParams];
 			// }
+			this.startTime = formatDateTime(new Date())
+			this.endTime = formatDateTime(getNextDayDate(30,new Date()))
+			// 初始化时间
+			this.time = formatTime(new Date())
+			this.date = this.startTime
+
 			//从本地获取方案列表和图片url
 			this.fanganList = this.maintenanceList.filter(item => item.selected == true);
 			console.log("fanganList" + JSON.stringify(this.fanganList));
@@ -227,6 +261,26 @@
 			}
 		}),
 		methods: {
+			onSelectType(name,checked){
+				// 判断只能有一个选中
+				this.phoneColorList = this.phoneColorList.map(item=>{
+					return {
+						...item,
+						isCheck:false,
+					}
+				})
+				// 然后选中
+				for (const index in this.phoneColorList) {
+					// 先全部未选
+					if(name == this.phoneColorList[index].name){
+						console.log('checked',checked)
+						this.phoneColorList[index].isCheck = checked;
+					}
+
+				}
+				this.selectedMemo = name
+
+			},
 			PickerChange(e) {
 				console.log('e.detail.value',e.detail.value)
 				this.index = e.detail.value
@@ -337,7 +391,7 @@
 					tempObject["price"] = this.fanganList[item].salePrice;
 					tempObject["goodsId"] = this.fanganList[item].id;//商品id
 					tempObject["count"] = 1;//暂时固定 1
-					tempObject["quickMemo"] = "红色";//颜色备注， getShopCart接口会返回，做出选择后传入
+					tempObject["quickMemo"] = this.selectedMemo;//颜色备注， getShopCart接口会返回，做出选择后传入
 					param_goodsList.push(tempObject);
 				}
 				console.log("param_goodsList:"+JSON.stringify(param_goodsList));

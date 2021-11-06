@@ -27,7 +27,7 @@
 								<view>
 									<text>{{item.goodsList[0].phoneType}}</text>
 								</view>
-								<view v-for="(subItem,index) in item.goodsList" :key="index+'good'">
+								<view v-for="(subItem) in item.goodsList" :key="subItem.title">
 									<text>{{subItem.title}}x{{subItem.count}}</text>
 								</view>
 							</view>
@@ -54,10 +54,11 @@
 	} from 'vuex' //引入mapState
 	const NavMap = {
 		'全部': 'ALL',
-		'已下单': 'Confirm',
-		'已接单': 'Packaged',
-		'已送达': 'Shipped',
-		'维修中': 'Check',
+		'已下单': 'New',
+		'已接单': 'Confirm',
+		'已送达': 'Packaged',
+		'维修中': 'Shipped',
+		'待验收':'Check',
 		'已取消': 'Canceled',
 		'已完成': 'Completed'
 	}

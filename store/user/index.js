@@ -10,7 +10,8 @@ const state = {
 	"sessionID":"xxxx",
 	"gender":"无",
 	"openId":"opfA81LO4KG84eBUeulJ0WmvK198",
-	"gmPhone":'xxxx'
+	"gmPhone":'xxxx',
+	"avatarUrl":''
 	
 }
 
