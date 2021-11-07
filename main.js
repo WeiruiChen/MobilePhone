@@ -6,6 +6,9 @@ import request from '@/utils/request.js'
 
 import nabBar from './pages/navBar/navBar.vue'
 import debug from './utils/debug.js'
+import share from './utils/share.js'
+
+Vue.mixin(share)
 Vue.component('nabBar',nabBar)
 
 
