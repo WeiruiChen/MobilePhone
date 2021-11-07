@@ -4,15 +4,18 @@ const state = {
 	"imageBaseUrl":"http://pow6rm42.dongtaiyuming.net:29203/phoneReparisServer/service/rest/tk.File/",
 	"id":"xxx",
 	"clientVer":"0.0.0",
-	"loginName":"xxxx",
+	"loginName":"",
 	"deviceId":"xxx",
 	"cityId":"1.1.5",
-	"sessionID":"xxxx",
-	"gender":"无",
+	"sessionID":"",
+	"gender":"",
 	"openId":"",
-	"gmPhone":'xxxx',
-	"avatarUrl":''
-	
+	"gmPhone":'',
+	"avatarUrl":'',
+	"province":'',
+	"city":'',
+	"country":''
+
 }
 
 const mutations = {

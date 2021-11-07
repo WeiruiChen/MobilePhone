@@ -48,7 +48,7 @@
 .cuIcon-check:before {
 	content: "\e645";
 	color: #23A88E;
-	margin:0rpx 0rpx 5rpx 4rpx;
+	margin:15rpx 0rpx 5rpx 10rpx;
 }
 
 .cuIcon-close:before {

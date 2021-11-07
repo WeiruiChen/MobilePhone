@@ -141,7 +141,7 @@
 				uni.navigateTo({
 					url: '../allAddress/allAddress'
 				})
-			}
+			},
 		}
 	}
 </script>

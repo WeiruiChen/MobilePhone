@@ -54,8 +54,8 @@
 					</form>
 				</view>
 				<view v-else class="padding margin-bottom-sm round-card">
-					<view style="display:flex;flex-direction:column;align-items:center">
-						<image style="width:100%;"  src="../../static/maintenance/null.png"></image>
+					<view style="display:flex;flex-direction:column;align-items:center;height:370rpx">
+						<image style="width:100%" src="../../static/maintenance/null.png"></image>
 					<view style="color:#D9D9D9">暂无数据</view>
 					</view>
 				</view>
@@ -66,12 +66,12 @@
 			
 		<view class="round-left" style="position:sticky;bottom:0">
 			<!-- <view></view> -->
-			<view style="display: flex;justify-content: space-between;">
+			<view style="display: flex;justify-content: space-between;align-items: center;">
 				<view style="position: relative;z-index: 999;">
 					<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">{{selectedCount}}</view>
 					<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
 				</view>
-				<view style="flex-direction: column; margin-right:10px">
+				<view style="flex-direction: column; align-items:center;">
 					<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
 						<text class="margin-left" style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text> 
 					</view>
@@ -80,7 +80,7 @@
 			</view>
 		</view>
 			
-			<view class="round-right" :style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'">
+			<view class="round-right center-button" :style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'">
 				<button class="cu-btn  block lg submit-button" @click="navigateOrderSuccess" :style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'"><text>{{selectedCount==0?'未选方案':'预约下单'}}</text></button>
 			</view>
 		</view>
@@ -107,7 +107,7 @@ import { mapState } from 'vuex'//引入mapState
 				],
 				currentGoodId:'',
 				forkMaintenance:[],
-				showNull:false
+				showNull:true
 			};
 		},
 		onLoad(option) {
@@ -302,6 +302,7 @@ import { mapState } from 'vuex'//引入mapState
 						this.showNull = true;
 						return;
 					}
+					this.showNull = false;
 					// const mockData = {"message":"成功","totalCount":7,"page":1,"pageSize":20,"data":"[{\"id\":\"2ca6245c588640b4a0e7748a282d84af\",\"createTime\":\"2021-10-27 20:14:50\",\"subTitle\":\"摄像头问题\",\"title\":\"摄像头问题\",\"price\":100,\"description\":\"<strong>保修一年<\\/strong>\",\"salePrice\":80,\"code\":\"00006140\",\"pictureId\":\"70e94e91c1e343529f6e3129a95d1fdf\"}]","javaClass":"com.caomei.xinxikeji.util.ResultInfo","code":0,"totalPage":1}
 					this.goodsList = res
 					// console.log('LOAD.....this.goodsListthis.goodsList',this.goodsList);
@@ -447,6 +448,13 @@ import { mapState } from 'vuex'//引入mapState
 
 	.text-left {
 		height: 13%;
+	}
+
+	.center-button{
+		display: flex;
+		flex-direction:column;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.icon-add {

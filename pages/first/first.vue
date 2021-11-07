@@ -1,7 +1,10 @@
 <template>
 	<view style="position: relative;">
+		<button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
+			登陆
+		</button>
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
-		
+		<!-- 强制用户点击获取信息 -->
 		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
 		 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
 		 indicator-active-color="#04D4C6">
@@ -12,10 +15,10 @@
 			</swiper-item>
 		</swiper> -->
 
-			<swiper class="screen-swiper" style="margin-top:10rpx" :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
 			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx">
-				<image :src="imageUrl+item.fileId" mode="aspectFill"></image>
+				<image :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
 			</swiper-item>
 		</swiper>
 
@@ -162,7 +165,8 @@
 				cuIconList: [{
 				}],
 				// 静态图等资源加载完后再限时
-				showStatic:false
+				showStatic:false,
+				showClickUser:true,
 			}
 		},
 		computed: mapState({
@@ -179,21 +183,65 @@
 			// 	enableDebug:true;
 			// }
 			// 获取微信用户信息
+			// this.getWxUserProfile()
 			// console.log('login')
-			// this.wxLogin()
-			this.getUserData()
+			this.wxLogin()
+
+			// 获取版本号
+			this.getAppVersion()
+			// this.getUserData()
 		},
 		methods: {
+			//获取小程序版本号
+			getAppVersion(){
+				const accountInfo = wx.getAccountInfoSync();
+				console.log('accountInfoaccountInfoaccountInfo',JSON.stringify(accountInfo));
+				this.$store.dispatch('actionTrigger',{
+						key:'clientVer',value:accountInfo.miniProgram.version || accountInfo.miniProgram.envVersion,
+				})
+			},
+			// 获取用户信息
+			getWxUserProfile(){
+				// console.log('click');
+				wx.getUserProfile({
+				desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+				success: (res) => {
+					console.log(res)
+						const userInfo = res.userInfo
+						const nickName = userInfo.nickName
+						const avatarUrl = userInfo.avatarUrl
+						const gender = userInfo.gender //性别 0：未知、1：男、2：女
+						const province = userInfo.province
+						const city = userInfo.city
+						const country = userInfo.country
+						console.log('UserInfoUserInfoUserInfoUserInfoUserInfo',JSON.stringify(userInfo))
+						this.$store.dispatch('actionTrigger',{
+							key:'loginName',value:nickName || '',
+						})
+						this.$store.dispatch('actionTrigger',{
+							key:'avatarUrl',value:avatarUrl || '',
+						})
+						this.$store.dispatch('actionTrigger',{
+							key:'gender',value:gender || '',
+						})
+							this.$store.dispatch('actionTrigger',{
+							key:'province',value:province || '',
+						})
+							this.$store.dispatch('actionTrigger',{
+							key:'city',value:city || '',
+						})
+							this.$store.dispatch('actionTrigger',{
+							key:'country',value:country || '',
+						})
+				}
+			})
+			},
 			// 微信登陆
 			wxLogin(){
-				this.$debug('微信登陆进入1')
 				let that = this;
 				uni.login({
 						provider: 'weixin',
 						onlyAuthorize:true,
-						fail:function(res){
-							that.$debug('失败'+JSON.stringify(res))
-						},
 						success: function (loginRes) {
 							// console.log('code',loginRes.authResult);
 							console.log('code',loginRes.code);
@@ -208,7 +256,6 @@
 									}
 								}).then(res=>{
 									console.log('openiddrequest',res)
-									that.$debug('OpenId'+that.$debug(JSON.stringify(res)))
 									that.$store.dispatch('actionTrigger',{
 										key:'openId',value:res['openId'] || '',
 									})
@@ -220,20 +267,52 @@
 							}
 							// loginName
 							// 获取用户信息
-							uni.getUserInfo({
-							provider: 'weixin',
-							success: function (infoRes) {
-								// console.log('用户昵称为：' + JSON.stringify(infoRes));
-								console.log('loginName' + infoRes.userInfo.loginName);
-								console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
-									that.$store.dispatch('actionTrigger',{
-										key:'loginName',value:infoRes.userInfo.nickName || '',
-									})
-									that.$store.dispatch('actionTrigger',{
-										key:'avatarUrl',value:infoRes.userInfo.avatarUrl || '',
-									})
-							}
-							});
+							// wx.getUserProfile({
+							// 	success: function(res) {
+							// 		const userInfo = res.userInfo
+							// 		const nickName = userInfo.nickName
+							// 		const avatarUrl = userInfo.avatarUrl
+							// 		const gender = userInfo.gender //性别 0：未知、1：男、2：女
+							// 		const province = userInfo.province
+							// 		const city = userInfo.city
+							// 		const country = userInfo.country
+
+							// 		console.log('UserInfoUserInfoUserInfoUserInfoUserInfo',JSON.stringify(userInfo))
+
+							// 		that.$store.dispatch('actionTrigger',{
+							// 			key:'loginName',value:nickName || '',
+							// 		})
+							// 		that.$store.dispatch('actionTrigger',{
+							// 			key:'avatarUrl',value:avatarUrl || '',
+							// 		})
+							// 		that.$store.dispatch('actionTrigger',{
+							// 			key:'gender',value:gender || '',
+							// 		})
+							// 			that.$store.dispatch('actionTrigger',{
+							// 			key:'province',value:province || '',
+							// 		})
+							// 			that.$store.dispatch('actionTrigger',{
+							// 			key:'city',value:city || '',
+							// 		})
+							// 			that.$store.dispatch('actionTrigger',{
+							// 			key:'country',value:country || '',
+							// 		})
+							// 	}
+							// })
+							// uni.getUserInfo({
+							// provider: 'weixin',
+							// success: function (infoRes) {
+							// 	// console.log('用户昵称为：' + JSON.stringify(infoRes));
+							// 	console.log('loginName' + infoRes.userInfo.loginName);
+							// 	console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
+							// 		that.$store.dispatch('actionTrigger',{
+							// 			key:'loginName',value:infoRes.userInfo.nickName || '',
+							// 		})
+							// 		that.$store.dispatch('actionTrigger',{
+							// 			key:'avatarUrl',value:infoRes.userInfo.avatarUrl || '',
+							// 		})
+							// }
+							// });
 						}
 					});
 			},
@@ -347,7 +426,6 @@
 					}
 				}).then(res=>{
 					const resFormat = res;
-						this.$debug('用户登陆信息'+this.$debug(JSON.stringify(res)))
 					// 获取信息存储到全局
 					this.$store.dispatch('actionTrigger',{
 						key:'cityId',value:resFormat['cityId'] || '',
@@ -358,9 +436,9 @@
 					this.$store.dispatch('actionTrigger',{
 						key:'deviceId',value:resFormat['deviceId'] || '',
 					})
-					this.$store.dispatch('actionTrigger',{
-						key:'loginName',value:resFormat['loginName'] || '',
-					})
+					// this.$store.dispatch('actionTrigger',{
+					// 	key:'loginName',value:resFormat['loginName'] || '',
+					// })
 					this.$store.dispatch('actionTrigger',{
 						key:'sessionID',value:resFormat['sessionID'] || '',
 					})

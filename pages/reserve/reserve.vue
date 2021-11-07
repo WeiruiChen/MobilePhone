@@ -38,7 +38,7 @@
 										<view v-else>
 											暂无地址!请点击右侧增加地址
 										</view>
-									<button v-if="chooseAddress === '上门取件'" class="cu-btn cuIcon icon-add" @click="addAddress" style="height:50rpx" >
+									<button v-if="chooseAddress.label === '取件地址'" class="cu-btn cuIcon icon-add" @click="addAddress" style="height:50rpx" >
 										<text class="cuIcon-add"></text>
 									</button>
 							</view>
@@ -99,7 +99,7 @@
 						<view style="display:flex;align-items:flex-end">
 							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix' style="height: auto;"></image>
 							<view >
-								<view class="margin-lr-sm"><text>iPhone12pro max</text></view>
+								<view class="margin-lr-sm"><text>{{fanganList[0].phoneType}}</text></view>
 								<view class="flex">
 									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList" :key="item.color">
 										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
@@ -322,7 +322,7 @@
 					//获取默认联系人
 					this.$request({
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
-						methods: 'GET',
+						methods: 'POST',
 						}).then(res => {
 							if(res.length === 0) this.haveDefaultAddress = false;
 							this.defaultAddress = res[0] || {};

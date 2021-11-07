@@ -40,6 +40,10 @@
 		{
 			"path": "pages/mine/mine",
 			"style": {}
+		},
+		{
+			"path": "pages/logs/logs",
+			"style": {}
 		}
 	],
 	"globalStyle": {
