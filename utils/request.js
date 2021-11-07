@@ -14,7 +14,7 @@ const request = function({url='',methods='POST',data={}}){
 		reqData['cityId'] =  store.state.user.cityId || '';
 		reqData['clientVer'] =  store.state.user.clientVer || '';
 	}
-	let reqUrl = 'http://www.caomeixinxi.com' +  url;
+	let reqUrl = 'https://www.caomeixinxi.com' +  url;
 	if(store.state.user.sessionID)
 	{
 		reqUrl += ";jsessionid=" +store.state.user.sessionID;

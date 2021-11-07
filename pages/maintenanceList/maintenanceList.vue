@@ -32,7 +32,7 @@
 
 			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-				<view v-if="showNull" class="padding-top padding-lr" v-for="(item,index) in forkMaintenance" :key="index" :id="'main-'+index">
+				<view v-if="!showNull" class="padding-top padding-lr" v-for="(item,index) in forkMaintenance" :key="index" :id="'main-'+index">
 					<form>
 						<view class="cu-form-group padding margin-bottom-sm round-card">
 							<view style="width: 100%;">
@@ -316,35 +316,35 @@ import { mapState } from 'vuex'//引入mapState
 					// 如果购物车里面本地存在数据则拿购物车的数据 不更新数据
 				})
 			},
-			VerticalMain(e) {
-				// #ifdef MP-ALIPAY
-				return false //支付宝小程序暂时不支持双向联动 
-				// #endif
-				let that = this;
-				let tabHeight = 0;
-				if (this.load) {
-					for (let i = 0; i < this.list.length; i++) {
-						let view = uni.createSelectorQuery().select("#main-" + this.list[i].id);
-						view.fields({
-							size: true
-						}, data => {
-							this.list[i].top = tabHeight;
-							tabHeight = tabHeight + data.height;
-							this.list[i].bottom = tabHeight;
-						}).exec();
-					}
-					this.load = false
-				}
-				let scrollTop = e.detail.scrollTop + 10;
-				for (let i = 0; i < this.list.length; i++) {
-					if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
-						this.verticalNavTop = (this.list[i].id - 1) * 50
-						this.tabCur = this.list[i].id
-						console.log(scrollTop)
-						return false
-					}
-				}
-			}
+			// VerticalMain(e) {
+			// 	// #ifdef MP-ALIPAY
+			// 	return false //支付宝小程序暂时不支持双向联动 
+			// 	// #endif
+			// 	let that = this;
+			// 	let tabHeight = 0;
+			// 	if (this.load) {
+			// 		for (let i = 0; i < this.list.length; i++) {
+			// 			let view = uni.createSelectorQuery().select("#main-" + this.list[i].id);
+			// 			view.fields({
+			// 				size: true
+			// 			}, data => {
+			// 				this.list[i].top = tabHeight;
+			// 				tabHeight = tabHeight + data.height;
+			// 				this.list[i].bottom = tabHeight;
+			// 			}).exec();
+			// 		}
+			// 		this.load = false
+			// 	}
+			// 	let scrollTop = e.detail.scrollTop + 10;
+			// 	for (let i = 0; i < this.list.length; i++) {
+			// 		if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
+			// 			this.verticalNavTop = (this.list[i].id - 1) * 50
+			// 			this.tabCur = this.list[i].id
+			// 			console.log(scrollTop)
+			// 			return false
+			// 		}
+			// 	}
+			// }
 		},
 	}
 </script>

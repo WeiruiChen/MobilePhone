@@ -119,7 +119,6 @@
 
 <script>
 	import { mapState } from 'vuex'//引入mapState
-	import { navBar } from '../navBar/navBar.vue'
 	
 	export default {
 		data() {
@@ -174,18 +173,27 @@
 			openId:state => state.user.openId
 		}),
 		onLoad(){
+			// this.$debug('首页进入1')
+			// alert('进入first页面')
+			// wx.seEnableDebug(){
+			// 	enableDebug:true;
+			// }
 			// 获取微信用户信息
 			// console.log('login')
-			this.wxLogin()
-			// this.getUserData()
+			// this.wxLogin()
+			this.getUserData()
 		},
 		methods: {
 			// 微信登陆
 			wxLogin(){
+				this.$debug('微信登陆进入1')
 				let that = this;
 				uni.login({
 						provider: 'weixin',
 						onlyAuthorize:true,
+						fail:function(res){
+							that.$debug('失败'+JSON.stringify(res))
+						},
 						success: function (loginRes) {
 							// console.log('code',loginRes.authResult);
 							console.log('code',loginRes.code);
@@ -200,6 +208,7 @@
 									}
 								}).then(res=>{
 									console.log('openiddrequest',res)
+									that.$debug('OpenId'+that.$debug(JSON.stringify(res)))
 									that.$store.dispatch('actionTrigger',{
 										key:'openId',value:res['openId'] || '',
 									})
@@ -338,6 +347,7 @@
 					}
 				}).then(res=>{
 					const resFormat = res;
+						this.$debug('用户登陆信息'+this.$debug(JSON.stringify(res)))
 					// 获取信息存储到全局
 					this.$store.dispatch('actionTrigger',{
 						key:'cityId',value:resFormat['cityId'] || '',

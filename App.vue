@@ -25,7 +25,6 @@
 			// if(this.$store.user.state.id){
 			// 	console.log(this.$store.user.state)
 			// }
-			
 			// this.$request({
 			// 	url:'/phoneReparisServer/service/rest/nologin.customer.login/collection/login',
 			// 	methods:'GET',
