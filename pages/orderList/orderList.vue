@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<cu-custom  bgColor="bg-gradual-blue" :isBack="true">
-			<view slot="backText">返回</view>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<view slot="backText" @click="backToMine">返回</view>
 			<view slot="content">我的订单</view>
 		</cu-custom>
 		<view class="container">
@@ -13,7 +13,7 @@
 					</view>
 				</view>
 			</scroll-view>
-			<view v-for="(item) in showOrderList"  :key="item.code">
+			<view v-for="(item) in showOrderList" :key="item.code">
 				<view @click="gotoDetail(item.id)"
 					class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content" style="width:100%">
@@ -22,7 +22,8 @@
 							<view class="cu-btn round sm">{{item.orderStateName}}</view>
 						</view>
 						<view style="display: flex;align-items: center;">
-							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix' style="height: auto;">
+							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'
+								style="height: auto;">
 							</image>
 							<view>
 								<view>
@@ -40,11 +41,15 @@
 
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
+						<view>共2项 合计：{{item.totalMoney}}</view>
 						<button v-if="NavMap[TabCur] === 'Check'" class="cu-btn round sm submit-btn">立即支付</button>
-						<button v-if="NavMap[TabCur] === 'New' && NavMap[TabCur] === 'Confirm'" class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</view>
+						<button v-if="NavMap[TabCur] === 'New' || NavMap[TabCur] === 'Confirm'"
+							class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</button>
+
 					</view>
 				</view>
 			</view>
+		</view>
 	</view>
 </template>
 
@@ -100,14 +105,19 @@
 		}),
 		methods: {
 			gotoDetail(id) {
-				let order={};
+				let order = {};
 				order["orderId"] = id;
-				uni.redirectTo({
-					url:'../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
+				uni.navigateTo({
+					url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
 				})
 				// uni.redirectTo({
 				// 	url: '../orderDetial/orderDetial?id=' + id
 				// })
+			},
+			backToMine() {
+				uni.redirectTo({
+					url: '../mine/mine'
+				})
 			},
 			getOrderList(type = 'ALL') {
 				this.$request({
@@ -125,7 +135,7 @@
 					console.log('e')
 				})
 			},
-				deleteOrder(id) {
+			deleteOrder(id) {
 				let that = this;
 				uni.showModal({
 					title: '确认',
@@ -135,31 +145,26 @@
 							that.$request({
 								url: '/phoneReparisServer/service/rest/login.orderService/collection/cancelOrder',
 								methods: 'POST',
-								data:{
-									orderId:id
+								data: {
+									orderId: id
 								}
 							}).then(res => {
-								console.log("deleteOrder:"+JSON.stringify(res));
-								
+								console.log("deleteOrder:" + JSON.stringify(res));
+
 							}).catch(e => {
 								console.log('deleteOrder', e)
 							})
 							uni.redirectTo({
-								url:'../orderList/orderList'
+								url: '../orderList/orderList'
 							})
 						} else if (e.cancel) {
 							uni.showToast({
-							    title: "取消删除",
-							    icon: "none"
+								title: "取消删除",
+								icon: "none"
 							})
 						}
 					}
 				});
-			},
-			backToMine() {
-				uni.redirectTo({
-					url: '../mine/mine'
-				})
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id;
@@ -200,7 +205,7 @@
 	}
 
 	.flex-container {
-		width:100%;
+		width: 100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -229,6 +234,7 @@
 	button {
 		color: #04D4C6;
 	}
+
 	.submit-btn {
 		/* background-color: blue; */
 		background-color: #ffffff !important;

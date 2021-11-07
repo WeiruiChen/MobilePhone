@@ -302,7 +302,7 @@
 				this.defaultAddress.id = this.addressList[this.index].id
 			},
 			addAddress() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../allAddress/allAddress'
 				})
 			},
@@ -426,7 +426,7 @@
 					let order = {};
 					order["orderId"] = res[0]["orderId"];
 					console.log("create order success:" + JSON.stringify(res[0]));
-					uni.redirectTo({
+					uni.navigateTo({
 						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
 							order))
 						// url: '../orderSuccess/orderSucces'

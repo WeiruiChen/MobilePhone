@@ -113,8 +113,7 @@
 						}
 					}
 				});
-				
-				
+			
 			},
 			deleteAddress(item) {
 				let that = this;

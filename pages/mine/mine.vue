@@ -57,14 +57,15 @@
 
 		</view>
 		<view style="height:100rpx;"></view>
-		<nabBar type="mine" :isActive="true"></nabBar>
+		<!-- <nabBar type="mine" :isActive="true"></nabBar> -->
+		<view-tabbar :current="2"></view-tabbar>
 	</view>
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex' //引入mapState
+	import {mapState} from 'vuex' //引入mapState
+	import Tabbar from '@/pages/tabBar/tabBar.vue'
+	
 	export default {
 		onLoad(){
 			// 获取全部订单信息
@@ -86,6 +87,14 @@
 				// console.log(JSON.stringify(this.typeCount))
 			}).catch(e=>{
 				console.log(e)
+			})
+		},
+		components: {
+			'view-tabbar': Tabbar
+		},
+		onShow() {
+			uni.hideTabBar({
+				animation: false
 			})
 		},
 		data() {
@@ -128,12 +137,12 @@
 		methods: {
 			navigateToOrderList(title) {
 				console.log('title', title)
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../orderList/orderList?title=' + title
 				})
 			},
 			navigateToMyAddress() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../allAddress/allAddress'
 				})
 			},

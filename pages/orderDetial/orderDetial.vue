@@ -68,6 +68,7 @@
 						<view class="text_right">{{orderDetail.totalMoney}}</view>
 					</view>
 				</view>
+				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="gotoOrderList">订单列表</button>
 				<button v-if="NavMap[orderDetail.orderState] !== ''" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
 			</form>
 		</view>
@@ -143,6 +144,11 @@
 			TimeChange(e) {
 				this.time = e.detail.value
 			},
+			gotoOrderList() {
+				uni.redirectTo({
+					url: '../orderList/orderList'
+				})
+			},
 			deleteOrder() {
 				let that = this;
 				uni.showModal({
@@ -163,7 +169,7 @@
 								console.log('deleteOrder', e)
 							})
 							uni.redirectTo({
-								url:'../orderList/orderList'
+								url:'../mine/mine'
 							})
 						} else if (e.cancel) {
 							uni.showToast({

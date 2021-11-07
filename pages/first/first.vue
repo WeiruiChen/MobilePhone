@@ -1,8 +1,8 @@
 <template>
 	<view style="position: relative;">
-		<!-- <button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
+		<button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
 			登陆
-		</button> -->
+		</button>
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		<!-- 强制用户点击获取信息 -->
 		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
@@ -115,13 +115,15 @@
 		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;">
 			<text style="text-align: center;">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<view style="height: 100rpx;"></view>
-		<nabBar style="height: 100rpx;" type="first" :isActive="true"></nabBar>		
+		<view style="height: 140rpx;"></view>
+		<!-- <nabBar style="height: 100rpx;" type="first" :isActive="true"></nabBar>		 -->
+		<view-tabbar :current="0"></view-tabbar>
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'//引入mapState
+	import Tabbar from '@/pages/tabBar/tabBar.vue'
 	
 	export default {
 		data() {
@@ -169,6 +171,14 @@
 				showClickUser:true,
 			}
 		},
+		components: {
+			'view-tabbar': Tabbar
+		},
+		onShow() {
+			uni.hideTabBar({
+				animation: false
+			})
+		},
 		computed: mapState({
 			// 从state中拿到数据 
 			loginName: state => state.user.loginName,
@@ -185,10 +195,11 @@
 			// 获取微信用户信息
 			// this.getWxUserProfile()
 			// console.log('login')
-			// this.wxLogin()
+			this.wxLogin()
+
 			// 获取版本号
-			// this.getAppVersion()
-			this.getUserData()
+			this.getAppVersion()
+			// this.getUserData()
 		},
 		methods: {
 			//获取小程序版本号
@@ -330,18 +341,18 @@
 					},
 					'Category':function(){
 						if(index > 3){
-							uni.redirectTo({
+							uni.navigateTo({
 							url:'../maintenanceList/maintenanceList'
 						})
 						}else{
-							uni.redirectTo({
+							uni.reLaunch({
 							url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
 						})
 						}
 					},
 					'Goods':function(){
 						console.log(JSON.stringify(item))
-						uni.redirectTo({
+						uni.navigateTo({
 							url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
 						})
 					}

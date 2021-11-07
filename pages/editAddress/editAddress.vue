@@ -54,8 +54,8 @@
 				</view>
 
 				<view class="cu-form-group round-bottom-card flex-container icon-color">
-					<checkbox class='round' :data-value="address.isDefault" :class="address.isDefault?'checked':''"
-						@click="checkHaddler"></checkbox>
+					<checkbox class='round' :checked="address.isDefault" :class="address.isDefault?'checked':''"
+						@click="checkHaddler(address.isDefault)"></checkbox>
 					<text>设为默认</text>
 				</view>
 
@@ -74,7 +74,7 @@
 			return {
 				region: ['广东省', '广州市', '海珠区'],
 				address: {
-					isDefault:false
+					isDefault:true,
 				},
 				isedit:false,
 				// checkbox: {
@@ -87,9 +87,13 @@
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.param));
-				this.address = navigateParams;
+				console.log('')
 				this.isedit = true;
-				console.log(navigateParams);
+				this.$nextTick(() => {
+					this.address = navigateParams;
+					this.region = this.address.region.split(',');
+					console.log('this.address ',this.address);
+				})
 			}
 
 		},
@@ -97,9 +101,9 @@
 			RegionChange(e) {
 				this.region = e.detail.value
 			},
-			checkHaddler(e){
-				console.log(e.target.dataset)
-				this.address.isDefault = !e.target.dataset.value
+			checkHaddler(value) {
+				// console.log(e.target.dataset)
+				this.address.isDefault = !value
 				// this.address.isDefault = event.de
 			},
 			addNewAddress() {
@@ -125,7 +129,7 @@
 								data: that.address
 							}).then(res => {
 								console.log("addNewAddress:" + JSON.stringify(res));
-								uni.navigateTo({
+								uni.redirectTo({
 									url:'../allAddress/allAddress'
 								})
 								uni.showToast({

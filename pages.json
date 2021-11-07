@@ -44,8 +44,36 @@
 		{
 			"path": "pages/logs/logs",
 			"style": {}
+		},
+		{
+			"path": "pages/tabBar/tabBar",
+			"style": {}
+		}, {
+			"path": "pages/test/test",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
 	],
+	"tabBar": {
+		"selectedColor": "#79D5AD",
+		"color": "#999999",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "white",
+		"height": "0px",
+		"list": [{
+			"pagePath": "pages/first/first",
+			"text": " "
+		}, {
+			"pagePath": "pages/mine/mine",
+			"text": " "
+		}, {
+			"pagePath": "pages/phoneModel/phoneModel",
+			"text": " "
+		}]
+	},
 	"globalStyle": {
 		"mp-alipay": {
 			/* 支付宝小程序特有相关 */

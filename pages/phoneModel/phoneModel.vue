@@ -2,8 +2,8 @@
 	<view class="background">
 
 		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
-			<block slot="backText">返回</block>
-			<block slot="content">设备型号</block>
+			<view slot="backText" @click="backToFirst">首页</view>
+			<view slot="content">设备型号</view>
 		</cu-custom>
 
 		<scroll-view scroll-x class="bg-white nav">
@@ -42,14 +42,15 @@
 				</view>
 			</scroll-view>
 		</view>
-		<nabBar type="phoneModel" :isActive="true"></nabBar>
+		<!-- <nabBar type="phoneModel" :isActive="true"></nabBar> -->
+		<view-tabbar :current="1"></view-tabbar>
 	</view>
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex' //引入mapState
+	import {mapState} from 'vuex' //引入mapState
+	import Tabbar from '@/pages/tabBar/tabBar.vue'
+	
 	export default {
 		data() {
 			return {
@@ -72,6 +73,14 @@
 			// 从state中拿到数据 
 			imageUrl: state => state.user.imageBaseUrl
 		}),
+		components: {
+			'view-tabbar': Tabbar
+		},
+		onShow() {
+			uni.hideTabBar({
+				animation: false
+			})
+		},
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.category));
@@ -123,9 +132,14 @@
 				console.log('this.titleMap[this.tabCur] ',this.titleMap[this.tabCur] )
 				console.log('item',this.item )
 
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../maintenanceList/maintenanceList?title=' + this.titleMap[this.tabCur] + '&phone=' +
 						encodeURIComponent(JSON.stringify(item))
+				})
+			},
+			backToFirst() {
+				uni.switchTab({
+					url: '../first/first'
 				})
 			},
 			tabSelect(e) {

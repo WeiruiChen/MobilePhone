@@ -2,8 +2,8 @@
 	<view>
 
 		<cu-custom :isBack="true"  bgColor="bg-gradual-blue">
-			<block slot="backText">返回</block>
-			<block slot="content">维修方案列表</block>
+			<view slot="backText">返回</view>
+			<view slot="content">维修方案列表</view>
 		</cu-custom>
 
 		<view class="VerticalBox container">
@@ -15,7 +15,7 @@
 				<view class="text-left margin-top-xl margin-left">
 					<view class="category-one"><text>{{phone.title}}</text></view>
 					<view class="category-two margin-tb-sm"><text>{{phone.name}}</text></view>
-					<view class="change-phone" @click="changePhone"><text>更换机型</text></view>
+					<view class="change-phone" @click="backPhoneModel"><text>更换机型</text></view>
 					<view class="category-three">
 					</view>
 				</view>
@@ -166,6 +166,11 @@ import { mapState } from 'vuex'//引入mapState
 			}
 		}),
 		methods: {
+			backPhoneModel() {
+				uni.redirectTo({
+					url: '../phoneModel/phoneModel'
+				})
+			},
 			navigateOrderSuccess(){
 				// 判断本地购物车是否有数据 有数据则跳转
 				let selectedFlag = false
@@ -174,7 +179,7 @@ import { mapState } from 'vuex'//引入mapState
 				}
 				
 				if(selectedFlag)
-					uni.redirectTo({
+					uni.navigateTo({
 						url:'../reserve/reserve'
 					})
 				else
@@ -200,11 +205,6 @@ import { mapState } from 'vuex'//引入mapState
 					}
 				],true);
 				console.log('maintasds',this.maintenanceList)
-			},
-			changePhone(){
-				uni.redirectTo({
-					url:'../phoneModel/phoneModel'
-				})
 			},
 			TabSelect(e) {
 				this.tabCur = e.currentTarget.dataset.item.index;

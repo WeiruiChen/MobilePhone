@@ -47,8 +47,12 @@
 
 .cuIcon-check:before {
 	content: "\e645";
+	/* background: url("/static/images/checked.png") no-repeat; */
 	color: #23A88E;
-	margin:15rpx 0rpx 5rpx 10rpx;
+	font-size: 45rpx;
+	font-weight: bold;
+	/* height: 20rpx; */
+	/* margin:15rpx 0rpx 5rpx 10rpx; */
 }
 
 .cuIcon-close:before {

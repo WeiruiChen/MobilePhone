@@ -40,7 +40,7 @@
 		},
 		methods: {
 			navigateDetail() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(this.orderId))
 				})
 			}
