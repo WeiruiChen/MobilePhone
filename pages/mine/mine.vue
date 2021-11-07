@@ -108,18 +108,13 @@
 					},
 					{
 						cuIcon: require("@/static/mine/维修中@3x.png"),
-						name: "已送达",
-						type:"Packaged"
-					},
-					{
-						cuIcon: require("@/static/mine/待验收@3x.png"),
 						name: "维修中",
 						type:"Shipped"
 					},
 					{
-						cuIcon: require("@/static/mine/待支付@3x.png"),
-						name: "待支付",
-						type:"isPay"
+						cuIcon: require("@/static/mine/待验收@3x.png"),
+						name: "待验收",
+						type:"Check"
 					},
 				]
 			}
@@ -133,12 +128,12 @@
 		methods: {
 			navigateToOrderList(title) {
 				console.log('title', title)
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../orderList/orderList?title=' + title
 				})
 			},
 			navigateToMyAddress() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../allAddress/allAddress'
 				})
 			},

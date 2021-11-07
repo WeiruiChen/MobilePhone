@@ -174,7 +174,7 @@ import { mapState } from 'vuex'//引入mapState
 				}
 				
 				if(selectedFlag)
-					uni.navigateTo({
+					uni.redirectTo({
 						url:'../reserve/reserve'
 					})
 				else

@@ -67,13 +67,13 @@
 				})
 			},
 			addAddress() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../editAddress/editAddress'
 				})
 			},
 			editAddress(item) {
 				console.log("item"+item);
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../editAddress/editAddress?param=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},

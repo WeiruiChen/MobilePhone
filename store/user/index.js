@@ -9,7 +9,7 @@ const state = {
 	"cityId":"1.1.5",
 	"sessionID":"",
 	"gender":"",
-	"openId":"",
+	"openId":"opfA81LO4KG84eBUeulJ0WmvK198",
 	"gmPhone":'',
 	"avatarUrl":'',
 	"province":'',

@@ -31,7 +31,7 @@
 		methods:{
 			onClickHandler(trigger,path){
 				if(trigger) return;
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'../'+ path + '/' + path
 				})
 			}

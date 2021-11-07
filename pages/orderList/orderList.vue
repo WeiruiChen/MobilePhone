@@ -16,11 +16,12 @@
 			<view v-for="(item) in showOrderList"  :key="item.code">
 				<view @click="gotoDetail(item.id)"
 					class="cu-item cu-form-group padding-top padding-bottom round-top-card">
-					<view class="content">
-						<view>
+					<view class="content" style="width:100%">
+						<view style="display:flex;justify-content: space-between;">
 							<text>订单编号：{{item.code}}</text>
+							<view class="cu-btn round sm">{{item.orderStateName}}</view>
 						</view>
-						<view style="display: flex;justify-content: center;align-items: center;">
+						<view style="display: flex;align-items: center;">
 							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix' style="height: auto;">
 							</image>
 							<view>
@@ -39,12 +40,11 @@
 
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
-						<view>共2项 合计：{{item.totalMoney}}</view>
-						<button class="cu-btn round sm">{{item.orderStateName}}</button>
+						<button v-if="NavMap[TabCur] === 'Check'" class="cu-btn round sm submit-btn">立即支付</button>
+						<button v-if="NavMap[TabCur] === 'New' && NavMap[TabCur] === 'Confirm'" class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</view>
 					</view>
 				</view>
 			</view>
-		</view>
 	</view>
 </template>
 
@@ -58,7 +58,7 @@
 		'已接单': 'Confirm',
 		'已送达': 'Packaged',
 		'维修中': 'Shipped',
-		'待验收':'Check',
+		'待验收': 'Check',
 		'已取消': 'Canceled',
 		'已完成': 'Completed'
 	}
@@ -74,6 +74,7 @@
 			return {
 				TabCur: '全部',
 				scrollLeft: 0,
+				NavMap,
 				showOrderList: [],
 				navList: [{
 						title: '全部',
@@ -89,9 +90,6 @@
 					},
 					{
 						title: '待验收',
-					},
-					{
-						title: '待支付',
 					}
 				]
 			};
@@ -104,7 +102,7 @@
 			gotoDetail(id) {
 				let order={};
 				order["orderId"] = id;
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
 				})
 				// uni.redirectTo({
@@ -122,13 +120,44 @@
 					}
 				}).then(res => {
 					this.showOrderList = res
-					console.log(res)
+					// alert(JSON.stringify(res))
 				}).catch(e => {
 					console.log('e')
 				})
 			},
+				deleteOrder(id) {
+				let that = this;
+				uni.showModal({
+					title: '确认',
+					content: '确认取消订单?',
+					success: function(e) {
+						if (e.confirm) {
+							that.$request({
+								url: '/phoneReparisServer/service/rest/login.orderService/collection/cancelOrder',
+								methods: 'POST',
+								data:{
+									orderId:id
+								}
+							}).then(res => {
+								console.log("deleteOrder:"+JSON.stringify(res));
+								
+							}).catch(e => {
+								console.log('deleteOrder', e)
+							})
+							uni.redirectTo({
+								url:'../orderList/orderList'
+							})
+						} else if (e.cancel) {
+							uni.showToast({
+							    title: "取消删除",
+							    icon: "none"
+							})
+						}
+					}
+				});
+			},
 			backToMine() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../mine/mine'
 				})
 			},
@@ -171,7 +200,7 @@
 	}
 
 	.flex-container {
-		width: 100%;
+		width:100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -192,11 +221,6 @@
 		color: #D9D9D9;
 	}
 
-	.submit-btn {
-		background-color: #04D4C6;
-		color: #FFFFFF;
-	}
-
 	.cancle {
 		margin-top: 60px;
 		text-align: right;
@@ -204,5 +228,12 @@
 
 	button {
 		color: #04D4C6;
+	}
+	.submit-btn {
+		/* background-color: blue; */
+		background-color: #ffffff !important;
+		color: #04D4C6;
+		border: 1rpx solid #04D4C6;
+
 	}
 </style>

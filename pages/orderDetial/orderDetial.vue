@@ -68,11 +68,7 @@
 						<view class="text_right">{{orderDetail.totalMoney}}</view>
 					</view>
 				</view>
-
-				<view class="cancle">
-					<button class="cu-btn shadow lg submit-btn round" @click="deleteOrder">取消订单</button>
-				</view>
-
+				<button v-if="NavMap[orderDetail.orderState] !== ''" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
 			</form>
 		</view>
 	</view>
@@ -112,14 +108,14 @@
 				switcha: false,
 				time: '12:01',
 				NavMap : {
-					'New':'新订单',
 					'ALL':'全部',
-					'Confirm':'已下单',
-					'Packaged':'已接单',
-					'Shipped':'已送达',
-					'Check':'维修中',
-					'Canceled':'已取消',
-					'Completed':'已完成'
+					'New':'已下单',
+					'Confirm': '已接单',
+					'Packaged': '已送达',
+					'Shipped': '维修中',
+					'Check':'待验收',
+					'Canceled': '已取消',
+					'Completed': '已完成'
 				},
 				phoneColorList:[
 					{

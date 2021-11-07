@@ -1,8 +1,8 @@
 <template>
 	<view style="position: relative;">
-		<button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
+		<!-- <button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
 			登陆
-		</button>
+		</button> -->
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		<!-- 强制用户点击获取信息 -->
 		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
@@ -185,11 +185,10 @@
 			// 获取微信用户信息
 			// this.getWxUserProfile()
 			// console.log('login')
-			this.wxLogin()
-
+			// this.wxLogin()
 			// 获取版本号
-			this.getAppVersion()
-			// this.getUserData()
+			// this.getAppVersion()
+			this.getUserData()
 		},
 		methods: {
 			//获取小程序版本号
@@ -325,24 +324,24 @@
 				const clickMap = {
 					// gototype为ClientPage则跳转
 					'ClientPage':function(){
-						uni.navigateTo({
+						uni.redirectTo({
 						url:pathMap[item.gotoValue]
 					})
 					},
 					'Category':function(){
 						if(index > 3){
-							uni.navigateTo({
+							uni.redirectTo({
 							url:'../maintenanceList/maintenanceList'
 						})
 						}else{
-							uni.navigateTo({
+							uni.redirectTo({
 							url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
 						})
 						}
 					},
 					'Goods':function(){
 						console.log(JSON.stringify(item))
-						uni.navigateTo({
+						uni.redirectTo({
 							url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
 						})
 					}

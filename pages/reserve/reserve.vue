@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :isBack="true"  bgColor="bg-gradual-blue" >
+		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">提交订单</view>
 		</cu-custom>
@@ -9,42 +9,43 @@
 			<form>
 				<view class="cu-form-group margin-top">
 					<view style="display:flex;flex-direction:column;width:100%;;margin-top:20rpx;margin-bottom:20rpx">
-								<view style="display:flex;justify-content:flex-end">
-										<view class="outer round"
-											style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
-											<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'" @click="sentBySelf">
-												<text style="width: 59px;line-height: 34px;">立即送修</text>
-											</view>
-											<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'" @click="getByDelivery">
-												<text style="width: 59px;line-height: 34px;">上门取件</text>
-											</view>
-										</view>
+						<view style="display:flex;justify-content:flex-end">
+							<view class="outer round"
+								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
+								<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'"
+									@click="sentBySelf">
+									<text style="width: 59px;line-height: 34px;">立即送修</text>
 								</view>
+								<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'"
+									@click="getByDelivery">
+									<text style="width: 59px;line-height: 34px;">上门取件</text>
+								</view>
+							</view>
+						</view>
 						<view style="margin-top:20rpx">
 							<view style="display:flex;justify-content:space-between;align-items:flex-end;">
-									<view style="display:flex;flex-direction:column;;width:100%" v-if="haveDefaultAddress">
-											<view v-if="changeType">
-												<picker @change="PickerChange" :value="index" :range="addressList">
-													<view>
-														{{chooseAddress.label}}:{{index>-1?addressList[index]:'暂无地址'}}
-													</view>
-												</picker>
+								<view style="display:flex;flex-direction:column;;width:100%" v-if="haveDefaultAddress">
+									<view v-if="changeType">
+										<picker @change="PickerChange" :value="index" :range="addressList">
+											<view>
+												{{chooseAddress.label}}:{{index>-1?addressList[index]:'暂无地址'}}
 											</view>
-											<view v-if="!changeType">
-												{{chooseAddress.label}}:{{chooseAddress.address}}
-											</view>
-												<view>{{name}} {{phone}}</view>								
+										</picker>
 									</view>
-										<view v-else>
-											暂无地址!请点击右侧增加地址
-										</view>
-									<button v-if="chooseAddress.label === '取件地址'" class="cu-btn cuIcon icon-add" @click="addAddress" style="height:50rpx" >
-										<text class="cuIcon-add"></text>
-									</button>
+									<view v-if="!changeType">
+										{{chooseAddress.label}}:{{chooseAddress.address}}
+									</view>
+									<view>{{name}} {{phone}}</view>
+								</view>
+								<view v-else>
+									暂无联系人信息，请点击右侧增加联系人地址
+								</view>
+								<button class="cu-btn cuIcon icon-add" @click="addAddress" style="height:50rpx">
+									<text class="cuIcon-add"></text>
+								</button>
 							</view>
-							
 						</view>
-					
+
 					</view>
 				</view>
 				<!-- <view class="cu-form-group flex-container round-card">
@@ -66,53 +67,56 @@
 				</picker>
 			</view> -->
 				<view v-if="changeType">
-				<view class="cu-form-group round-card">
-					<view class="title">取件日期：</view>
+					<view class="cu-form-group round-card">
+						<view class="title">取件日期：</view>
 
-					<picker mode="date" :value="date" :start="startTime" :end="endTime">
-						<view class="picker">
-							{{date}}
-						</view>
-					</picker>
+						<picker mode="date" :value="date" :start="startTime" :end="endTime" @change="dateChange">
+							<view class="picker">
+								{{date}}
+							</view>
+						</picker>
+					</view>
+
+					<view class="cu-form-group round-card">
+						<view class="title">取件时间：</view>
+
+						<picker mode="time" :value="time" start="09:01" end="21:01" @change="TimeChange">
+							<view class="picker">
+								{{time}}
+							</view>
+						</picker>
+					</view>
 				</view>
 
-				<view class="cu-form-group round-card">
-					<view class="title">取件时间：</view>
-
-					<picker mode="time" :value="time" start="09:01" end="21:01" @change="TimeChange">
-						<view class="picker">
-							{{time}}
-						</view>
-					</picker>
-				</view>
-				</view>
-				
 				<view class="cu-form-group round-card" v-if="!changeType">
 					<view class="title">送修日期：无特殊要求</view>
 				</view>
-				
+
 				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content">
 						<view class="">
 							<text>维修方案</text>
 						</view>
 						<view style="display:flex;align-items:flex-end">
-							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix' style="height: auto;"></image>
-							<view >
+							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix'
+								style="height: auto;"></image>
+							<view>
 								<view class="margin-lr-sm"><text>{{fanganList[0].phoneType}}</text></view>
 								<view class="flex">
-									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList" :key="item.color">
+									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList"
+										:key="item.color">
 										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
-											<!-- <text> </text> --> 
-												<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
-											<view class="round phone-color"  :class="item.isCheck ? 'cuIcon-check' : ''" :style="'background-color:'+item.color"></view>
+											<!-- <text> </text> -->
+											<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
+											<view class="round phone-color" :class="item.isCheck ? 'cuIcon-check' : ''"
+												:style="'background-color:'+item.color"></view>
 										</view>
 										<view class="margin-tb-sm">{{item.name}}</view>
 									</view>
 								</view>
+							</view>
 						</view>
-					</view>
-				
+
 					</view>
 				</view>
 
@@ -150,7 +154,8 @@
 				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:0">
 					<view>
 						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
-								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text> </view>
+								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
+						</view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
 					</view>
 					<view>
@@ -176,49 +181,48 @@
 		data() {
 			return {
 				sent: true,
-				chooseAddress:{
-					label:"",
-					address:""
+				chooseAddress: {
+					label: "",
+					address: ""
 				},
 				// 判断是否有默认地址
-				haveDefaultAddress:true,
-				phone:"",
-				name:"",
+				haveDefaultAddress: true,
+				phone: "",
+				name: "",
 				time: '',
 				date: '',
 				goodsList: [],
 				fanganList: [],
-				deliveryPrice:20,
+				deliveryPrice: 20,
 				defaultAddress: {},
-				changeType:true,
-				addressList:[],
-				index:-1,
-				orginList:[],
-				phoneColorList:[
-					{
-						name:'白色',
-						color:'#FFFFFF',
-						isCheck:true,
+				changeType: true,
+				addressList: [],
+				index: -1,
+				orginList: [],
+				phoneColorList: [{
+						name: '白色',
+						color: '#FFFFFF',
+						isCheck: true,
 					},
 					{
-						name:'黑色',
-						color:'#000000',
-						isCheck:false
+						name: '黑色',
+						color: '#000000',
+						isCheck: false
 					},
-						{
-						name:'金色',
-						color:'#D9D919',
-						isCheck:false
+					{
+						name: '金色',
+						color: '#D9D919',
+						isCheck: false
 					}
 				],
-				selectedMemo:'',
-				startTime:'',
-				endTime:''
+				selectedMemo: '',
+				startTime: '',
+				endTime: ''
 				// 地址跟索引的
 				// imageUrl: ''
 			}
 		},
-		onLoad(){
+		onLoad() {
 			// alert(JSON.stringify(this.time))
 			// alert(JSON.stringify(this.startTime))
 			// alert(JSON.stringify(this.endTime))
@@ -230,7 +234,7 @@
 			// 	this.goodsList = [navigateParams];
 			// }
 			this.startTime = formatDateTime(new Date())
-			this.endTime = formatDateTime(getNextDayDate(30,new Date()))
+			this.endTime = formatDateTime(getNextDayDate(30, new Date()))
 			// 初始化时间
 			this.time = formatTime(new Date())
 			this.date = this.startTime
@@ -240,48 +244,48 @@
 			console.log("fanganList" + JSON.stringify(this.fanganList));
 			// this.imageUrl = this.baseImageUrl;
 			console.log(this.imageUrl);
-			
+
 			// 先获取全部地址
 			this.getAddressList()
 
 			// 获取地址数据
-		
+
 		},
 		computed: mapState({
 			// 从state中拿到数据 
 			maintenanceList: state => state.goods.maintenanceList,
 			baseImageUrl: state => state.user.imageBaseUrl,
-			totalPrice(){
-				let list = this.maintenanceList.filter(item=>item.selected === true);
+			totalPrice() {
+				let list = this.maintenanceList.filter(item => item.selected === true);
 				let total = 0
-				for(let item in list){
+				for (let item in list) {
 					total += list[item].price;
 				}
 				return total;
 			},
-			totalSalePrice(){
-				let list = this.maintenanceList.filter(item=>item.selected === true);
+			totalSalePrice() {
+				let list = this.maintenanceList.filter(item => item.selected === true);
 				let totalSale = 0;
-				for(let item in list){
+				for (let item in list) {
 					totalSale += list[item].salePrice;
 				}
-				return totalSale+this.deliveryPrice;
+				return totalSale + this.deliveryPrice;
 			}
 		}),
 		methods: {
-			onSelectType(name,checked){
+			onSelectType(name, checked) {
 				// 判断只能有一个选中
-				this.phoneColorList = this.phoneColorList.map(item=>{
+				this.phoneColorList = this.phoneColorList.map(item => {
 					return {
 						...item,
-						isCheck:false,
+						isCheck: false,
 					}
 				})
 				// 然后选中
 				for (const index in this.phoneColorList) {
 					// 先全部未选
-					if(name == this.phoneColorList[index].name){
-						console.log('checked',checked)
+					if (name == this.phoneColorList[index].name) {
+						console.log('checked', checked)
 						this.phoneColorList[index].isCheck = checked;
 					}
 
@@ -290,32 +294,32 @@
 
 			},
 			PickerChange(e) {
-				console.log('e.detail.value',e.detail.value)
+				console.log('e.detail.value', e.detail.value)
 				this.index = e.detail.value
 				this.name = this.orginList[this.index].name
 				this.phone = this.orginList[this.index].phone
 				this.chooseAddress.address = this.addressList[this.index]
 				this.defaultAddress.id = this.addressList[this.index].id
 			},
-			addAddress(){
+			addAddress() {
 				uni.redirectTo({
-					url:'../allAddress/allAddress'
+					url: '../allAddress/allAddress'
 				})
 			},
 			// PickerChange(e) {
 			// 	this.chooseAddress.address = e.detail.value
 			// },
-			getAddressList(){
+			getAddressList() {
 				this.$request({
-					url:'/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
-					methods:'POST'
-				}).then(res=>{
-					console.log('resresres',res)
+					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
+					methods: 'POST'
+				}).then(res => {
+					console.log('resresres', res)
 					this.orginList = res
 					this.addressList = []
-					if(this.orginList.length>0){
+					if (this.orginList.length > 0) {
 						for (const value of this.orginList) {
-							this.addressList.push(value.region +' ' +value.address)
+							this.addressList.push(value.region + ' ' + value.address)
 						}
 					}
 
@@ -323,57 +327,61 @@
 					this.$request({
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
 						methods: 'POST',
-						}).then(res => {
-							if(res.length === 0) this.haveDefaultAddress = false;
-							this.defaultAddress = res[0] || {};
-							
-							// 获取默认地址在全部地址中的索引
-							for (const index in this.orginList) {
-								if( this.orginList[index].id == this.defaultAddress.id){
-									this.index = index;
-								}
+					}).then(res => {
+						if (res.length === 0) this.haveDefaultAddress = false;
+						this.defaultAddress = res[0] || {};
+
+						// 获取默认地址在全部地址中的索引
+						for (const index in this.orginList) {
+							if (this.orginList[index].id == this.defaultAddress.id) {
+								this.index = index;
 							}
-							console.log(this.index)
-							//加载地址，默认选中上门取件
-							this.getByDelivery();
-							console.log(JSON.stringify(res));
-						}).catch(e => {
-							console.log(e)
+						}
+						console.log(this.index)
+						//加载地址，默认选中上门取件
+						this.getByDelivery();
+						console.log(JSON.stringify(res));
+					}).catch(e => {
+						console.log(e)
 					})
-				}).catch(err=>{
+				}).catch(err => {
 					console.error(err)
 				})
+			},
+			dateChange(e) {
+				this.date = e.detail.value
 			},
 			TimeChange(e) {
 				this.time = e.detail.value
 			},
-			sentBySelf(){
-				this.chooseAddress.label = "最近网点" ;
+			sentBySelf() {
+				this.chooseAddress.label = "最近网点";
 				//默认最近网点只有一个固定值，主页已经拿到
 				this.chooseAddress.address = "雨花区**商务楼101";
 				this.phone = "123456";
 				this.name = "金牌手机维修";
 				this.changeType = false;
 			},
-			getByDelivery(){
-				this.chooseAddress.label = "取件地址" ;
-				this.chooseAddress.address = (this.defaultAddress.region||'') + (this.defaultAddress.address || '') + (this.defaultAddress.houseNumber||'') ;
+			getByDelivery() {
+				this.chooseAddress.label = "取件地址";
+				this.chooseAddress.address = (this.defaultAddress.region || '') + (this.defaultAddress.address || '') + (
+					this.defaultAddress.houseNumber || '');
 				this.phone = this.defaultAddress.phone || '';
 				this.name = this.defaultAddress.name || '';
 				this.changeType = true;
 			},
 			submitOrder() {
-				if(!this.defaultAddress.id){
+				if (!this.defaultAddress.id) {
 					uni.showModal({
-					    content:  '目前没有地址,请选择或者新增地址后再进行下单',
-						showCancel:false,
-					    success: function (res) {
-					        if (res.confirm) {
-					            // console.log('用户点击确定');
-					        } else if (res.cancel) {
-					            // console.log('用户点击取消');
-					        }
-					    }
+						content: '目前没有地址,请选择或者新增地址后再进行下单',
+						showCancel: false,
+						success: function(res) {
+							if (res.confirm) {
+								// console.log('用户点击确定');
+							} else if (res.cancel) {
+								// console.log('用户点击取消');
+							}
+						}
 					});
 					return;
 				}
@@ -386,29 +394,29 @@
 				param_orderParams["orderType"] = "Order"; //暂时固定 Order
 				param_orderParams["remark"] = "..."; //用户备注
 				// param_orderParams["predetermine"] = "2021-10-23 08:00-11:00" //预订上门时间
-				param_orderParams["predetermine"] = this.date +" "+this.time; //预订上门时间
+				param_orderParams["predetermine"] = this.date + " " + this.time; //预订上门时间
 				param_orderParams["isForced"] = true; //暂时固定 true
 				//param_orderParams["cityId"] = ""; //登录返回的cityId
 				param_orderParams["needPickUp"] = true; //是否上门取件 ，true  是，false  自行送修
 				//获取最近网点和快递费getDeliveryAddressList接口返回的id，目前只有一个
-				param_orderParams["deliveryId"] ="66a88b5cbc434905875ac6c8a3aff86c"; 
-				console.log("param_orderParams:"+JSON.stringify(param_orderParams));
-				
+				param_orderParams["deliveryId"] = "66a88b5cbc434905875ac6c8a3aff86c";
+				console.log("param_orderParams:" + JSON.stringify(param_orderParams));
+
 				let param_goodsList = [];
-				for(let item in this.fanganList){
+				for (let item in this.fanganList) {
 					let tempObject = {};
 					tempObject["price"] = this.fanganList[item].salePrice;
-					tempObject["goodsId"] = this.fanganList[item].id;//商品id
-					tempObject["count"] = 1;//暂时固定 1
-					tempObject["quickMemo"] = this.selectedMemo;//颜色备注， getShopCart接口会返回，做出选择后传入
+					tempObject["goodsId"] = this.fanganList[item].id; //商品id
+					tempObject["count"] = 1; //暂时固定 1
+					tempObject["quickMemo"] = this.selectedMemo; //颜色备注， getShopCart接口会返回，做出选择后传入
 					param_goodsList.push(tempObject);
 				}
-				console.log("param_goodsList:"+JSON.stringify(param_goodsList));
-				
+				console.log("param_goodsList:" + JSON.stringify(param_goodsList));
+
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.orderService/collection/createOrder',
 					methods: 'POST',
-					data:{
+					data: {
 						orderParams: JSON.stringify(param_orderParams),
 						goodsList: JSON.stringify(param_goodsList)
 					}
@@ -417,9 +425,10 @@
 					//跳转到下单成功页面
 					let order = {};
 					order["orderId"] = res[0]["orderId"];
-					console.log("create order success:"+JSON.stringify(res[0]));
-					uni.navigateTo({
-						url: '../orderSuccess/orderSuccess?param='+encodeURIComponent(JSON.stringify(order))
+					console.log("create order success:" + JSON.stringify(res[0]));
+					uni.redirectTo({
+						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
+							order))
 						// url: '../orderSuccess/orderSucces'
 					})
 				}).catch(e => {
@@ -500,6 +509,7 @@
 		height: 34px;
 		text-align: center;
 	}
+
 	.round-right {
 		border-top-right-radius: 17px;
 		border-bottom-right-radius: 17px;
@@ -508,9 +518,11 @@
 		height: 34px;
 		text-align: center;
 	}
+
 	.active {
 		background-color: #04D4C6;
 	}
+
 	button {
 		color: #FFFFFF;
 		background-color: #04D4C6 !important;
