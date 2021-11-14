@@ -16,7 +16,8 @@ const state = {
 	"city":'',
 	"country":'',
 	"wxHead":'',
-	'name':''
+	'name':'',
+	'delivery':{}
 
 }
 

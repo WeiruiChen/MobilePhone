@@ -41,7 +41,7 @@
 		</view>
 		
 		<view v-show="showStatic">
-			
+			<view v-if="salesTimeList.length > 0">
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
@@ -70,7 +70,7 @@
 						</view>
 				</view>
 			</scroll-view>
-			
+			</view>
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
@@ -189,7 +189,6 @@
 			wxHead:state => state.user.wxHead
 		}),
 		onLoad(){
-			
 			// this.$request({
 			// 	url:'/phoneReparisServer/service/rest/login.customerService/collection/updateUserWXInfo',
 			// 	methods:'POST',
@@ -210,7 +209,6 @@
 				 // 获取版本号
 				 this.getAppVersion()
 			 }
-		
 			// this.getUserData()
 		},
 		methods: {
@@ -371,15 +369,11 @@
 					})
 					},
 					'Category':function(){
-						if(index > 3){
-						}else{
-							uni.wx.reLaunch({
+							uni.reLaunch({
 								url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
 						})
-						}
 					},
 					'Goods':function(){
-						console.log(JSON.stringify(item))
 						uni.navigateTo({
 							url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
 						})
@@ -417,6 +411,10 @@
 					this.$store.dispatch('actionTrigger',{
 						key:'gmPhone',
 						value: this.cshPhone
+					})
+					this.$store.dispatch('actionTrigger',{
+						key:'delivery',
+						value: res[0]
 					})
 				}).catch(e=>{
 					console.log('getDeliveryAddressList',e)

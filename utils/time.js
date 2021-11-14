@@ -1,7 +1,7 @@
  /**
  * 格式成2012-10-15 12:13:14格式的字符串
  */
-  function formatFullTime(t){
+export  function formatFullTime(t){
     var str = '';
     str = str + t.getFullYear() + '-' + format2Char(t.getMonth() + 1) + '-' + format2Char(t.getDate());
     str = str + ' ' + format2Char(t.getHours()) + ':' + format2Char(t.getMinutes()) + ':' + format2Char(t.getSeconds());
@@ -208,7 +208,7 @@ function getYMDStrofDate(d){
  * @param time1
  * @param time2
  */
-function compareTimeStr(time1, time2) {
+export function compareTimeStr(time1, time2) {
     var t1 = parseTime(time1).getTime();
     var t2 = parseTime(time2).getTime();
     if(t1 > t2) {
