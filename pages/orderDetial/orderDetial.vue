@@ -14,15 +14,14 @@
 						<view>订单状态：{{NavMap[orderDetail.orderState||'']}}</view>
 					</view>
 				</view>
-
 				<view class="cu-item cu-form-group padding-tb round-card">
 					<view class="content">
-						<view>{{orderDetail.needPickup==true?'上门信息':'最近网点'}}</view>
+						<view>{{orderDetail.needPickUp ? ' 上门信息' :'最近网点'}}</view>
 						<view>
-							{{orderDetail.needPickUp==true?orderDetail.deliveryName||'':orderDetail.receiverName||''}} 
-							{{orderDetail.needPickUp==true?orderDetail.receiverPhone||'':orderDetail.companyPhone||''}} 
+							{{orderDetail.needPickUp ? orderDetail.receiverName || '' : orderDetail.deliveryName || ''}} 
+							{{orderDetail.needPickUp ? orderDetail.receiverPhone || '' : orderDetail.companyPhone || ''}} 
 						</view>
-						<view>{{orderDetail.needPickUp==true?orderDetail.deliveryAdress||'':orderDetail.address||''}}</view>
+						<view>{{orderDetail.needPickUp ? orderDetail.address || '' : orderDetail.deliveryAdress || ''}}</view>
 						<view v-if="orderDetail.needPickUp">上门时间： {{orderDetail.appointmentTime}}</view>
 					</view>
 				</view>
@@ -69,7 +68,8 @@
 					</view>
 				</view>
 				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="gotoOrderList">订单列表</button>
-				<button v-if="NavMap[orderDetail.orderState] !== ''" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
+				<button v-if="NavMap[orderDetail.orderState] !== '已送达' &&  NavMap[orderDetail.orderState] !== '已完成'" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
+				<button v-else class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="callPhone">联系客服</button>
 			</form>
 		</view>
 	</view>
@@ -91,14 +91,15 @@
 				}).then(res=>{
 					console.log("orderdetial res" + JSON.stringify(res))
 					this.orderDetail = res
-					// alert(JSON.stringify(this.orderDetail))
+					// alert(this.orderDetail.needPickUp)
 				}).catch(e=>{
 					console.log(e)
 				})
 			}
 		},
 		computed: mapState({
-			imageUrl:state => state.user.imageBaseUrl
+			imageUrl:state => state.user.imageBaseUrl,
+			gmPhone:state => state.user.gmPhone,
 		}),
 		data() {
 			return {
@@ -147,6 +148,11 @@
 			gotoOrderList() {
 				uni.redirectTo({
 					url: '../orderList/orderList'
+				})
+			},
+			callPhone(){
+				uni.makePhoneCall({
+				  phoneNumber: this.gmPhone,
 				})
 			},
 			deleteOrder() {

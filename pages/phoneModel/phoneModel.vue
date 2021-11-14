@@ -8,7 +8,7 @@
 
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''"
+				<view class="cu-item flex-sub" :class="item.id == TabCur?'text-orange cur':''"
 					v-for="(item,index) in FirstMenu" :key="index" @tap="tabSelect" :data-item="{id:item.id,index}">
 					{{item.text}}
 				</view>
@@ -18,7 +18,7 @@
 		<view class="VerticalBox container visualHeight">
 			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop">
 				<view class="flex-vertical margin-top-xl" style="overflow:scroll;">
-					<view class="nav-item" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
+					<view class="nav-item" :class="item.id == tabCur?'text-green cur':''" v-for="(item,index) in list"
 						:key="index" @tap="TabSelect" :data-item="{id:item.id,index}">
 						{{item.name}}
 					</view>
@@ -43,7 +43,7 @@
 			</scroll-view>
 		</view>
 		<!-- <nabBar type="phoneModel" :isActive="true"></nabBar> -->
-		<view-tabbar :current="1"></view-tabbar>
+		<view-tabbar current="1"></view-tabbar>
 	</view>
 </template>
 
@@ -55,15 +55,13 @@
 		data() {
 			return {
 				list: [],
-				tabCur: 0,
+				tabCur: null,
 				mainCur: 0,
 				verticalNavTop: 0,
 				load: true,
-				TabCur: 0,
+				TabCur: null,
 				FirstMenu: [],
 				deviceList: [],
-				oneMeneText: '手机',
-				twoMeneText: '苹果',
 				// 加载闪屏
 				flag:true,
 				titleMap:{}
@@ -84,23 +82,9 @@
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.category));
-				if (navigateParams.title === '苹果手机' || navigateParams.title === '其他机型') {
-					this.oneMeneText = '手机'
-					this.twoMeneText = '苹果'
-					this.TabCur = 0
-					this.tabCur = 0
-				}
-				if (navigateParams.title === '华为手机') {
-					this.oneMeneText = '手机'
-					this.twoMeneText = '华为'
-					this.TabCur = 0
-					this.tabCur = 1
-				}
-				if (navigateParams.title === '小米手机') {
-					this.oneMeneText = '手机'
-					this.twoMeneText = '小米'
-					this.TabCur = 0
-					this.tabCur = 2
+				if(navigateParams.gotoValue.indexOf(',')){
+					this.tabCur = navigateParams.gotoValue.split(',')[1]
+					this.TabCur = navigateParams.gotoValue.split(',')[0]
 				}
 			}
 			uni.showLoading({
@@ -113,9 +97,8 @@
 				methods: 'POST'
 			}).then(res => {
 				this.FirstMenu = res
-				this.getSecondMenu(this.FirstMenu.filter(item =>
-					item.text === this.oneMeneText
-				)[0].id)
+				this.getSecondMenu(this.TabCur ?this.TabCur : this.FirstMenu[0].id)
+				this.TabCur = this.FirstMenu[0].id;
 				this.flag = true
 			}).catch(e => {
 				console.log('getCategoryOne', e)
@@ -128,9 +111,9 @@
 		methods: {
 			// 维修页面跳转
 			fixPhone(item) {
-				console.log('this.tabCur');
-				console.log('this.titleMap[this.tabCur] ',this.titleMap[this.tabCur] )
-				console.log('item',this.item )
+				// console.log('this.tabCur');
+				// console.log('this.titleMap[this.tabCur] ',this.titleMap[this.tabCur] )
+				console.log('itemitemitemitemitemitemitem',item )
 
 				uni.navigateTo({
 					url: '../maintenanceList/maintenanceList?title=' + this.titleMap[this.tabCur] + '&phone=' +
@@ -143,13 +126,13 @@
 				})
 			},
 			tabSelect(e) {
-				this.TabCur = e.currentTarget.dataset.item.index;
+				this.TabCur = e.currentTarget.dataset.item.id;
 				console.log('e.currentTarget.dataset', e.currentTarget.dataset)
 				this.getSecondMenu(e.currentTarget.dataset.item.id)
 			},
 			TabSelect(e) {
-				this.tabCur = e.currentTarget.dataset.item.index;
-				this.mainCur = e.currentTarget.dataset.item.index;
+				this.tabCur = e.currentTarget.dataset.item.id;
+				this.mainCur = e.currentTarget.dataset.item.id;
 				this.getThirdMenu(e.currentTarget.dataset.item.id)
 				// this.verticalNavTop = (e.currentTarget.dataset.id - 1) * 50
 			},
@@ -167,10 +150,8 @@
 					for (const index in this.list) {
 						this.titleMap[index] = this.list[index].name
 					}
-					this.getThirdMenu(this.list.filter(item =>
-						item.name === this.twoMeneText
-					)[0].id)
-					
+					this.getThirdMenu(this.tabCur ? this.tabCur : this.list[0].id)
+					this.tabCur = this.list[0].id;
 				}).catch(e => {
 					console.log('getCategoryTwo', e)
 				})

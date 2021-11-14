@@ -1,7 +1,7 @@
 //存放用户小程序全局状态
 const state = {
 	// 全局照片存储
-	"imageBaseUrl":"http://pow6rm42.dongtaiyuming.net:29203/phoneReparisServer/service/rest/tk.File/",
+	"imageBaseUrl":"https://www.caomeixinxi.com/phoneReparisServer/service/rest/tk.File/",
 	"id":"xxx",
 	"clientVer":"0.0.0",
 	"loginName":"",
@@ -14,7 +14,9 @@ const state = {
 	"avatarUrl":'',
 	"province":'',
 	"city":'',
-	"country":''
+	"country":'',
+	"wxHead":'',
+	'name':''
 
 }
 

@@ -13,7 +13,7 @@
 				<view style="display:flex;flex-direction:column;">
 
 				<view class="text-left margin-top-xl margin-left">
-					<view class="category-one"><text>{{phone.title}}</text></view>
+					<view class="category-one"><text>{{phone.groupCnName}}</text></view>
 					<view class="category-two margin-tb-sm"><text>{{phone.name}}</text></view>
 					<view class="change-phone" @click="backPhoneModel"><text>更换机型</text></view>
 					<view class="category-three">
@@ -21,7 +21,7 @@
 				</view>
 
 				<view class="flex-vertical margin-top-xl">
-					<view class="nav-item" style="margin-top:10rpx" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
+					<view class="nav-item" style="margin-top:20rpx" :class="index==tabCur?'text-green cur':''" v-for="(item,index) in list"
 						:key="index" @tap ="TabSelect" :data-item="{id:item.id,index}">
 						{{item.name}}
 					</view>
@@ -167,7 +167,7 @@ import { mapState } from 'vuex'//引入mapState
 		}),
 		methods: {
 			backPhoneModel() {
-				uni.redirectTo({
+				uni.switchTab({
 					url: '../phoneModel/phoneModel'
 				})
 			},
@@ -369,7 +369,7 @@ import { mapState } from 'vuex'//引入mapState
 		background-color: #D9D9D9;
 		color: #A6A6A6;
 		border: none;
-		height: 50px;
+		height: 60rpx;
 		/* position: relative; */
 	}
 
@@ -388,7 +388,7 @@ import { mapState } from 'vuex'//引入mapState
 	.VerticalNav.nav .nav-item.cur::after {
 		/* content: ""; */
 		width: 8upx;
-		height: 30upx;
+		height: 50rpx;
 		/* border-radius: 10upx 0 0 10upx; */
 		/* position: absolute; */
 		background-color: currentColor;
@@ -401,8 +401,11 @@ import { mapState } from 'vuex'//引入mapState
 	.nav-item {
 		border-radius: 8px;
 		width: 80% !important;
-		font-size: 1.1rem;
-		line-height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 30rpx;
+		line-height: 50rpx;
 	}
 
 	.category-one {

@@ -222,17 +222,19 @@
 				// imageUrl: ''
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			// alert(JSON.stringify(this.time))
 			// alert(JSON.stringify(this.startTime))
 			// alert(JSON.stringify(this.endTime))
+				if (Object.keys(option).length > 0) {
+				const navigateParams = JSON.parse(decodeURIComponent(option.goods));
+				console.log('navigateParamsnavigateParamsnavigateParamsnavigateParamsnavigateParams', navigateParams);
+				this.fanganList = [navigateParams.goods];
+				console.log('fanganListfanganListfanganListfanganListfanganList', fanganList);
+			}
 		},
 		onShow() {
-			// if (Object.keys(option).length > 0) {
-			// 	const navigateParams = JSON.parse(decodeURIComponent(option.goods));
-			// 	console.log('navigateParams', navigateParams);
-			// 	this.goodsList = [navigateParams];
-			// }
+		
 			this.startTime = formatDateTime(new Date())
 			this.endTime = formatDateTime(getNextDayDate(30, new Date()))
 			// 初始化时间
@@ -397,7 +399,7 @@
 				param_orderParams["predetermine"] = this.date + " " + this.time; //预订上门时间
 				param_orderParams["isForced"] = true; //暂时固定 true
 				//param_orderParams["cityId"] = ""; //登录返回的cityId
-				param_orderParams["needPickUp"] = true; //是否上门取件 ，true  是，false  自行送修
+				param_orderParams["needPickUp"] = this.changeType; //是否上门取件 ，true  是，false  自行送修
 				//获取最近网点和快递费getDeliveryAddressList接口返回的id，目前只有一个
 				param_orderParams["deliveryId"] = "66a88b5cbc434905875ac6c8a3aff86c";
 				console.log("param_orderParams:" + JSON.stringify(param_orderParams));

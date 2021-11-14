@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<button v-if="!loginName" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
+		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
 			登陆
 		</button>
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
@@ -17,8 +17,9 @@
 
 			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx">
-				<image :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx"  @click="onClickHandler(item)">
+				<!-- {{item}} -->
+				<image  :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
 			</swiper-item>
 		</swiper>
 
@@ -104,7 +105,7 @@
 			
 		</view>
 		
-		<view class="cu-card case" v-for="(item,index) in serviceProfitList" :key="item.fileId">
+		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
@@ -112,12 +113,11 @@
 				</view>
 			</view>
 		</view>
-		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;">
-			<text style="text-align: center;">24小时客服电话:{{cshPhone}}</text>
+		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;" >
+			<text style="text-align: center;" @click="callPhone">24小时客服电话:{{cshPhone}}</text>
 		</view>
 		<view style="height: 140rpx;"></view>
-		<!-- <nabBar style="height: 100rpx;" type="first" :isActive="true"></nabBar>		 -->
-		<view-tabbar :current="0"></view-tabbar>
+		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
 
@@ -184,21 +184,33 @@
 			loginName: state => state.user.loginName,
 			cityId: state => state.user.cityId,
 			imageUrl:state => state.user.imageBaseUrl,
-			openId:state => state.user.openId
+			openId:state => state.user.openId,
+			gmPhone:state => state.user.gmPhone,
+			wxHead:state => state.user.wxHead
 		}),
 		onLoad(){
-			// this.$debug('首页进入1')
-			// alert('进入first页面')
-			// wx.seEnableDebug(){
-			// 	enableDebug:true;
-			// }
-			// 获取微信用户信息
-			// this.getWxUserProfile()
-			// console.log('login')
-			this.wxLogin()
-
-			// 获取版本号
-			this.getAppVersion()
+			
+			// this.$request({
+			// 	url:'/phoneReparisServer/service/rest/login.customerService/collection/updateUserWXInfo',
+			// 	methods:'POST',
+			// 	data:{
+			// 		name:'123',
+			// 		wxHead:'xxxxx'
+			// 	}
+			// }).then(res=>{
+			// 	console.log('更新用户头像成功')
+			// }).catch(err=>{
+			// 	console.log('更新用户头像失败')
+			// })
+			// const accountInfo = wx.getAccountInfoSync();
+			 if(uni.getSystemInfoSync().platform == 'mac'){
+				 this.getUserData()
+			 }else{
+				 this.wxLogin()
+				 // 获取版本号
+				 this.getAppVersion()
+			 }
+		
 			// this.getUserData()
 		},
 		methods: {
@@ -243,6 +255,20 @@
 							this.$store.dispatch('actionTrigger',{
 							key:'country',value:country || '',
 						})
+						// 返回成功后更新用户头像和name
+						this.$request({
+							url:'/phoneReparisServer/service/rest/login.customerService/collection/updateUserWXInfo',
+							methods:'POST',
+							data:{
+								name:nickName,
+								wxHead:avatarUrl
+							}
+						}).then(res=>{
+							console.log('更新用户头像成功')
+						}).catch(err=>{
+							console.log('更新用户头像失败')
+						})
+							
 				}
 			})
 			},
@@ -336,17 +362,19 @@
 					// gototype为ClientPage则跳转
 					'ClientPage':function(){
 						uni.redirectTo({
-						url:pathMap[item.gotoValue]
+						url:pathMap[item.gotoValue],
+						fail:function(){
+							uni.switchTab({
+								url:pathMap[item.gotoValue]
+							})
+						}
 					})
 					},
 					'Category':function(){
 						if(index > 3){
-							uni.navigateTo({
-							url:'../maintenanceList/maintenanceList'
-						})
 						}else{
-							uni.reLaunch({
-							url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
+							uni.wx.reLaunch({
+								url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
 						})
 						}
 					},
@@ -423,6 +451,12 @@
 					console.log('getHomeBanner',e)
 				})
 			},
+			callPhone(){
+				console.log('callPhone')
+				uni.makePhoneCall({
+				  phoneNumber: this.gmPhone,
+				})
+			},
 			getUserData(){
 				uni.showLoading({
 				    title: '加载中'
@@ -431,7 +465,7 @@
 					url:'/phoneReparisServer/service/rest/nologin.customer.login/collection/login',
 					methods:'POST',
 					data:{
-						openId:this.openId,
+						openId:this.openId || 'opfA81LO4KG84eBUeulJ0WmvK198',
 						loginType:"openId"
 					}
 				}).then(res=>{
@@ -451,6 +485,12 @@
 					// })
 					this.$store.dispatch('actionTrigger',{
 						key:'sessionID',value:resFormat['sessionID'] || '',
+					})
+					this.$store.dispatch('actionTrigger',{
+						key:'name',value:resFormat['name'] || '',
+					})
+					this.$store.dispatch('actionTrigger',{
+						key:'wxHead',value:resFormat['wxHead'] || '',
 					})
 					// 获取轮播图等信息
 					this.getHomeBannerData()
