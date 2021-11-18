@@ -8,7 +8,8 @@
 		<view class="container">
 			<form>
 				<view class="cu-form-group margin-top round-card">
-					<view style="display:flex;flex-direction:row;justify-content:space-between;width:100%;;margin-top:20rpx;margin-bottom:20rpx">
+					<view
+						style="display:flex;flex-direction:row;justify-content:space-between;width:100%;;margin-top:20rpx;margin-bottom:20rpx">
 						<!-- <view style="display:flex;justify-content:flex-end">
 							<view class="outer round"
 								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
@@ -43,10 +44,10 @@
 										<text class="cuIcon-add"></text>
 									</button>
 								</view>
-								
+
 							</view>
 						</view>
-						
+
 						<view style="display:flex;justify-content:flex-end">
 							<view class="outer round"
 								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
@@ -67,7 +68,8 @@
 					<view class="cu-form-group round-card">
 						<view class="title">取件日期：</view>
 
-						<picker mode="date" fields="day" :value="date" :start="startTime" :end="endTime" @change="dateChange">
+						<picker mode="date" fields="day" :value="date" :start="startTime" :end="endTime"
+							@change="dateChange">
 							<view class="picker">
 								{{date}}
 							</view>
@@ -76,12 +78,12 @@
 
 					<view class="cu-form-group round-card">
 						<view class="title">取件时间：</view>
-					
-					<picker @change="timeChange" value="index" :range="timeList">
-						<view class="text-right picker">
-							{{time}}
-						</view>
-					</picker>
+
+						<picker @change="timeChange" :value="timeIndex" :range="timeList">
+							<view class="text-right picker">
+								{{time}}
+							</view>
+						</picker>
 						<!-- <picker mode="time" :value="time" start="09:01" end="21:01" @change="TimeChange">
 							<view class="picker">
 								{{time}}
@@ -153,20 +155,20 @@
 						<view>4、预约订单无需支付费用，最终费用待您验收完成后一并支付。</view>
 					</view>
 				</view>
-				
-				
+
+
 				<view style="margin-top:150px" v-if="!changeType">
-					
+
 				</view>
-				
-				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:20px">
+
+				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:0">
 					<view>
 						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
 					</view>
-					<view >
+					<view>
 						<button @click="submitOrder" class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
 					</view>
 				</view>
@@ -199,21 +201,16 @@
 				haveDefaultAddress: true,
 				phone: "",
 				name: "",
-				time: '9:00-11:00',
+				time: '17:00-19:00',
 				date: '',
+				timeIndex:'',
 				goodsList: [],
 				fanganList: [],
 				deliveryPrice: 20,
 				defaultAddress: {},
 				changeType: true,
 				addressList: [],
-				timeList:[
-					'9:00-11:00',
-					'11:00-13:00',
-					'13:00-15:00',
-					'15:00-17:00',
-					'17:00-19:00',
-				],
+				timeList: [],
 				index: -1,
 				orginList: [],
 				phoneColorList: [{
@@ -238,13 +235,14 @@
 				startTime1: '',
 				endTime1: '',
 				// 判断是否立即抢购跳转
-				isShopping:false,
+				isShopping: false,
 				// 地址跟索引的
 				// imageUrl: ''
+				
 			}
 		},
 		onLoad(option) {
-				if (Object.keys(option).length > 0) {
+			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.goods));
 				console.log('navigateParamsnavigateParamsnavigateParamsnavigateParamsnavigateParams', navigateParams);
 				this.fanganList = [navigateParams.goods];
@@ -258,14 +256,11 @@
 			this.startTime = formatDateTime(dateTime)
 			this.endTime = formatDateTime(getNextDayDate(7, dateTime))
 			this.date = this.startTime
-			// this.time = formatTime(dateTime)
-			// 初始化时间
-			// this.startTime1 = formatTime(dateTime)
-			// this.endTime1 = formatTime(getNextDayDate(7, dateTime))
-			// console.log(this.startTime,this.endTime,this.startTime1,this.endTime1)
+			this.changeTimeList()
+			this.time = this.timeList[0]
 			
 			//从本地获取方案列表和图片url
-			if(!this.isShopping)
+			if (!this.isShopping)
 				this.fanganList = this.maintenanceList.filter(item => item.selected == true);
 			console.log("fanganList" + JSON.stringify(this.fanganList));
 			// this.imageUrl = this.baseImageUrl;
@@ -274,14 +269,12 @@
 			// 先获取全部地址
 			this.getAddressList()
 
-			// 获取地址数据
-
 		},
 		computed: mapState({
 			// 从state中拿到数据 
 			maintenanceList: state => state.goods.maintenanceList,
 			baseImageUrl: state => state.user.imageBaseUrl,
-			delivery:state => state.user.delivery,
+			delivery: state => state.user.delivery,
 			totalPrice() {
 				let list = this.fanganList;
 				let total = 0
@@ -296,15 +289,61 @@
 				for (let item in list) {
 					totalSale += list[item].salePrice;
 				}
-				
-				if(this.changeType){
-					totalSale = totalSale+this.deliveryPrice;
+
+				if (this.changeType) {
+					totalSale = totalSale + (this.delivery.expressFee|'');
 				}
-				
+
 				return totalSale
 			}
 		}),
 		methods: {
+			compareTime(t1, t2) {
+				let time = new Date();
+				let a = t1.split(":");
+				let b = t2.split(":");
+				return time.setHours(a[0], a[1], a[2]) < time.setHours(b[0], b[1], b[2]);
+			},
+			changeTimeList(){
+				let t = new Date()
+				let n = t.toTimeString()
+				let t1 = n.split(" ")[0]
+				let timeList = [
+					'9:00-11:00',
+					'11:00-13:00',
+					'13:00-15:00',
+					'15:00-17:00',
+					'17:00-19:00',
+				]
+				
+				let timeList1 = [
+					'11:00:00',
+					'13:00:00',
+					'15:00:00',
+					'17:00:00',
+					'19:00:00',
+				]
+				let list = []
+				let t2 = this.date.toString().split("-")[2]
+				
+				// 如果当前日期等于送修日期改变timelist,getDate()一月中的一天
+				if(t.getDate().toString()==t2){
+					for(let j in timeList1){
+						//当前时间小于时间段结束时间
+						if(this.compareTime(t1,timeList1[j])){
+							list.push(timeList[j])
+						}
+					}
+					this.timeList = list;
+				}else{
+					this.timeList = timeList;
+				}
+				// uni.showModal({
+				// 	content:t.getDate().toString()
+				// 	// content:
+				// })
+				
+			},
 			onSelectType(name, checked) {
 				// 判断只能有一个选中
 				this.phoneColorList = this.phoneColorList.map(item => {
@@ -339,27 +378,8 @@
 				})
 			},
 			timeChange(e) {
-				let i = e.detail.value
-				// alert(this.date +' ' +this.timeList[i].split('-')[1] + ':00')
-				// alert(formatFullTime(new Date()))
-				// alert(this.timeList[i].split('-')[1]+':00')
-				// alert(compareTimeStr(formatFullTime(new Date()),this.date +' ' +this.timeList[i].split('-')[1] + ':00'))
-				// 判断时间是否过去
-				if(compareTimeStr(formatFullTime(new Date()),this.date +' ' + this.timeList[i].split('-')[1]) + ':00' == 1){
-					uni.showModal({
-					    content:  '不能选择已经过去的时间，请重新选择!',
-						showCancel:false,
-					    success: function (res) {
-					        if (res.confirm) {
-					            // console.log('用户点击确定');
-					        } else if (res.cancel) {
-					            // console.log('用户点击取消');
-					        }
-					    }
-					});
-					return;
-				}
-				this.time = this.timeList[i]
+				this.timeIndex = e.detail.value
+				this.time = this.timeList[this.timeIndex]
 			},
 			getAddressList() {
 				this.$request({
@@ -397,15 +417,20 @@
 						console.log(e)
 					})
 				}).catch(err => {
+					
 					console.error(err)
 				})
 			},
 			dateChange(e) {
 				this.date = e.detail.value
+				this.changeTimeList()
+				if(!this.timeList){
+					uni.showModal({
+						content:"今天已经很晚了，请明天再送修"
+					})
+				}
+				this.time = this.timeList[0]
 			},
-			// TimeChange(e) {
-			// 	this.time = e.detail.value
-			// },
 			sentBySelf() {
 				this.chooseAddress.label = "最近网点";
 				//默认最近网点只有一个固定值，主页已经拿到
@@ -434,6 +459,14 @@
 								// console.log('用户点击取消');
 							}
 						}
+					});
+					return;
+				}
+				
+				if (!this.timeList) {
+					uni.showModal({
+						content: '今天已经很晚了，请明天再送修',
+						showCancel: false,
 					});
 					return;
 				}
@@ -478,7 +511,7 @@
 					let order = {};
 					order["orderId"] = res[0]["orderId"];
 					console.log("create order success:" + JSON.stringify(res[0]));
-					uni.navigateTo({
+					uni.redirectTo({
 						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
 							order))
 						// url: '../orderSuccess/orderSucces'

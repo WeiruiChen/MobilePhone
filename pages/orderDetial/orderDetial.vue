@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
-			<view slot="backText" >返回</view>
+			<view slot="backText">返回</view>
 			<view slot="content">订单详情</view>
 		</cu-custom>
 
@@ -11,7 +11,7 @@
 					<view class="content ">
 						<view>订单编号：{{orderDetail.code||''}}</view>
 						<view>下单时间：{{orderDetail.createTime||''}}</view>
-						<view>订单状态：{{NavMap[orderDetail.orderState||'']}}</view>
+						<view>订单状态：{{NavMap[orderDetail.orderState]||''}}</view>
 					</view>
 				</view>
 				<view class="cu-item cu-form-group padding-tb round-card">
@@ -139,6 +139,11 @@
 			}
 		},
 		methods: {
+			// navigateToDetail() {
+			// 	uni.navigateBack({
+			// 		url: '../maintenanceList/maintenanceList'
+			// 	})
+			// },
 			SwitchA(e) {
 				this.switch = e.detail.value
 			},

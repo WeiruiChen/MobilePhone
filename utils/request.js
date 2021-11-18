@@ -14,7 +14,9 @@ const request = function({url='',methods='POST',data={}}){
 		reqData['cityId'] =  store.state.user.cityId || '';
 		reqData['clientVer'] =  store.state.user.clientVer || '';
 	}
-	let reqUrl = 'https://www.caomeixinxi.com' +  url;
+	let reqUrl = 'http://120.78.178.26' +  url;
+	// http://pow6rm42.dongtaiyuming.net:29203
+	//https://www.caomeixinxi.com
 	if(store.state.user.sessionID)
 	{
 		reqUrl += ";jsessionid=" +store.state.user.sessionID;

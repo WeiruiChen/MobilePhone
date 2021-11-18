@@ -48,13 +48,14 @@
 		{
 			"path": "pages/tabBar/tabBar",
 			"style": {}
-		}, {
+		},
+		{
 			"path": "pages/test/test",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
+			"style": {}
+		},
+		{
+			"path": "pages/payment/payment",
+			"style": {}
 		}
 	],
 	"tabBar": {

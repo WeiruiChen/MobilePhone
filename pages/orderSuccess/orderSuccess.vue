@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<cu-custom  bgColor="bg-gradual-blue">
 			<view slot="backText">返回</view>
 			<view slot="content">下单成功</view>
 		</cu-custom>
@@ -51,7 +51,7 @@
 		},
 		methods: {
 			navigateDetail() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(this.orderId))
 				})
 			},

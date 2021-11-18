@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
-			<view slot="backText" @click="backToMine">返回</view>
+			<view slot="backText">返回</view>
 			<view slot="content">我的订单</view>
 		</cu-custom>
 		<view class="container">
@@ -42,10 +42,8 @@
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
 						<view>共2项 合计：{{item.totalMoney}}</view>
-						<button v-if="NavMap[TabCur] === 'Check'" class="cu-btn round sm submit-btn">立即支付</button>
-						<button v-if="NavMap[TabCur] === 'New' || NavMap[TabCur] === 'Confirm'"
-							class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</button>
-
+						<button v-if="NavMap[TabCur] === 'Check'" class="cu-btn round sm submit-btn" @click="navigateToPayment(item.id)">立即支付</button>
+						<button v-if="NavMap[TabCur] === 'New' || NavMap[TabCur] === 'Confirm'" class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</button>
 					</view>
 				</view>
 			</view>
@@ -72,8 +70,9 @@
 			if (Object.keys(option).length > 0) {
 				console.log(option)
 				this.TabCur = option.title
+			
 			}
-			this.getOrderList()
+			this.getOrderList(NavMap[this.TabCur])
 		},
 		data() {
 			return {
@@ -110,14 +109,6 @@
 				uni.navigateTo({
 					url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
 				})
-				// uni.redirectTo({
-				// 	url: '../orderDetial/orderDetial?id=' + id
-				// })
-			},
-			backToMine() {
-				uni.redirectTo({
-					url: '../mine/mine'
-				})
 			},
 			getOrderList(type = 'ALL') {
 				this.$request({
@@ -133,6 +124,11 @@
 					// alert(JSON.stringify(res))
 				}).catch(e => {
 					console.log('e')
+				})
+			},
+			navigateToPayment(id){
+				uni.navigateTo({
+					url: '../payment/payment?param=' + encodeURIComponent(JSON.stringify(id))
 				})
 			},
 			deleteOrder(id) {

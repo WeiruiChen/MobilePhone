@@ -56,7 +56,6 @@
 			return {
 				list: [],
 				tabCur: null,
-				mainCur: 0,
 				verticalNavTop: 0,
 				load: true,
 				TabCur: null,
@@ -64,7 +63,9 @@
 				deviceList: [],
 				// 加载闪屏
 				flag:true,
-				titleMap:{}
+				titleMap:{},
+				getNavigate:false,
+
 			};
 		},
 		computed: mapState({
@@ -80,11 +81,13 @@
 			})
 		},
 		onLoad(option) {
+			let navigateParams = null
 			if (Object.keys(option).length > 0) {
-				const navigateParams = JSON.parse(decodeURIComponent(option.category));
+				navigateParams = JSON.parse(decodeURIComponent(option.category));
 				if(navigateParams.gotoValue.indexOf(',')){
 					this.tabCur = navigateParams.gotoValue.split(',')[1]
 					this.TabCur = navigateParams.gotoValue.split(',')[0]
+					this.getNavigate = true
 				}
 			}
 			uni.showLoading({
@@ -98,12 +101,20 @@
 			}).then(res => {
 				this.FirstMenu = res
 				this.getSecondMenu(this.TabCur ?this.TabCur : this.FirstMenu[0].id)
-				this.TabCur = this.FirstMenu[0].id;
+				if(!this.getNavigate)
+					this.TabCur = this.FirstMenu[0].id;
 				this.flag = true
 			}).catch(e => {
 				console.log('getCategoryOne', e)
 			})
 
+		},
+		onShow(){
+			// 清空购物车
+			this.$store.dispatch('shoppingTrigger',{
+						key:'maintenanceList',
+						value:[]
+			})
 		},
 		onReady() {
 			uni.hideLoading()
@@ -111,10 +122,7 @@
 		methods: {
 			// 维修页面跳转
 			fixPhone(item) {
-				// console.log('this.tabCur');
-				// console.log('this.titleMap[this.tabCur] ',this.titleMap[this.tabCur] )
 				console.log('itemitemitemitemitemitemitem',item )
-
 				uni.navigateTo({
 					url: '../maintenanceList/maintenanceList?title=' + this.titleMap[this.tabCur] + '&phone=' +
 						encodeURIComponent(JSON.stringify(item))
@@ -127,12 +135,11 @@
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.item.id;
-				console.log('e.currentTarget.dataset', e.currentTarget.dataset)
+				// console.log('e.currentTarget.dataset', e.currentTarget.dataset)
 				this.getSecondMenu(e.currentTarget.dataset.item.id)
 			},
 			TabSelect(e) {
 				this.tabCur = e.currentTarget.dataset.item.id;
-				this.mainCur = e.currentTarget.dataset.item.id;
 				this.getThirdMenu(e.currentTarget.dataset.item.id)
 				// this.verticalNavTop = (e.currentTarget.dataset.id - 1) * 50
 			},
@@ -151,7 +158,8 @@
 						this.titleMap[index] = this.list[index].name
 					}
 					this.getThirdMenu(this.tabCur ? this.tabCur : this.list[0].id)
-					this.tabCur = this.list[0].id;
+					if(!this.getNavigate)
+						this.tabCur = this.list[0].id;
 				}).catch(e => {
 					console.log('getCategoryTwo', e)
 				})

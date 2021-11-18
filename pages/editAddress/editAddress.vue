@@ -106,6 +106,11 @@
 				this.address.isDefault = !value
 				// this.address.isDefault = event.de
 			},
+			backToAll() {
+				uni.redirectTo({
+					url:'../allAddress/allAddress'
+				})
+			},
 			addNewAddress() {
 				this.address.region = this.region;
 				this.address.label = '学校';
@@ -129,7 +134,7 @@
 								data: that.address
 							}).then(res => {
 								console.log("addNewAddress:" + JSON.stringify(res));
-								uni.redirectTo({
+								uni.navigateBack({
 									url:'../allAddress/allAddress'
 								})
 								uni.showToast({

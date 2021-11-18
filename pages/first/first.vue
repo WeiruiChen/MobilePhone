@@ -105,7 +105,8 @@
 			
 		</view>
 		
-		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)">
+		<!-- <view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)"> -->
+		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
@@ -116,7 +117,7 @@
 		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;" >
 			<text style="text-align: center;" @click="callPhone">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<view style="height: 140rpx;"></view>
+		<view style="height: 200rpx;"></view>
 		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
@@ -292,6 +293,7 @@
 									console.log('openiddrequest',res)
 									that.$store.dispatch('actionTrigger',{
 										key:'openId',value:res['openId'] || '',
+										// key:'openId',value:'opfA81LO4KG84eBUeulJ0WmvK198',
 									})
 									// 获取用户登陆信息
 									that.getUserData()
@@ -359,19 +361,19 @@
 				const clickMap = {
 					// gototype为ClientPage则跳转
 					'ClientPage':function(){
-						uni.redirectTo({
-						url:pathMap[item.gotoValue],
-						fail:function(){
-							uni.switchTab({
-								url:pathMap[item.gotoValue]
-							})
-						}
-					})
+						uni.navigateTo({
+							url:pathMap[item.gotoValue],
+							fail:function(){
+								uni.switchTab({
+									url:pathMap[item.gotoValue]
+								})
+							}
+						})
 					},
 					'Category':function(){
 							uni.reLaunch({
 								url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
-						})
+							})
 					},
 					'Goods':function(){
 						uni.navigateTo({

@@ -47,6 +47,9 @@
 		},
 		onLoad() {
 			// 获取地址列表
+			
+		},
+		onShow() {
 			this.getAddList()
 		},
 		methods: {
@@ -67,13 +70,13 @@
 				})
 			},
 			addAddress() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../editAddress/editAddress'
 				})
 			},
 			editAddress(item) {
 				console.log("item"+item);
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../editAddress/editAddress?param=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},
