@@ -247,7 +247,6 @@
 				console.log('navigateParamsnavigateParamsnavigateParamsnavigateParamsnavigateParams', navigateParams);
 				this.fanganList = [navigateParams.goods];
 				this.isShopping = true;
-				console.log('fanganListfanganListfanganListfanganListfanganList', fanganList);
 			}
 		},
 		onShow() {
@@ -463,9 +462,9 @@
 					return;
 				}
 				
-				if (!this.timeList) {
+				if (!this.time) {
 					uni.showModal({
-						content: '今天已经很晚了，请明天再送修',
+						content: '请选择时间',
 						showCancel: false,
 					});
 					return;

@@ -109,7 +109,7 @@
 				tabCur: 0,
 				mainCur: 0,
 				verticalNavTop: 0,
-				load: true,
+				loaded: false,
 				phone: {
 					title: '苹果',
 					name: 'iphone12ProMax'
@@ -117,7 +117,7 @@
 				goodsList: [],
 				currentGoodId: '',
 				forkMaintenance: [],
-				showNull: true
+				showNull: true,
 			};
 		},
 		onLoad(option) {
@@ -144,13 +144,17 @@
 				// 获取第一个四级信息
 				// if(this.list >)
 				this.getGoods(this.list[0].id)
+				
 			}).catch(e => {
 				console.log(e)
 			})
-			this.listCur = this.list[0];
 		},
 		onShow(){
-			this.forkMaintenance = []
+			//重置菜单状态和购物车
+				this.tabCur = 0;
+				this.mainCur = 0;
+				this.getGoods(this.list[0].id)
+				this.forkMaintenance = []
 		},
 		onReady() {
 			uni.hideLoading()

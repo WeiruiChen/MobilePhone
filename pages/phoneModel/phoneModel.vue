@@ -1,7 +1,8 @@
 <template>
 	<view class="background">
 
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<!-- <cu-custom :isBack="true" bgColor="bg-gradual-blue"> -->
+		<cu-custom bgColor="bg-gradual-blue">
 			<view slot="backText" @click="backToFirst">首页</view>
 			<view slot="content">设备型号</view>
 		</cu-custom>
@@ -80,16 +81,49 @@
 				animation: false
 			})
 		},
-		onLoad(option) {
-			let navigateParams = null
-			if (Object.keys(option).length > 0) {
-				navigateParams = JSON.parse(decodeURIComponent(option.category));
+		onLoad() {
+			// let navigateParams = null
+			// if (Object.keys(option).length > 0) {
+			// 	navigateParams = JSON.parse(decodeURIComponent(option.category));
+			// 	if(navigateParams.gotoValue.indexOf(',')){
+			// 		this.tabCur = navigateParams.gotoValue.split(',')[1]
+			// 		this.TabCur = navigateParams.gotoValue.split(',')[0]
+			// 		this.getNavigate = true
+			// 	}
+			// }
+			// uni.showLoading({
+			// 	title: '加载中...',
+			// 	mask: true
+			// });
+			// this.flag = false
+			// this.$request({
+			// 	url: '/phoneReparisServer/service/rest/login.customerService/collection/getCategoryOne',
+			// 	methods: 'POST'
+			// }).then(res => {
+			// 	this.FirstMenu = res
+			// 	this.getSecondMenu(this.TabCur ?this.TabCur : this.FirstMenu[0].id)
+			// 	if(!this.getNavigate)
+			// 		this.TabCur = this.FirstMenu[0].id;
+			// 	this.flag = true
+			// }).catch(e => {
+			// 	console.log('getCategoryOne', e)
+			// })
+
+		},
+		onShow(){
+			// 取缓存相关参数
+			const category = uni.getStorageSync('category');
+			if(category && category !== ''){
+				let navigateParams = JSON.parse(category)
 				if(navigateParams.gotoValue.indexOf(',')){
 					this.tabCur = navigateParams.gotoValue.split(',')[1]
 					this.TabCur = navigateParams.gotoValue.split(',')[0]
 					this.getNavigate = true
 				}
 			}
+			// 获取值后清空category
+			uni.setStorageSync('category',undefined);
+
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
@@ -108,8 +142,7 @@
 				console.log('getCategoryOne', e)
 			})
 
-		},
-		onShow(){
+
 			// 清空购物车
 			this.$store.dispatch('shoppingTrigger',{
 						key:'maintenanceList',
@@ -183,6 +216,7 @@
 							})
 						}
 					console.log('getCategoryThree', res)
+					uni.hideLoading()
 					// this.list = res
 				}).catch(e => {
 					console.log('getCategoryThree', e)

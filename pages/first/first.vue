@@ -371,13 +371,21 @@
 						})
 					},
 					'Category':function(){
-							uni.reLaunch({
-								url:'../phoneModel/phoneModel?category='+encodeURIComponent(JSON.stringify(item))
-							})
+						// 设置缓存供phonemodel使用
+						try {
+							uni.setStorageSync('category',JSON.stringify(item));
+						} catch (e) {
+							// error
+							console.log('缓存设置错误',e)
+						}
+						uni.switchTab({
+							url:'../phoneModel/phoneModel'
+						})
 					},
 					'Goods':function(){
-						uni.navigateTo({
-							url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
+						uni.switchTab({
+							url:'../phoneModel/phoneModel'
+							// url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
 						})
 					}
 				}
