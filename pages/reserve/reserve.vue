@@ -256,7 +256,6 @@
 			this.endTime = formatDateTime(getNextDayDate(7, dateTime))
 			this.date = this.startTime
 			this.changeTimeList()
-			this.time = this.timeList[0]
 			
 			//从本地获取方案列表和图片url
 			if (!this.isShopping)
@@ -308,19 +307,19 @@
 				let n = t.toTimeString()
 				let t1 = n.split(" ")[0]
 				let timeList = [
-					'9:00-11:00',
-					'11:00-13:00',
-					'13:00-15:00',
-					'15:00-17:00',
-					'17:00-19:00',
+					'00:00-00:40'
+					// '11:00-13:00',
+					// '13:00-15:00',
+					// '15:00-17:00',
+					// '17:00-19:00',
 				]
 				
 				let timeList1 = [
-					'11:00:00',
-					'13:00:00',
-					'15:00:00',
-					'17:00:00',
-					'19:00:00',
+					'00:40:00'
+					// '13:00:00',
+					// '15:00:00',
+					// '17:00:00',
+					// '19:00:00',
 				]
 				let list = []
 				let t2 = this.date.toString().split("-")[2]
@@ -341,7 +340,11 @@
 				// 	content:t.getDate().toString()
 				// 	// content:
 				// })
-				
+				if(this.timeList.length==0){
+					this.time = "今天已经很晚了，请择日送修"
+				}else{
+					this.time = this.timeList[0]
+				}
 			},
 			onSelectType(name, checked) {
 				// 判断只能有一个选中
@@ -423,12 +426,6 @@
 			dateChange(e) {
 				this.date = e.detail.value
 				this.changeTimeList()
-				if(!this.timeList){
-					uni.showModal({
-						content:"今天已经很晚了，请明天再送修"
-					})
-				}
-				this.time = this.timeList[0]
 			},
 			sentBySelf() {
 				this.chooseAddress.label = "最近网点";
@@ -462,9 +459,9 @@
 					return;
 				}
 				
-				if (!this.time) {
+				if(this.timeList.length==0||!this.time) {
 					uni.showModal({
-						content: '请选择时间',
+						content: '请选择取件时间',
 						showCancel: false,
 					});
 					return;

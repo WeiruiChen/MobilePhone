@@ -76,11 +76,11 @@
 		components: {
 			'view-tabbar': Tabbar
 		},
-		onShow() {
-			uni.hideTabBar({
-				animation: false
-			})
-		},
+		// onShow() {
+		// 	uni.hideTabBar({
+		// 		animation: false
+		// 	})
+		// },
 		onLoad() {
 			// let navigateParams = null
 			// if (Object.keys(option).length > 0) {
@@ -123,7 +123,6 @@
 			}
 			// 获取值后清空category
 			uni.setStorageSync('category',undefined);
-
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
@@ -134,10 +133,10 @@
 				methods: 'POST'
 			}).then(res => {
 				this.FirstMenu = res
-				this.getSecondMenu(this.TabCur ?this.TabCur : this.FirstMenu[0].id)
+				this.getSecondMenu(this.TabCur ? this.TabCur : this.FirstMenu[0].id)
 				if(!this.getNavigate)
 					this.TabCur = this.FirstMenu[0].id;
-				this.flag = true
+			
 			}).catch(e => {
 				console.log('getCategoryOne', e)
 			})
@@ -215,7 +214,7 @@
 								goodsList: res[key]
 							})
 						}
-					console.log('getCategoryThree', res)
+					this.flag = true
 					uni.hideLoading()
 					// this.list = res
 				}).catch(e => {
@@ -268,7 +267,7 @@
 	}
 
 	.visualHeight{
-		height: calc(100vh - 280upx);
+		height: calc(100vh - 310upx);
 	}
 
 	.VerticalNav.nav {

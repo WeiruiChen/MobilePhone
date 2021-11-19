@@ -101,7 +101,7 @@
 		left: 0;
 		right: 0;
 		width: 100%;
-		height: 140rpx;
+		height: 120rpx;
 		background-color: #ffffff;
 		display: flex;
 		justify-content: space-around;

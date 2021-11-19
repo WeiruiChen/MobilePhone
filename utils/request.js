@@ -39,11 +39,11 @@ const request = function({
 			// 获取接口原有数据
 			const reponseData = response[1].data
 			// uni-app返回一个数组
-			console.log(reponseData)
 			if (reponseData.code !== 0) {
 				let content = ''
 				let flag = false
-				if(reponseData.message == '当前登录已失效'){
+
+				if(reponseData.message.indexOf('当前登录已失效') !== -1){
 					flag = true
 					content = '当前登录已失效,点击确认返回首页重新登录~'
 				}else{
@@ -55,8 +55,9 @@ const request = function({
 					success: function(res) {
 						if (res.confirm) {
 							if(flag){
-								uni.redirectTo({
-									url:'../first/first'
+								// 登陆失效设置缓存
+								uni.reLaunch({
+									url:'/pages/first/first'
 								})
 							}
 						} else if (res.cancel) {

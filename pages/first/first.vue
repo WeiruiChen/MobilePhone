@@ -117,7 +117,7 @@
 		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;" >
 			<text style="text-align: center;" @click="callPhone">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<view style="height: 200rpx;"></view>
+		<view style="height: 120rpx;"></view>
 		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
@@ -190,19 +190,6 @@
 			wxHead:state => state.user.wxHead
 		}),
 		onLoad(){
-			// this.$request({
-			// 	url:'/phoneReparisServer/service/rest/login.customerService/collection/updateUserWXInfo',
-			// 	methods:'POST',
-			// 	data:{
-			// 		name:'123',
-			// 		wxHead:'xxxxx'
-			// 	}
-			// }).then(res=>{
-			// 	console.log('更新用户头像成功')
-			// }).catch(err=>{
-			// 	console.log('更新用户头像失败')
-			// })
-			// const accountInfo = wx.getAccountInfoSync();
 			 if(uni.getSystemInfoSync().platform == 'mac'){
 				 this.getUserData()
 			 }else{
@@ -210,8 +197,24 @@
 				 // 获取版本号
 				 this.getAppVersion()
 			 }
-			// this.getUserData()
 		},
+		// onShow(){
+			// // 登陆失效后重新加载
+			// const loginStatus = uni.getStorageSync('login');
+			// console.log('loginStatus',loginStatus)
+			// if(loginStatus){
+			// 	if(uni.getSystemInfoSync().platform == 'mac'){
+			// 	 	this.getUserData()
+			// 	}else{
+			// 		this.wxLogin()
+			// 		// 获取版本号
+			// 		this.getAppVersion()
+			// 	}
+			// 	this.getUserData()
+			// }
+			// // 清除登陆状态
+			// uni.setStorageSync('login',false);
+		// },
 		methods: {
 			//获取小程序版本号
 			getAppVersion(){
@@ -223,7 +226,6 @@
 			},
 			// 获取用户信息
 			getWxUserProfile(){
-				// console.log('click');
 				wx.getUserProfile({
 				desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
 				success: (res) => {
