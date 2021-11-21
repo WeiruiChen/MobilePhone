@@ -68,12 +68,13 @@ const request = function({
 				reject(reponseData.message)
 			}
 			// 格式化data数据
-			reponseData.data = JSON.parse(reponseData.data)
+			if(reponseData.data)
+				reponseData.data = JSON.parse(reponseData.data)
 			console.log('reponseData', reponseData.data);
 			resolve(reponseData.data);
 		}).catch(error => {
 			// let [err, res] = error;
-			reject('error', error)
+			reject(error)
 		})
 	})
 }

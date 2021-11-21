@@ -14,7 +14,7 @@
 				</view>
 			</scroll-view>
 			<view v-for="(item) in showOrderList" :key="item.code">
-				<view @click="gotoDetail(item.id)"
+				<view @click="gotoDetail(item.id,item)"
 					class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content" style="width:100%">
 						<view style="display:flex;justify-content: space-between;">
@@ -41,9 +41,9 @@
 
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
-						<view>共2项 合计：{{item.totalMoney}}</view>
-						<button v-if="NavMap[TabCur] === 'Check'" class="cu-btn round sm submit-btn" @click="navigateToPayment(item.id)">立即支付</button>
-						<button v-if="NavMap[TabCur] === 'New' || NavMap[TabCur] === 'Confirm'" class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</button>
+						<view>共{{item.goodsList.length||''}}项 合计：{{item.totalMoney}}</view>
+						<button v-if="item.orderState === 'Check'" class="cu-btn round sm submit-btn" @click="navigateToPayment(item.id)">立即支付</button>
+						<button v-if="item.orderState === 'New' || item.orderState === 'Confirm'" class="cu-btn round sm submit-btn" @click="deleteOrder(item.id)">取消订单</button>
 					</view>
 				</view>
 			</view>
@@ -70,9 +70,8 @@
 			if (Object.keys(option).length > 0) {
 				console.log(option)
 				this.TabCur = option.title
-			
 			}
-			this.getOrderList(NavMap[this.TabCur])
+			this.getOrderList(this.NavMap[this.TabCur])
 		},
 		data() {
 			return {
@@ -103,12 +102,19 @@
 			imageUrl: state => state.user.imageBaseUrl
 		}),
 		methods: {
-			gotoDetail(id) {
+			gotoDetail(id,item) {
 				let order = {};
 				order["orderId"] = id;
-				uni.navigateTo({
-					url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
-				})
+				if(item.orderState == 'Check'){
+						uni.navigateTo({
+						url: '../payment/payment?param=' + encodeURIComponent(JSON.stringify(id))
+					})
+				}else{
+						uni.navigateTo({
+						url: '../orderDetial/orderDetial?param=' + encodeURIComponent(JSON.stringify(order))
+					})
+				}
+				
 			},
 			getOrderList(type = 'ALL') {
 				this.$request({
@@ -121,7 +127,6 @@
 					}
 				}).then(res => {
 					this.showOrderList = res
-					// alert(JSON.stringify(res))
 				}).catch(e => {
 					console.log('e')
 				})
@@ -145,6 +150,10 @@
 									orderId: id
 								}
 							}).then(res => {
+								uni.showToast({
+								title: "取消成功",
+								icon: "none"
+							})
 								console.log("deleteOrder:" + JSON.stringify(res));
 
 							}).catch(e => {

@@ -289,7 +289,7 @@
 				}
 
 				if (this.changeType) {
-					totalSale = totalSale + (this.delivery.expressFee|'');
+					totalSale = totalSale + (parseFloat(this.delivery.expressFee)||0);
 				}
 
 				return totalSale
@@ -307,19 +307,33 @@
 				let n = t.toTimeString()
 				let t1 = n.split(" ")[0]
 				let timeList = [
-					'00:00-00:40'
-					// '11:00-13:00',
-					// '13:00-15:00',
-					// '15:00-17:00',
-					// '17:00-19:00',
+					'8:00-9:00',
+					'9:00-10:00',
+					'10:00-11:00',
+					'11:00-12:00',
+					'12:00-13:00',
+					'13:00-14:00',
+					'14:00-15:00',
+					'15:00-16:00',
+					'16:00-17:00',
+					'17:00-18:00',
+					'18:00-19:00',
+					'19:00-20:00'
 				]
 				
 				let timeList1 = [
-					'00:40:00'
-					// '13:00:00',
-					// '15:00:00',
-					// '17:00:00',
-					// '19:00:00',
+					'09:00:00',
+					'10:00:00',
+					'11:00:00',
+					'12:00:00',
+					'13:00:00',
+					'14:00:00',
+					'15:00:00',
+					'16:00:00',
+					'17:00:00',
+					'18:00:00',
+					'19:00:00',
+					'20:00:00'
 				]
 				let list = []
 				let t2 = this.date.toString().split("-")[2]
@@ -341,7 +355,7 @@
 				// 	// content:
 				// })
 				if(this.timeList.length==0){
-					this.time = "今天已经很晚了，请择日送修"
+					this.time = "暂无可选时段，请更改日期再选。"
 				}else{
 					this.time = this.timeList[0]
 				}
@@ -368,11 +382,12 @@
 			},
 			PickerChange(e) {
 				console.log('e.detail.value', e.detail.value)
+				console.log('this.addressList',this.addressList)
 				this.index = e.detail.value
 				this.name = this.orginList[this.index].name
 				this.phone = this.orginList[this.index].phone
 				this.chooseAddress.address = this.addressList[this.index]
-				this.defaultAddress.id = this.addressList[this.index].id
+				this.defaultAddress.id = this.orginList[this.index].id
 			},
 			addAddress() {
 				uni.navigateTo({
@@ -396,7 +411,6 @@
 							this.addressList.push(value.region + ' ' + value.address)
 						}
 					}
-
 					//获取默认联系人
 					this.$request({
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
@@ -444,7 +458,7 @@
 				this.changeType = true;
 			},
 			submitOrder() {
-				if (!this.defaultAddress.id) {
+				if (!this.defaultAddress.id&&this.addressList.length==0) {
 					uni.showModal({
 						content: '目前没有地址,请选择或者新增地址后再进行下单',
 						showCancel: false,
@@ -459,19 +473,21 @@
 					return;
 				}
 				
-				if(this.timeList.length==0||!this.time) {
-					uni.showModal({
-						content: '请选择取件时间',
-						showCancel: false,
-					});
-					return;
+				if(this.changeType){
+					if(this.timeList.length==0||!this.time) {
+						uni.showModal({
+							content: '请选择取件时间',
+							showCancel: false,
+						});
+						return;
+					}
 				}
 
 				let param_orderParams = {};
 				param_orderParams["receiverId"] = this.defaultAddress.id || ''; //地址id
 				param_orderParams["points"] = 0; //暂时固定 0
 				param_orderParams["balance"] = 0; //暂时固定 0
-				param_orderParams["payType"] = "WeiXin"; //暂时固定 WeiXin
+				param_orderParams["payType"] = "WxSmallProgramReaders"; //暂时固定
 				param_orderParams["orderType"] = "Order"; //暂时固定 Order
 				param_orderParams["remark"] = "..."; //用户备注
 				// param_orderParams["predetermine"] = "2021-10-23 08:00-11:00" //预订上门时间
@@ -480,7 +496,9 @@
 				//param_orderParams["cityId"] = ""; //登录返回的cityId
 				param_orderParams["needPickUp"] = this.changeType; //是否上门取件 ，true  是，false  自行送修
 				//获取最近网点和快递费getDeliveryAddressList接口返回的id，目前只有一个
-				param_orderParams["deliveryId"] = "66a88b5cbc434905875ac6c8a3aff86c";
+				// param_orderParams["deliveryId"] = "66a88b5cbc434905875ac6c8a3aff86c";
+				param_orderParams["deliveryId"] = this.delivery.id;
+				
 				console.log("param_orderParams:" + JSON.stringify(param_orderParams));
 
 				let param_goodsList = [];

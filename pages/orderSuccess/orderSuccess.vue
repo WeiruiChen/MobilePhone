@@ -9,8 +9,8 @@
 			<image src="../../static/images/order-success-icon.png" mode="widthFix"
 				class="order-success-icon margin-top-xl"></image>
 			<view class="margin">下单成功</view>
-			<view class="text-gray">下单时间为8：30 - 20：00，客服会在15分钟内与您联系</view>
-			<view class="text-gray">下单时间为8：30 - 20：00，客服响应时间可能会有所延迟</view>
+			<view class="text-gray">下单时间为8：00 - 20：00，客服会在15分钟内与您联系</view>
+			<view class="text-gray">下单时间为20：00 - 8：00，客服响应时间可能会有所延迟</view>
 		</view>
 
 		<view class="btn-bottom">

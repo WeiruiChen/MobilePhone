@@ -61,6 +61,13 @@
 					</view>
 				</view>
 
+				<view v-if="orderDetail.needPickUp" class="cu-form-group round-bottom-card">
+					<view class="flex-container">
+						<view>取件费用</view>
+						<view class="text_right">{{delivery.expressFee||''}}</view>
+					</view>
+				</view>
+
 				<view class="cu-form-group round-bottom-card">
 					<view class="flex-container">
 						<view>合计</view>
@@ -100,6 +107,7 @@
 		computed: mapState({
 			imageUrl:state => state.user.imageBaseUrl,
 			gmPhone:state => state.user.gmPhone,
+			delivery: state => state.user.delivery
 		}),
 		data() {
 			return {
@@ -174,8 +182,11 @@
 									orderId:that.orderDetail.id
 								}
 							}).then(res => {
+								uni.showToast({
+								title: "取消成功",
+								icon: "none"
+							})
 								console.log("deleteOrder:"+JSON.stringify(res));
-								
 							}).catch(e => {
 								console.log('deleteOrder', e)
 							})

@@ -63,7 +63,7 @@
 								</view>
 								<view style="position: relative;">
 									<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
-									<view style="position: absolute;top: 30rpx;left: 10rpx;color: #FFFFFF;font-weight: 700;font-size: 35rpx;">立即抢购</view>
+									<view style="position: absolute;top: 25rpx;left: 15rpx;color: #FFFFFF;font-weight: 700;font-size: 30rpx;">立即抢购</view>
 								</view>
 							</view>
 							
@@ -106,7 +106,7 @@
 		</view>
 		
 		<!-- <view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)"> -->
-		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId">
+		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
@@ -117,7 +117,7 @@
 		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;" >
 			<text style="text-align: center;" @click="callPhone">24小时客服电话:{{cshPhone}}</text>
 		</view>
-		<view style="height: 120rpx;"></view>
+		<view style="height: 180rpx;"></view>
 		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
@@ -219,10 +219,10 @@
 			//获取小程序版本号
 			getAppVersion(){
 				const accountInfo = wx.getAccountInfoSync();
-				console.log('accountInfoaccountInfoaccountInfo',JSON.stringify(accountInfo));
-				this.$store.dispatch('actionTrigger',{
-						key:'clientVer',value:accountInfo.miniProgram.version || accountInfo.miniProgram.envVersion,
-				})
+				// console.log('accountInfoaccountInfoaccountInfo',JSON.stringify(accountInfo));
+				// this.$store.dispatch('actionTrigger',{
+				// 		key:'clientVer',value:accountInfo.miniProgram.version || accountInfo.miniProgram.envVersion,
+				// })
 			},
 			// 获取用户信息
 			getWxUserProfile(){
@@ -237,7 +237,6 @@
 						const province = userInfo.province
 						const city = userInfo.city
 						const country = userInfo.country
-						console.log('UserInfoUserInfoUserInfoUserInfoUserInfo',JSON.stringify(userInfo))
 						this.$store.dispatch('actionTrigger',{
 							key:'loginName',value:nickName || '',
 						})
@@ -255,6 +254,9 @@
 						})
 							this.$store.dispatch('actionTrigger',{
 							key:'country',value:country || '',
+						})
+							this.$store.dispatch('actionTrigger',{
+							key:'wxHead',value:avatarUrl || '',
 						})
 						// 返回成功后更新用户头像和name
 						this.$request({

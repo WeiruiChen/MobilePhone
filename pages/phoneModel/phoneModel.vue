@@ -1,5 +1,5 @@
 <template>
-	<view class="background">
+	<view class="background bg-white">
 
 		<!-- <cu-custom :isBack="true" bgColor="bg-gradual-blue"> -->
 		<cu-custom bgColor="bg-gradual-blue">
@@ -63,7 +63,7 @@
 				FirstMenu: [],
 				deviceList: [],
 				// 加载闪屏
-				flag:true,
+				flag:false,
 				titleMap:{},
 				getNavigate:false,
 
@@ -82,6 +82,8 @@
 		// 	})
 		// },
 		onLoad() {
+			//清空右边
+			this.deviceList=[]
 			// let navigateParams = null
 			// if (Object.keys(option).length > 0) {
 			// 	navigateParams = JSON.parse(decodeURIComponent(option.category));
@@ -108,7 +110,6 @@
 			// }).catch(e => {
 			// 	console.log('getCategoryOne', e)
 			// })
-
 		},
 		onShow(){
 			// 取缓存相关参数
@@ -121,13 +122,18 @@
 					this.getNavigate = true
 				}
 			}
+			if(this.TabCur == 'root'){
+				this.tabCur = undefined;
+				this.TabCur = undefined;
+				this.getNavigate = true;
+			}
+			//清空右边
+			this.deviceList=[]
 			// 获取值后清空category
-			uni.setStorageSync('category',undefined);
 			uni.showLoading({
 				title: '加载中...',
 				mask: true
 			});
-			this.flag = false
 			this.$request({
 				url: '/phoneReparisServer/service/rest/login.customerService/collection/getCategoryOne',
 				methods: 'POST'
@@ -136,11 +142,10 @@
 				this.getSecondMenu(this.TabCur ? this.TabCur : this.FirstMenu[0].id)
 				if(!this.getNavigate)
 					this.TabCur = this.FirstMenu[0].id;
-			
 			}).catch(e => {
 				console.log('getCategoryOne', e)
 			})
-
+			uni.setStorageSync('category',undefined);
 
 			// 清空购物车
 			this.$store.dispatch('shoppingTrigger',{
@@ -267,7 +272,7 @@
 	}
 
 	.visualHeight{
-		height: calc(100vh - 310upx);
+		height: calc(100vh - 375upx);
 	}
 
 	.VerticalNav.nav {
