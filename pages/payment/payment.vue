@@ -71,10 +71,11 @@
 						<view class="text_right">{{orderDetail.totalMoney}}</view>
 					</view>
 				</view>
-				<!-- <button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx"
-					@click="gotoOrderList">订单列表</button> -->
-				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx"
-					@click="payment">支付订单</button>
+
+				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="callPhone">联系客服</button>
+				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="payment">支付订单</button>
+				<!-- <button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx"
+					@click="payment">支付订单</button> -->
 			</form>
 		</view>
 	</view>
@@ -145,6 +146,11 @@
 			}
 		},
 		methods: {
+			callPhone(){
+				uni.makePhoneCall({
+				  phoneNumber: this.gmPhone,
+				})
+			},
 			SwitchA(e) {
 				this.switch = e.detail.value
 			},
@@ -174,7 +180,9 @@
 					console.log("payment:" + JSON.stringify(res))
 					//微信小程序支付
 					let param = JSON.parse(res["package"])
-					
+					uni.showLoading({
+						title: "支付中...",
+					})
 					uni.requestPayment({
 						// provider: 'wxpay',
 						// // timeStamp: String(Date.now()),
@@ -189,9 +197,22 @@
 						signType: 'MD5',
 						paySign: param.paySign,
 						success: function(res) {
+							uni.showToast({
+								title:'支付成功',
+								icon: "success",
+								duration: 1000
+							})
+							uni.reLaunch({
+								url:'/pages/orderDetial/orderDetial'
+							})
 							console.log('payment success:' + JSON.stringify(res));
 						},
 						fail: function(err) {
+							uni.showToast({
+								title:'支付失败',
+								icon: "error",
+								duration: 1000
+							})
 							console.log('payment fail:' + JSON.stringify(err));
 						}
 					});

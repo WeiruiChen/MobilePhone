@@ -74,9 +74,11 @@
 						<view class="text_right">{{orderDetail.totalMoney}}</view>
 					</view>
 				</view>
-				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="gotoOrderList">订单列表</button>
-				<button v-if="NavMap[orderDetail.orderState] !== '已送达' &&  NavMap[orderDetail.orderState] !== '已完成'" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
-				<button v-else class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="callPhone">联系客服</button>
+`				<template v-if="NavMap[orderDetail.orderState] !== '已取消'">
+						<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="gotoOrderList">订单列表</button>
+						<button v-if="NavMap[orderDetail.orderState] !== '已接单' && NavMap[orderDetail.orderState] !== '维修中' && NavMap[orderDetail.orderState] !== '已送达' &&  NavMap[orderDetail.orderState] !== '已完成'" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="deleteOrder">取消订单</button>
+						<button v-else class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="callPhone">联系客服</button>
+				</template>
 			</form>
 		</view>
 	</view>
