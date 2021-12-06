@@ -4,7 +4,7 @@ export default{
            //设置默认的分享参数
            //如果页面不设置share，就触发这个默认的分享
             share:{
-                title:'分享',
+                title:'同城预约维修',
                 path:'/pages/first/first',
                 imageUrl:'',
                 desc:'',

@@ -1,8 +1,5 @@
 <template>
 	<view style="position: relative;">
-		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
-			登陆
-		</button>
 		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
 		<!-- 强制用户点击获取信息 -->
 		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
@@ -223,57 +220,6 @@
 				// this.$store.dispatch('actionTrigger',{
 				// 		key:'clientVer',value:accountInfo.miniProgram.version || accountInfo.miniProgram.envVersion,
 				// })
-			},
-			// 获取用户信息
-			getWxUserProfile(){
-				wx.getUserProfile({
-				desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-				success: (res) => {
-					console.log(res)
-						const userInfo = res.userInfo
-						const nickName = userInfo.nickName
-						const avatarUrl = userInfo.avatarUrl
-						const gender = userInfo.gender //性别 0：未知、1：男、2：女
-						const province = userInfo.province
-						const city = userInfo.city
-						const country = userInfo.country
-						this.$store.dispatch('actionTrigger',{
-							key:'loginName',value:nickName || '',
-						})
-						this.$store.dispatch('actionTrigger',{
-							key:'avatarUrl',value:avatarUrl || '',
-						})
-						this.$store.dispatch('actionTrigger',{
-							key:'gender',value:gender || '',
-						})
-							this.$store.dispatch('actionTrigger',{
-							key:'province',value:province || '',
-						})
-							this.$store.dispatch('actionTrigger',{
-							key:'city',value:city || '',
-						})
-							this.$store.dispatch('actionTrigger',{
-							key:'country',value:country || '',
-						})
-							this.$store.dispatch('actionTrigger',{
-							key:'wxHead',value:avatarUrl || '',
-						})
-						// 返回成功后更新用户头像和name
-						this.$request({
-							url:'/phoneReparisServer/service/rest/login.customerService/collection/updateUserWXInfo',
-							methods:'POST',
-							data:{
-								name:nickName,
-								wxHead:avatarUrl
-							}
-						}).then(res=>{
-							console.log('更新用户头像成功')
-						}).catch(err=>{
-							console.log('更新用户头像失败')
-						})
-							
-				}
-			})
 			},
 			// 微信登陆
 			wxLogin(){

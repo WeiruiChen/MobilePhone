@@ -47,14 +47,14 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        "appid" : "wxff7b2ad3dc99592f",
+        "appid" : "wx0df3c8b05d59401a",
         "setting" : {
             "urlCheck" : false,
             "es6" : true
         }
     },
     "h5" : {
-        "title" : "ColorUi for UniApp",
-        "domain" : "demo.color-ui.com"
+        "title" : "同城维修预约",
+        "domain" : "https://www.rongjiu.online"
     }
 }

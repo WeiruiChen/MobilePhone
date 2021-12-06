@@ -1,7 +1,7 @@
 //存放用户小程序全局状态
 const state = {
 	// 全局照片存储
-	"imageBaseUrl":"http://120.78.178.26/phoneReparisServer/service/rest/tk.File/",
+	"imageBaseUrl":"https://www.rongjiu.online/phoneReparisServer/service/rest/tk.File/",
 	"id":"xxx",
 	// "clientVer":"1.1.5",
 	"clientVer":"WxSmallProgramReaders",

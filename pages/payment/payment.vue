@@ -73,9 +73,9 @@
 				</view>
 
 				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="callPhone">联系客服</button>
-				<button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="payment">支付订单</button>
-				<!-- <button class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx"
-					@click="payment">支付订单</button> -->
+				<button v-if="isPayed" class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;left:50rpx" @click="gotoOrderList">订单列表</button>
+				<button v-else class="cu-btn shadow lg submit-btn round" style="position:fixed;bottom:50rpx;right:50rpx" @click="payment">支付订单</button>
+				
 			</form>
 		</view>
 	</view>
@@ -117,6 +117,7 @@
 				},
 				switcha: false,
 				time: '12:01',
+				isPayed:false,
 				NavMap: {
 					'ALL': '全部',
 					'New': '已下单',
@@ -149,6 +150,11 @@
 			callPhone(){
 				uni.makePhoneCall({
 				  phoneNumber: this.gmPhone,
+				})
+			},
+			gotoOrderList() {
+				uni.redirectTo({
+					url: '../orderList/orderList'
 				})
 			},
 			SwitchA(e) {
@@ -184,12 +190,6 @@
 						title: "支付中...",
 					})
 					uni.requestPayment({
-						// provider: 'wxpay',
-						// // timeStamp: String(Date.now()),
-						// nonceStr: 'A1B2C3D4E5',
-						// package: 'prepay_id=wx20180101abcdefg',
-						// signType: 'MD5',
-						// paySign: '',
 						provider: 'wxpay',
 						timeStamp: param.timeStamp,
 						nonceStr: param.nonceStr,
@@ -200,11 +200,11 @@
 							uni.showToast({
 								title:'支付成功',
 								icon: "success",
-								duration: 1000
+								duration: 1000,
+								// url:'/pages/payment/payment'
 							})
-							uni.reLaunch({
-								url:'/pages/orderDetial/orderDetial'
-							})
+							this.orderDetail.orderState = 'Completed';
+							this.isPayed = true;
 							console.log('payment success:' + JSON.stringify(res));
 						},
 						fail: function(err) {

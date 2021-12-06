@@ -399,6 +399,7 @@
 				this.time = this.timeList[this.timeIndex]
 			},
 			getAddressList() {
+				this.haveDefaultAddress = true;
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
 					methods: 'POST'
@@ -416,7 +417,9 @@
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
 						methods: 'POST',
 					}).then(res => {
-						if (res.length === 0) this.haveDefaultAddress = false;
+						if (res.length === 0) {
+							this.haveDefaultAddress = false;
+						}
 						this.defaultAddress = res[0] || {};
 
 						// 获取默认地址在全部地址中的索引
