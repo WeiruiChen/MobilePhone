@@ -201,14 +201,33 @@
 				}
 
 				if (selectedFlag){
-					uni.navigateTo({
+					// 获取选择本地商品
+					let list = this.maintenanceList.filter(item => item.selected === true);
+					// 获取所有商品
+					let goodsIds = [];
+					if(list.length > 0){
+						list.forEach(element => {
+							goodsIds.push(element.id);
+						});
+					}
+					alert(JSON.stringify(list));
+					// 上传购物车
+					this.$request({
+						url:'/phoneReparisServer/service/rest/login.shoppingCart/collection/addShopCartByGoodsIds',
+						methods:'POST',
+						data:{
+							goodsId:goodsIds.join(','),
+							count:1
+						}
+					}).then(res=>{
+						console.log("addShopCartByGoodsIds" + JSON.stringify(res))
+						uni.navigateTo({
 						url: '../reserve/reserve'
+						})
+						// this.orderDetail = res
+					}).catch(e=>{
+						console.log(e)
 					})
-					// // 清空购物车
-					// this.$store.dispatch('shoppingTrigger',{
-					// 	key:'maintenanceList',
-					// 	value:[]
-					// })
 				}
 				else
 					uni.showModal({
@@ -343,35 +362,6 @@
 					// 如果购物车里面本地存在数据则拿购物车的数据 不更新数据
 				})
 			},
-			// VerticalMain(e) {
-			// 	// #ifdef MP-ALIPAY
-			// 	return false //支付宝小程序暂时不支持双向联动 
-			// 	// #endif
-			// 	let that = this;
-			// 	let tabHeight = 0;
-			// 	if (this.load) {
-			// 		for (let i = 0; i < this.list.length; i++) {
-			// 			let view = uni.createSelectorQuery().select("#main-" + this.list[i].id);
-			// 			view.fields({
-			// 				size: true
-			// 			}, data => {
-			// 				this.list[i].top = tabHeight;
-			// 				tabHeight = tabHeight + data.height;
-			// 				this.list[i].bottom = tabHeight;
-			// 			}).exec();
-			// 		}
-			// 		this.load = false
-			// 	}
-			// 	let scrollTop = e.detail.scrollTop + 10;
-			// 	for (let i = 0; i < this.list.length; i++) {
-			// 		if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
-			// 			this.verticalNavTop = (this.list[i].id - 1) * 50
-			// 			this.tabCur = this.list[i].id
-			// 			console.log(scrollTop)
-			// 			return false
-			// 		}
-			// 	}
-			// }
 		},
 	}
 </script>

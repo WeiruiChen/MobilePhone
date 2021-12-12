@@ -151,7 +151,8 @@
 						<view>温馨提示：</view>
 						<view>1、最终维修方案以工程师检测为准；</view>
 						<view>2、维修方案变更需经过您同意确认方可执行；</view>
-						<view>3、若工程师检测后，由于您个人原因不维修，需要支付检测费{{delivery.testingFee||''}}元；</view>
+						<!-- <view>3、若工程师检测后，由于您个人原因不维修，需要支付检测费{{delivery.testingFee||''}}元；</view> -->
+						<view>3、若工程师检测后，由于您个人原因不维修，需要支付检测费；</view>
 						<view>4、预约订单无需支付费用，最终费用待您验收完成后一并支付。</view>
 					</view>
 				</view>
@@ -236,6 +237,8 @@
 				endTime1: '',
 				// 判断是否立即抢购跳转
 				isShopping: false,
+				// phoneColor
+				phtonColorMap:{},
 				// 地址跟索引的
 				// imageUrl: ''
 				
@@ -250,6 +253,37 @@
 			}
 		},
 		onShow() {
+			// 获取线上购物车
+				this.phoneColorList = []
+				this.$request({
+						url:'/phoneReparisServer/service/rest/login.shoppingCart/collection/getShopCart',
+						methods:'POST',
+					}).then(res=>{
+						console.log("getShopCart" + JSON.stringify(res))
+						// 获取单个商品
+						let item =  res.items[0];
+						let  colors = item.colors.split(',');
+						let  colorsValue = item.colorsValue.split(',');
+						for (const index in colors) {
+							this.phoneColorList.push({
+								name: colors[index],
+								color: colorsValue[index],
+								isCheck: index == 0 ? true :false
+							})
+						}
+						// if(item.colors)
+						// for (const key in object) {
+						// 	if (Object.hasOwnProperty.call(object, key)) {
+						// 		const element = object[key];
+								
+						// 	}
+						// }
+						// 获取手机颜色显示
+						// this.orderDetail = res
+					}).catch(e=>{
+						console.log(e)
+				})
+
 			// 初始化日期
 			let dateTime = new Date()
 			this.startTime = formatDateTime(dateTime)

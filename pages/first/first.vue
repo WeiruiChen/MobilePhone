@@ -187,7 +187,7 @@
 			wxHead:state => state.user.wxHead
 		}),
 		onLoad(){
-			 if(uni.getSystemInfoSync().platform == 'mac'){
+			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData()
 			 }else{
 				 this.wxLogin()

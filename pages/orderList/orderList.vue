@@ -21,7 +21,9 @@
 							<text>订单编号：{{item.code}}</text>
 							<view class="cu-btn round sm">{{item.orderStateName}}</view>
 						</view>
-						<view style="display: flex;align-items: center;">
+						<view v-if="item.goodsList.length == 0">暂无商品信息</view>
+						<view v-else style="display: flex;align-items: center;">
+						
 							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'
 								style="height: auto;">
 							</image>
@@ -73,6 +75,8 @@
 			}
 			this.getOrderList(this.NavMap[this.TabCur])
 		},
+		onshow() {
+		},
 		data() {
 			return {
 				TabCur: '全部',
@@ -117,6 +121,7 @@
 				
 			},
 			getOrderList(type = 'ALL') {
+				this.showOrderList = [];
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.orderService/collection/getPagingOrder',
 					methods: 'POST',
@@ -127,6 +132,7 @@
 					}
 				}).then(res => {
 					this.showOrderList = res
+					// alert(JSON.stringify(this.showOrderList))
 				}).catch(e => {
 					console.log('e')
 				})

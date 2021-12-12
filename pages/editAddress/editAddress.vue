@@ -10,12 +10,12 @@
 
 				<view class="cu-form-group round-top-card ">
 					<view class="title">收货人</view>
-					<input placeholder="大名" name="name" v-model="address.name"></input>
+					<input name="name" v-model="address.name"></input>
 				</view>
 
 				<view class="cu-form-group ">
 					<view class="title">手机号</view>
-					<input placeholder="1234566788" name="phonenumber" v-model="address.phone"></input>
+					<input  name="phonenumber" v-model="address.phone"></input>
 				</view>
 
 				<!-- #ifndef H5 || APP-PLUS || MP-ALIPAY -->
@@ -31,12 +31,12 @@
 
 				<view class="cu-form-group ">
 					<view class="title">详细地址</view>
-					<input placeholder="四季星城2期附近" name="addressDetial" v-model="address.address"></input>
+					<input  name="addressDetial" v-model="address.address"></input>
 				</view>
 
 				<view class="cu-form-group round-bottom-card ">
 					<view class="title">门牌号</view>
-					<input placeholder="307" name="address" v-model="address.houseNumber"></input>
+					<input name="address" v-model="address.houseNumber"></input>
 				</view>
 
 

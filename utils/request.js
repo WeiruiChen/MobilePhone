@@ -15,7 +15,7 @@ const request = function({
 		reqData['cityId'] = store.state.user.cityId || '';
 		reqData['clientVer'] = store.state.user.clientVer || '';
 	}
-	let reqUrl = ' https://www.rongjiu.online' + url;
+	let reqUrl = 'http://pow6rm42.dongtaiyuming.net:29203' + url;
 	// http://pow6rm42.dongtaiyuming.net:29203
 	//https://www.caomeixinxi.com
 	if (store.state.user.sessionID) {
@@ -31,13 +31,22 @@ const request = function({
 		},
 		data: reqData
 	}
+	  let str = "";
+	 for(var obj in reqData)
+	 {
+	   str += obj +"=" + reqData[obj] + "&";
+	 }
+	 str =  str.substr(0,str.length - 1);
+	 console.log(reqUrl +"?" +str);
 	return new Promise((resolve, reject) => {
 		uni.request(requestObj).then((response) => {
 			// setTimeout(function() {
 			//     uni.hideLoading();
 			// }, 200);
 			// 获取接口原有数据
+			console.log('responseData#',response);
 			const reponseData = response[1].data
+			
 			// uni-app返回一个数组
 			if (reponseData.code !== 0) {
 				let content = ''
@@ -74,6 +83,7 @@ const request = function({
 			resolve(reponseData.data);
 		}).catch(error => {
 			// let [err, res] = error;
+			console.log('request###error', error);
 			reject(error)
 		})
 	})
