@@ -15,7 +15,8 @@ const request = function({
 		reqData['cityId'] = store.state.user.cityId || '';
 		reqData['clientVer'] = store.state.user.clientVer || '';
 	}
-	let reqUrl = 'http://pow6rm42.dongtaiyuming.net:29203' + url;
+	let reqUrl = 'https://www.rongjiu.online' + url;
+	// https://www.rongjiu.online
 	// http://pow6rm42.dongtaiyuming.net:29203
 	//https://www.caomeixinxi.com
 	if (store.state.user.sessionID) {

@@ -15,8 +15,9 @@
 			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
 			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx"  @click="onClickHandler(item)">
+				<view v-if="!item.fileId"></view>
 				<!-- {{item}} -->
-				<image  :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
+				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
 			</swiper-item>
 		</swiper>
 
@@ -31,7 +32,8 @@
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index < gridCol*2">
 				<view style="display:flex;flex-direction:column;align-items:center">
-					<image @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 120rpx;height: 120rpx;"></image>
+					<view v-if="!item.fileId"></view>
+					<image v-else @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 120rpx;height: 120rpx;"></image>
 					<view >{{item.title}}</view>
 				</view>
 			</view>
@@ -56,7 +58,7 @@
 									<view style="display: inline-flex;align-items: center;">
 										<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
 										<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
-									</view>
+							<!--  -->		</view>
 								</view>
 								<view style="position: relative;">
 									<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
