@@ -51,7 +51,7 @@
 			<scroll-view scroll-x scroll-with-animation >
 				<view class="cu-card" style="display: inline-flex;">
 						<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
-							<view style="display: flex;;background-color: #E7F0F4;height: 100%;">
+							<view style="display: flex;;background-color: #E7F0F4;height: 210rpx;">
 								<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
 									<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
 									<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
@@ -82,9 +82,9 @@
 					<view class="content" style="display: flex;justify-content: space-around;margin: 15rpx;">
 						<view v-for="(item,index) in preferentialList" :key="index">
 							<view style="display: flex;margin: 0rpx 0 0 28rpx;">
-								<image style="width: 50rpx;height: 50rpx;" :src="item.cuIcon"></image>
+								<image style="width: 65rpx;height: 65rpx;" :src="item.cuIcon"></image>
 								<view style="display: absolute;">
-									<image v-if="index <4" style="left: 15rpx;top:5rpx;width: 50rpx;height: 10rpx;" src="../../static/first/线@3x.png"></image>
+									<image v-if="index <3" style="left: 28rpx;top:20rpx;width: 50rpx;height: 10rpx;" src="../../static/first/线@3x.png"></image>
 								</view>
 							</view>
 							<view style="font-weight: bold;">{{item.name}}</view>
@@ -97,7 +97,7 @@
 			<view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<!-- src="../../static/first/服务优势icon@3x.png" -->
-					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
+					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/advanceicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务优势</text>
 				</view>
 			</view>
@@ -145,12 +145,8 @@
 				},
 				{
 					cuIcon:require("@/static/first/设备验收@3x.png"),
-					name:"设备验收"
-				},
-				{
-					cuIcon:require("@/static/first/付款取件@3x.png"),
-					name:"付款取件"
-				},
+					name:"验收付款"
+				}
 				],
 				dotStyle: false,
 				cardCur: 0,
