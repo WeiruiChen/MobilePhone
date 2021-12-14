@@ -45,11 +45,11 @@
 								<view class="flex-container margin-top">
 									<view class="text-price"><text>{{item.salePrice}}</text></view>
 									<button v-if="!item.selected"  class="cu-btn cuIcon icon-add" style="font-weight: 900;"
-										@click="addShopping(item,true)">
+										@click="addShopping(index,true)">
 										<text class="cuIcon-add"></text>
 									</button>
 									<button v-else class="cu-btn cuIcon icon-move"
-										@click="addShopping(item,false)">
+										@click="addShopping(index,false)">
 										<text class="cuIcon-move"></text>
 									</button>
 								</view>
@@ -205,19 +205,21 @@
 					let list = this.maintenanceList.filter(item => item.selected === true);
 					// 获取所有商品
 					let goodsIds = [];
+					let goodsCount = [];
 					if(list.length > 0){
 						list.forEach(element => {
 							goodsIds.push(element.id);
+							goodsCount.push(1);
 						});
 					}
-					alert(JSON.stringify(list));
+					// alert(JSON.stringify(list));
 					// 上传购物车
 					this.$request({
 						url:'/phoneReparisServer/service/rest/login.shoppingCart/collection/addShopCartByGoodsIds',
 						methods:'POST',
 						data:{
 							goodsId:goodsIds.join(','),
-							count:1
+							count:goodsCount.join(',')
 						}
 					}).then(res=>{
 						console.log("addShopCartByGoodsIds" + JSON.stringify(res))
@@ -242,13 +244,27 @@
 						}
 					});
 			},
-			addShopping(item, status) {
+			addShopping(index, status) {
+				// deepcopy
+				let coptList = []
+				for (const key in this.forkMaintenance) {
+					coptList.push({
+						...this.forkMaintenance[key],
+						selected: key == index ? status : this.forkMaintenance[key].selected
+					})
+					// alert(key == index ? status : false)
+				}
+				
+				
+				// let coptList = this.forkMaintenance.map(element=>{
+				// 	return {
+				// 		...element,
 
+				// 	}
+				// })
 				// 判断是否重复 重复的话则删除 下一步再添加
-				this.forkMaintenance = this.judgeRepeat(this.maintenanceList, [{
-					...item,
-					selected: status
-				}], true);
+				this.forkMaintenance = this.judgeRepeat(this.maintenanceList,coptList, true);
+
 				console.log('maintasds', this.maintenanceList)
 			},
 			TabSelect(e) {

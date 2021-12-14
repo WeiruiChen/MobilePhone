@@ -230,30 +230,6 @@
 				// #ifdef MP-ALIPAY
 				return false //支付宝小程序暂时不支持双向联动 
 				// #endif
-				let that = this;
-				let tabHeight = 0;
-				if (this.load) {
-					for (let i = 0; i < this.list.length; i++) {
-						let view = uni.createSelectorQuery().select("#main-" + this.list[i].id);
-						view.fields({
-							size: true
-						}, data => {
-							this.list[i].top = tabHeight;
-							tabHeight = tabHeight + data.height;
-							this.list[i].bottom = tabHeight;
-						}).exec();
-					}
-					this.load = false
-				}
-				let scrollTop = e.detail.scrollTop + 10;
-				for (let i = 0; i < this.list.length; i++) {
-					if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
-						this.verticalNavTop = (this.list[i].id - 1) * 50
-						this.tabCur = this.list[i].id
-						console.log(scrollTop)
-						return false
-					}
-				}
 			}
 		},
 	}

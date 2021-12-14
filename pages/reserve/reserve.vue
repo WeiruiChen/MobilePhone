@@ -565,7 +565,6 @@
 					uni.redirectTo({
 						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
 							order))
-						// url: '../orderSuccess/orderSucces'
 					})
 				}).catch(e => {
 					console.log(e)
