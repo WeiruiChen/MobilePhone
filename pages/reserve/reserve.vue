@@ -271,15 +271,7 @@
 								isCheck: index == 0 ? true :false
 							})
 						}
-						// if(item.colors)
-						// for (const key in object) {
-						// 	if (Object.hasOwnProperty.call(object, key)) {
-						// 		const element = object[key];
-								
-						// 	}
-						// }
-						// 获取手机颜色显示
-						// this.orderDetail = res
+					
 					}).catch(e=>{
 						console.log(e)
 				})

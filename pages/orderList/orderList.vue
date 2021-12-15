@@ -158,15 +158,13 @@
 							}).then(res => {
 								uni.showToast({
 								title: "取消成功",
-								icon: "none"
+								icon: "none",
+								success: function(){
+									that.getOrderList()
+								}
 							})
-								console.log("deleteOrder:" + JSON.stringify(res));
-
 							}).catch(e => {
 								console.log('deleteOrder', e)
-							})
-							uni.redirectTo({
-								url: '../orderList/orderList'
 							})
 						} else if (e.cancel) {
 							uni.showToast({
