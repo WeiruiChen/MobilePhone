@@ -106,7 +106,7 @@
 								style="height: auto;"></image>
 							<view>
 								<view class="margin-lr-sm"><text>{{fanganList[0].phoneType}}</text></view>
-								<view class="flex">
+								<view v-if="phoneColorList.length > 0" class="flex">
 									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList"
 										:key="item.color">
 										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
@@ -214,21 +214,7 @@
 				timeList: [],
 				index: -1,
 				orginList: [],
-				phoneColorList: [{
-						name: '白色',
-						color: '#FFFFFF',
-						isCheck: true,
-					},
-					{
-						name: '黑色',
-						color: '#000000',
-						isCheck: false
-					},
-					{
-						name: '金色',
-						color: '#D9D919',
-						isCheck: false
-					}
+				phoneColorList: [
 				],
 				selectedMemo: '',
 				startTime: '',
@@ -260,6 +246,7 @@
 						methods:'POST',
 					}).then(res=>{
 						console.log("getShopCart" + JSON.stringify(res))
+						this.phoneColorList = [];
 						// 获取单个商品
 						let item =  res.items[0];
 						let  colors = item.colors.split(',');
@@ -271,7 +258,6 @@
 								isCheck: index == 0 ? true :false
 							})
 						}
-					
 					}).catch(e=>{
 						console.log(e)
 				})
