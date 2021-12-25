@@ -185,6 +185,8 @@
 			wxHead:state => state.user.wxHead
 		}),
 		onLoad(){
+			// 获取系统信息
+			console.log('system:'+JSON.stringify(uni.getSystemInfoSync()));
 			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData()
 			 }else{
@@ -373,6 +375,10 @@
 					this.$store.dispatch('actionTrigger',{
 						key:'delivery',
 						value: res[0]
+					})
+					this.$store.dispatch('actionTrigger',{
+						key:'deliveryList',
+						value: res
 					})
 				}).catch(e=>{
 					console.log('getDeliveryAddressList',e)

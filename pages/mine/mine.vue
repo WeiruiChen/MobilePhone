@@ -3,6 +3,7 @@
 		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
 			登陆
 		</button>
+		
 		<cu-custom bgColor="bg-gradual-blue">
 			<view slot="content">我的</view>
 		</cu-custom>
@@ -72,28 +73,16 @@
 	export default {
 		onLoad(){
 		},
+		// 下拉刷新
+		onPullDownRefresh(){
+			this.getAllOrderList();
+			uni.stopPullDownRefresh();
+		},
 		components: {
 			'view-tabbar': Tabbar
 		},
 		onShow() {
-			// 获取全部订单信息
-			this.$request({
-				url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderCounts',
-				methods:'POST'
-			}).then(res=>{
-				console.log(JSON.stringify(res));
-				// if(res.length >0){
-				for (const key in res) {
-					this.typeCount[key] = res[key]
-				}
-				// }
-				// console.log(JSON.stringify(this.typeCount))
-			}).catch(e=>{
-				console.log(e)
-			})
-			uni.hideTabBar({
-				animation: false
-			})
+			this.getAllOrderList();
 		},
 		data() {
 			return {
@@ -138,6 +127,27 @@
 			wxHead: state => state.user.wxHead,
 		}),
 		methods: {
+			// 获取全部订单
+			getAllOrderList(){
+				// 获取全部订单信息
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderCounts',
+					methods:'POST'
+				}).then(res=>{
+					console.log(JSON.stringify(res));
+					// if(res.length >0){
+					for (const key in res) {
+						this.typeCount[key] = res[key]
+					}
+					// }
+					// console.log(JSON.stringify(this.typeCount))
+				}).catch(e=>{
+					console.log(e)
+				})
+				uni.hideTabBar({
+					animation: false
+				})
+			},
 				// 获取用户信息
 			getWxUserProfile(){
 				wx.getUserProfile({

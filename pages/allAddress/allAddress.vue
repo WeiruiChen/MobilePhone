@@ -7,7 +7,7 @@
 
 		<view class="container">
 			<form>
-				<view v-for="(item,index) in addressList">
+				<view v-for="(item,index) in addressList" :key="index" @click="isSelect ? onSelectAddrress(index) : ()=>{}">
 					<view class="cu-form-group padding-top padding-bottom round-top-card">
 						<view class="content">
 							<view>{{item.name}} {{item.phone}}</view>
@@ -42,17 +42,31 @@
 	export default {
 		data() {
 			return {
-				addressList: []
+				addressList: [],
+				isSelect:false,
 			}
 		},
-		onLoad() {
-			// 获取地址列表
-			
-		},
 		onShow() {
-			this.getAddList()
+			this.getAddList();
+			// 获取当前栈的参数
+			let pages = getCurrentPages();
+			// 数组中索引最大的页面--当前页面
+			let currentPage = pages[pages.length-1];
+			// 打印出当前页面中的 options
+			if(currentPage.options['isSelect'] && currentPage.options['isSelect'] == '1'){
+				this.isSelect = true;
+				return;
+			}
+		
 		},
 		methods: {
+			onSelectAddrress(index){
+				// 获取选择地址
+				uni.setStorageSync("selectAdrress",JSON.stringify(this.addressList[index]));
+				uni.navigateBack({
+					delta:1,
+				})
+			},
 			getAddList() {
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',

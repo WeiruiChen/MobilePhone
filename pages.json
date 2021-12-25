@@ -39,7 +39,9 @@
 		},
 		{
 			"path": "pages/mine/mine",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/logs/logs",
@@ -58,6 +60,8 @@
 			"style": {}
 		}
 	],
+	"enablePullDownRefresh":true,
+	"permission":{ "scope.userLocation": { "desc": "获取您的地理位置" } },
 	"tabBar": {
 		"selectedColor": "#79D5AD",
 		"color": "#999999",

@@ -10,40 +10,27 @@
 				<view class="cu-form-group margin-top round-card">
 					<view
 						style="display:flex;flex-direction:row;justify-content:space-between;width:100%;;margin-top:20rpx;margin-bottom:20rpx">
-						<!-- <view style="display:flex;justify-content:flex-end">
-							<view class="outer round"
-								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
-								<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'"
-									@click="sentBySelf">
-									<text style="width: 59px;line-height: 34px;">自行送修</text>
-								</view>
-								<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'"
-									@click="getByDelivery">
-									<text style="width: 59px;line-height: 34px;">上门取件</text>
-								</view>
-							</view>
-						</view> -->
 						<view style="margin-top:20rpx">
 							<view style="display:flex;justify-content:space-between;align-items:flex-end;">
-								<view style="display:flex;flex-direction:column;width:100%" v-if="haveDefaultAddress">
+								<view style="display:flex;flex-direction:column;width:100%">
 									<view v-if="changeType">
-										<picker @change="PickerChange" :value="index" :range="addressList">
-											<view style="font-weight: bold;">
-												{{chooseAddress.label}}:{{index>-1?addressList[index]:'暂无地址'}}
+										<!-- <picker @change="PickerChange" :value="index" :range="addressList"> -->
+											<view style="font-weight: bold;"  @click="gotoSelectAddress">
+												{{chooseAddress.label}}:{{defaultAddress.region}}
 											</view>
-										</picker>
+										<!-- </picker> -->
 									</view>
 									<view style="font-weight: bold;" v-if="!changeType">
 										{{chooseAddress.label}}:{{chooseAddress.address}}
 									</view>
 									<view style="color: gray;margin-top: 5rpx;">{{name}} {{phone}}</view>
 								</view>
-								<view v-else>
+								<!-- <view v-else>
 									<view>暂无联系人信息，请点击右侧增加联系人地址</view>
 									<button class="cu-btn cuIcon icon-add" @click="addAddress" style="height:50rpx">
 										<text class="cuIcon-add"></text>
 									</button>
-								</view>
+								</view> -->
 
 							</view>
 						</view>
@@ -107,8 +94,9 @@
 							<view>
 								<view class="margin-lr-sm"><text>{{fanganList[0].phoneType}}</text></view>
 								<view v-if="phoneColorList.length > 0" class="flex">
-									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList"
+									<view class="margin-tb-sm margin-left-sm"  v-for="item in phoneColorList"
 										:key="item.color">
+									<view style="display:flex;flex-direction:column;align-items: center">
 										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
 											<!-- <text> </text> -->
 											<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
@@ -116,6 +104,7 @@
 												:style="'background-color:'+item.color"></view>
 										</view>
 										<view class="margin-tb-sm">{{item.name}}</view>
+									</view>
 									</view>
 								</view>
 							</view>
@@ -158,13 +147,13 @@
 				</view>
 
 
-				<view style="margin-top:150px" v-if="!changeType">
+				<!-- <view style="margin-top:150px" v-if="!changeType">
 
-				</view>
+				</view> -->
 
 				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:0">
 					<view>
-						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
+						<view> 预估费用：{{!changeType ? totalSalePrice : totalSalePrice + (parseFloat(this.delivery.expressFee) || 0)}} <text class="margin-left"
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
@@ -179,6 +168,7 @@
 </template>
 
 <script>
+	import BMapWX from '../../utils/bmap-wx.js';
 	import {
 		mapState
 	} from 'vuex' //引入mapState
@@ -199,7 +189,7 @@
 					address: ""
 				},
 				// 判断是否有默认地址
-				haveDefaultAddress: true,
+				// haveDefaultAddress: true,
 				phone: "",
 				name: "",
 				time: '17:00-19:00',
@@ -240,6 +230,40 @@
 		},
 		onShow() {
 			// 获取线上购物车
+			this.initShow();
+
+		},
+		computed: mapState({
+			// 从state中拿到数据 
+			maintenanceList: state => state.goods.maintenanceList,
+			baseImageUrl: state => state.user.imageBaseUrl,
+			delivery: state => state.user.delivery,
+			deliveryList:state => state.user.deliveryList,
+			totalPrice() {
+				let list = this.fanganList;
+				let total = 0
+				for (let item in list) {
+					total += list[item].price;
+				}
+				return total;
+			},
+			totalSalePrice() {
+				let list = this.fanganList;
+				let totalSale = 0;
+				for (let item in list) {
+					totalSale += list[item].salePrice;
+				}
+				// alert(JSON.stringify(list));
+				// alert(this.changeType)
+				// if (this.changeType) {
+				// 	totalSale = totalSale + (parseFloat(this.delivery.expressFee)||0);
+				// }
+
+				return totalSale
+			}
+		}),
+		methods: {
+			initShow(){
 				this.phoneColorList = []
 				this.$request({
 						url:'/phoneReparisServer/service/rest/login.shoppingCart/collection/getShopCart',
@@ -262,52 +286,23 @@
 						console.log(e)
 				})
 
-			// 初始化日期
-			let dateTime = new Date()
-			this.startTime = formatDateTime(dateTime)
-			this.endTime = formatDateTime(getNextDayDate(7, dateTime))
-			this.date = this.startTime
-			this.changeTimeList()
-			
-			//从本地获取方案列表和图片url
-			if (!this.isShopping)
-				this.fanganList = this.maintenanceList.filter(item => item.selected == true);
-			console.log("fanganList" + JSON.stringify(this.fanganList));
-			// this.imageUrl = this.baseImageUrl;
-			console.log(this.imageUrl);
+				// 初始化日期
+				let dateTime = new Date()
+				this.startTime = formatDateTime(dateTime)
+				this.endTime = formatDateTime(getNextDayDate(7, dateTime))
+				this.date = this.startTime
+				this.changeTimeList()
+				
+				//从本地获取方案列表和图片url
+				if (!this.isShopping)
+					this.fanganList = this.maintenanceList.filter(item => item.selected == true);
+				console.log("fanganList" + JSON.stringify(this.fanganList));
+				// this.imageUrl = this.baseImageUrl;
+				console.log(this.imageUrl);
 
-			// 先获取全部地址
-			this.getAddressList()
-
-		},
-		computed: mapState({
-			// 从state中拿到数据 
-			maintenanceList: state => state.goods.maintenanceList,
-			baseImageUrl: state => state.user.imageBaseUrl,
-			delivery: state => state.user.delivery,
-			totalPrice() {
-				let list = this.fanganList;
-				let total = 0
-				for (let item in list) {
-					total += list[item].price;
-				}
-				return total;
+				// 先获取全部地址
+				this.getAddressList()
 			},
-			totalSalePrice() {
-				let list = this.fanganList;
-				let totalSale = 0;
-				for (let item in list) {
-					totalSale += list[item].salePrice;
-				}
-
-				if (this.changeType) {
-					totalSale = totalSale + (parseFloat(this.delivery.expressFee)||0);
-				}
-
-				return totalSale
-			}
-		}),
-		methods: {
 			compareTime(t1, t2) {
 				let time = new Date();
 				let a = t1.split(":");
@@ -392,15 +387,15 @@
 				this.selectedMemo = name
 
 			},
-			PickerChange(e) {
-				console.log('e.detail.value', e.detail.value)
-				console.log('this.addressList',this.addressList)
-				this.index = e.detail.value
-				this.name = this.orginList[this.index].name
-				this.phone = this.orginList[this.index].phone
-				this.chooseAddress.address = this.addressList[this.index]
-				this.defaultAddress.id = this.orginList[this.index].id
-			},
+			// PickerChange(e) {
+			// 	console.log('e.detail.value', e.detail.value)
+			// 	console.log('this.addressList',this.addressList)
+			// 	this.index = e.detail.value
+			// 	this.name = this.orginList[this.index].name
+			// 	this.phone = this.orginList[this.index].phone
+			// 	this.chooseAddress.address = this.addressList[this.index]
+			// 	this.defaultAddress.id = this.orginList[this.index].id
+			// },
 			addAddress() {
 				uni.navigateTo({
 					url: '../allAddress/allAddress'
@@ -410,8 +405,13 @@
 				this.timeIndex = e.detail.value
 				this.time = this.timeList[this.timeIndex]
 			},
+			gotoSelectAddress(){
+				uni.navigateTo({
+					url:'../allAddress/allAddress?isSelect=1'
+				})
+			},
 			getAddressList() {
-				this.haveDefaultAddress = true;
+				// this.haveDefaultAddress = true;
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
 					methods: 'POST'
@@ -424,26 +424,39 @@
 							this.addressList.push(value.region + ' ' + value.address)
 						}
 					}
+
 					//获取默认联系人
 					this.$request({
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
 						methods: 'POST',
 					}).then(res => {
 						if (res.length === 0) {
-							this.haveDefaultAddress = false;
+							// this.haveDefaultAddress = false;
+							// 没有默认地址时强制跳转
+							gotoSelectAddress();
+							
 						}
-						this.defaultAddress = res[0] || {};
+						let selectAdrress = uni.getStorageSync("selectAdrress");
+						if(selectAdrress && selectAdrress !== ''){
+							selectAdrress = JSON.parse(selectAdrress);
+							this.defaultAddress = selectAdrress;
+						}else{
+							this.defaultAddress = res[0] || {};
+						}
+						this.chooseAddress.address = this.defaultAddress.address;
+						this.getByDelivery();
+						console.log(JSON.stringify(res));	
+
 
 						// 获取默认地址在全部地址中的索引
-						for (const index in this.orginList) {
-							if (this.orginList[index].id == this.defaultAddress.id) {
-								this.index = index;
-							}
-						}
-						console.log(this.index)
+						// for (const index in this.orginList) {
+						// 	if (this.orginList[index].id == this.defaultAddress.id) {
+						// 		this.index = index;
+						// 	}
+						// }
+						// console.log(this.index)
 						//加载地址，默认选中上门取件
-						this.getByDelivery();
-						console.log(JSON.stringify(res));
+					
 					}).catch(e => {
 						console.log(e)
 					})
@@ -457,20 +470,53 @@
 				this.changeTimeList()
 			},
 			sentBySelf() {
+				this.changeType = false;
 				this.chooseAddress.label = "最近网点";
 				//默认最近网点只有一个固定值，主页已经拿到
 				this.chooseAddress.address = this.delivery.adress;
 				this.phone = this.delivery.phone;
 				this.name = this.delivery.name;
-				this.changeType = false;
+			
+
+			},
+			// 获取最近运营点计算
+			getNearestAddress(){
+			// 	let that = this;
+			// 	// 根据最近网店获取最近运营点
+			// 	const bmap = new BMapWX({
+			// 		ak:'PhSR9LImfQeGhPcwCYZKafcoBOX3rQlt'
+			// 	});
+			// 	// 正在定位最近运营点
+			// 	uni.showLoading({
+			// 		title: '正在寻找最近运营点'
+			// 	});
+		
+			// 	const fail = function (data) {
+			// 		console.log(data)
+			// 		uni.showToast({
+			// 			title:'寻找失败,请手动选择',
+			// 			icon:'none',
+			// 			duration:1000
+			// 		})
+			// 	};
+			// 	const success = function (data) {
+			// 	}
+			// 	BMap.geocoding({
+			// 	address: '北京市海淀区上地十街10号',
+			// 	fail: fail,
+			// 	success: success,
+			// 	iconPath: '../../static/marker_red.png',
+			// 	iconTapPath: '../../static/marker_red.png'
+			// });
 			},
 			getByDelivery() {
+				this.changeType = true;
 				this.chooseAddress.label = "取件地址";
 				this.chooseAddress.address = (this.defaultAddress.region || '') + (this.defaultAddress.address || '') + (
 					this.defaultAddress.houseNumber || '');
 				this.phone = this.defaultAddress.phone || '';
 				this.name = this.defaultAddress.name || '';
-				this.changeType = true;
+			
 			},
 			submitOrder() {
 				if (!this.defaultAddress.id&&this.addressList.length==0) {

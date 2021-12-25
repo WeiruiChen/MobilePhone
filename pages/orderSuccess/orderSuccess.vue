@@ -38,6 +38,9 @@
 						key:'maintenanceList',
 						value:[]
 					})
+
+			// 下单成功后删除选择地址
+			uni.setStorageSync("selectAdrress",undefined);
 			
 		},
 		data() {
@@ -69,7 +72,7 @@
 		display: flex;
 		flex-direction:column;
 		justify-content:space-between;
-		height: calc(100vh - 280upx);
+		height: calc(100vh - 500upx);
 
 	}
 	.container {

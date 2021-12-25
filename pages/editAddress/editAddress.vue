@@ -17,17 +17,21 @@
 					<view class="title">手机号</view>
 					<input  name="phonenumber" v-model="address.phone"></input>
 				</view>
+				<view class="cu-form-group ">
+					<view class="title">备用手机号</view>
+					<input  name="phonenumber" v-model="address.sparePhone"></input>
+				</view>
 
-				<!-- #ifndef H5 || APP-PLUS || MP-ALIPAY -->
 				<view class="cu-form-group">
 					<view class="title">地址选择</view>
+					<!-- 增加是否需要地址定位点击事件 -->
 					<picker mode="region" @change="RegionChange" :value="region">
 						<view class="picker">
 							{{region[0]}}，{{region[1]}}，{{region[2]}}
 						</view>
 					</picker>
+					<view style="margin-left: 10rpx;" @click="getLocationInfo">智能定位</view>
 				</view>
-				<!-- #endif -->
 
 				<view class="cu-form-group ">
 					<view class="title">详细地址</view>
@@ -39,19 +43,6 @@
 					<input name="address" v-model="address.houseNumber"></input>
 				</view>
 
-
-
-				<view class="cu-form-group padding-top padding-bottom round-top-card flex-container">
-					<view>
-						<text>标签</text>
-					</view>
-					<view class="tag-group">
-						<view class='cu-tag round'>学校</view>
-						<view class='cu-tag round'>家</view>
-						<view class='cu-tag round'>公司</view>
-						<view class='cu-tag round'>其他</view>
-					</view>
-				</view>
 
 				<view class="cu-form-group round-bottom-card flex-container icon-color">
 					<checkbox class='round' :checked="address.isDefault" :class="address.isDefault?'checked':''"
@@ -69,6 +60,7 @@
 </template>
 
 <script>
+	import BMapWX from '../../utils/bmap-wx.js';
 	export default {
 		data() {
 			return {
@@ -81,13 +73,14 @@
 				// 	checked: true,
 				// 	value: '1'
 				// },
-				radio: 'A'
+				radio: 'A',
+				isFirstEntry:true
 			}
 		},
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
+				// 判断是否选择地址
 				const navigateParams = JSON.parse(decodeURIComponent(option.param));
-				console.log('')
 				this.isedit = true;
 				this.$nextTick(() => {
 					this.address = navigateParams;
@@ -98,6 +91,40 @@
 
 		},
 		methods: {
+			// 获取位置信息
+			getLocationInfo(){
+				let that = this;
+				if(this.isFirstEntry){
+					const baiduMap = new BMapWX({
+						ak:'PhSR9LImfQeGhPcwCYZKafcoBOX3rQlt'
+					});
+					uni.showLoading({
+						title: '定位中'
+					})
+					baiduMap.regeocoding({
+						fail: function(res){
+							uni.hideLoading()
+							uni.showToast({
+								title: res.errMsg,
+								icon: "none",
+								duration: 1000
+							})
+						},
+						success: function(res){
+							const originalData = res['originalData'];
+							const wxMarkerData = res['wxMarkerData'];
+							that.region[0] = originalData['result']['addressComponent']['province'];
+							that.region[1] = originalData['result']['addressComponent']['city'];
+							that.region[2] = originalData['result']['addressComponent']['district'];
+							that.address.address = originalData['result']['formatted_address'];
+							that.isFirstEntry = false;
+							uni.hideLoading();
+							// uni.set
+						}
+					})
+				}else{
+				}
+			},
 			RegionChange(e) {
 				this.region = e.detail.value
 			},

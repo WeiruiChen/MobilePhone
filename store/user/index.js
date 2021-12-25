@@ -18,7 +18,8 @@ const state = {
 	"country":'',
 	"wxHead":'',
 	'name':'',
-	'delivery':{}
+	'delivery':{},
+	'deliveryList':[]
 
 }
 
