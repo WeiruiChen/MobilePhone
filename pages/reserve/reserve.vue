@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<cu-custom :isBack="true" bgColor="bg-gradual-default">
 			<view slot="backText">返回</view>
 			<view slot="content">提交订单</view>
 		</cu-custom>
@@ -39,11 +39,11 @@
 							<view class="outer round"
 								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
 								<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'"
-									@click="sentBySelf">
+									@tap="sentBySelf">
 									<text style="width: 59px;line-height: 34px;">自行送修</text>
 								</view>
 								<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'"
-									@click="getByDelivery">
+									@tap="getByDelivery">
 									<text style="width: 59px;line-height: 34px;">上门取件</text>
 								</view>
 							</view>
@@ -71,11 +71,6 @@
 								{{time}}
 							</view>
 						</picker>
-						<!-- <picker mode="time" :value="time" start="09:01" end="21:01" @change="TimeChange">
-							<view class="picker">
-								{{time}}
-							</view>
-						</picker> -->
 					</view>
 				</view>
 
@@ -146,12 +141,9 @@
 					</view>
 				</view>
 
+				<view style="height:150rpx"></view>
 
-				<!-- <view style="margin-top:150px" v-if="!changeType">
-
-				</view> -->
-
-				<view class="cu-form-group padding-top padding-bottom" style="position:sticky;bottom:0">
+				<view class="cu-form-group padding-top padding-bottom" style="position:fixed;bottom:0;width:100%">
 					<view>
 						<view> 预估费用：{{!changeType ? totalSalePrice : totalSalePrice + (parseFloat(this.delivery.expressFee) || 0)}} <text class="margin-left"
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
@@ -168,7 +160,6 @@
 </template>
 
 <script>
-	import BMapWX from '../../utils/bmap-wx.js';
 	import {
 		mapState
 	} from 'vuex' //引入mapState
@@ -254,10 +245,7 @@
 					totalSale += list[item].salePrice;
 				}
 				// alert(JSON.stringify(list));
-				// alert(this.changeType)
-				// if (this.changeType) {
-				// 	totalSale = totalSale + (parseFloat(this.delivery.expressFee)||0);
-				// }
+				console.log('JSON.stringify(list):'+JSON.stringify(list));
 
 				return totalSale
 			}
@@ -412,6 +400,7 @@
 			},
 			getAddressList() {
 				// this.haveDefaultAddress = true;
+				let that = this;
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getAddressList',
 					methods: 'POST'
@@ -433,7 +422,7 @@
 						if (res.length === 0) {
 							// this.haveDefaultAddress = false;
 							// 没有默认地址时强制跳转
-							gotoSelectAddress();
+							that.gotoSelectAddress();
 							
 						}
 						let selectAdrress = uni.getStorageSync("selectAdrress");
@@ -476,38 +465,8 @@
 				this.chooseAddress.address = this.delivery.adress;
 				this.phone = this.delivery.phone;
 				this.name = this.delivery.name;
-			
+				console.log('changeType',this.changeType);
 
-			},
-			// 获取最近运营点计算
-			getNearestAddress(){
-			// 	let that = this;
-			// 	// 根据最近网店获取最近运营点
-			// 	const bmap = new BMapWX({
-			// 		ak:'PhSR9LImfQeGhPcwCYZKafcoBOX3rQlt'
-			// 	});
-			// 	// 正在定位最近运营点
-			// 	uni.showLoading({
-			// 		title: '正在寻找最近运营点'
-			// 	});
-		
-			// 	const fail = function (data) {
-			// 		console.log(data)
-			// 		uni.showToast({
-			// 			title:'寻找失败,请手动选择',
-			// 			icon:'none',
-			// 			duration:1000
-			// 		})
-			// 	};
-			// 	const success = function (data) {
-			// 	}
-			// 	BMap.geocoding({
-			// 	address: '北京市海淀区上地十街10号',
-			// 	fail: fail,
-			// 	success: success,
-			// 	iconPath: '../../static/marker_red.png',
-			// 	iconTapPath: '../../static/marker_red.png'
-			// });
 			},
 			getByDelivery() {
 				this.changeType = true;
@@ -516,6 +475,7 @@
 					this.defaultAddress.houseNumber || '');
 				this.phone = this.defaultAddress.phone || '';
 				this.name = this.defaultAddress.name || '';
+				console.log('changeType',this.changeType);
 			
 			},
 			submitOrder() {

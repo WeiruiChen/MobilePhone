@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+		<cu-custom bgColor="bg-gradual-default" :isBack="true">
 			<view slot="backText">返回</view>
 			<view slot="content">我的订单</view>
 		</cu-custom>
@@ -18,8 +18,8 @@
 					class="cu-item cu-form-group padding-top padding-bottom round-top-card">
 					<view class="content" style="width:100%">
 						<view style="display:flex;justify-content: space-between;">
-							<text>订单编号：{{item.code}}</text>
-							<view class="cu-btn round sm">{{item.orderStateName}}</view>
+							<text style="color:#999999">订单编号：{{item.code}}</text>
+							<view class="cu-btn round sm" >{{item.orderStateName}}</view>
 						</view>
 						<view v-if="item.goodsList.length == 0">暂无商品信息</view>
 						<view v-else style="display: flex;align-items: center;">
@@ -59,7 +59,7 @@
 	} from 'vuex' //引入mapState
 	const NavMap = {
 		'全部': 'ALL',
-		'已下单': 'New',
+		'已预约': 'New',
 		'已接单': 'Confirm',
 		'已送达': 'Packaged',
 		'维修中': 'Shipped',
@@ -87,7 +87,10 @@
 						title: '全部',
 					},
 					{
-						title: '已下单',
+						title: '已预约',
+					},
+					{
+						title: '已接单',
 					},
 					{
 						title: '已送达',

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+		<cu-custom bgColor="bg-gradual-default" :isBack="true">
 			<view slot="backText">返回</view>
 			<view slot="content">支付订单</view>
 		</cu-custom>

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<cu-custom :isBack="true" bgColor="bg-gradual-default">
 			<view slot="backText">返回</view>
 			<view slot="content">新增/编辑地址</view>
 		</cu-custom>
@@ -94,7 +94,11 @@
 			// 获取位置信息
 			getLocationInfo(){
 				let that = this;
-				if(this.isFirstEntry){
+				// 首先校验是否有定位权限
+				uni.authorize({
+				scope: 'scope.userLocation',
+				success() {
+					if(that.isFirstEntry){
 					const baiduMap = new BMapWX({
 						ak:'PhSR9LImfQeGhPcwCYZKafcoBOX3rQlt'
 					});
@@ -104,11 +108,23 @@
 					baiduMap.regeocoding({
 						fail: function(res){
 							uni.hideLoading()
-							uni.showToast({
-								title: res.errMsg,
-								icon: "none",
-								duration: 1000
-							})
+							// uni.showToast({
+							// 	title: res.errMsg,
+							// 	icon: "none",
+							// 	duration: 1000
+							// })
+							uni.showModal({
+							title: '定位失败',
+							showCancel:false,
+							content: '请确认定位相关权限已开启或手动选择输入',
+							success: function (res) {
+								if (res.confirm) {
+									console.log('用户点击确定');
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+								}
+							}
+						});
 						},
 						success: function(res){
 							const originalData = res['originalData'];
@@ -119,11 +135,12 @@
 							that.address.address = originalData['result']['formatted_address'];
 							that.isFirstEntry = false;
 							uni.hideLoading();
-							// uni.set
 						}
 					})
-				}else{
 				}
+				}
+			})
+			
 			},
 			RegionChange(e) {
 				this.region = e.detail.value

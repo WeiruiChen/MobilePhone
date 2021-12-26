@@ -1,17 +1,21 @@
 <template>
-	<view class="body">
-		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
+	<view class="body" style="margin-top:-60rpx">
+	<view>
+
+	</view>
+	<view>
+		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="debounce(getWxUserProfile)">
 			登陆
 		</button>
-		
-		<cu-custom bgColor="bg-gradual-blue">
+
+		<cu-custom bgColor="bg-gradual-default">
 			<view slot="content">我的</view>
 		</cu-custom>
 		
-		<view style="text-align: center;">
-			<view style="margin-top:150rpx;text-align: center;">
+		<view>
+			<view style="margin-top:150rpx;margin-left:52rpx;display:flex;flex-direction:row;align-items: center;">
 				<view class="cu-avatar xl round" :style="'background-image:url('+wxHead+');'"></view>
-				<view>{{loginName}}</view>
+				<view style="margin-left:50rpx;font-weight:bold;">{{name}}</view>
 			</view>
 		</view>
 		<view class="cu-card article">
@@ -60,6 +64,8 @@
 			</view>
 
 		</view>
+	
+	</view>
 		<view style="height:100rpx;"></view>
 		<!-- <nabBar type="mine" :isActive="true"></nabBar> -->
 		<view-tabbar current="2"></view-tabbar>
@@ -69,7 +75,7 @@
 <script>
 	import {mapState} from 'vuex' //引入mapState
 	import Tabbar from '@/pages/tabBar/tabBar.vue'
-	
+	import { debounce } from '@/utils/debounce'
 	export default {
 		onLoad(){
 		},
@@ -88,30 +94,38 @@
 			return {
 				typeCount:{
 					newCount:null,
+					confirmCount:null,
 					packagedCount:null,
 					shippedCount:null,
 					checkCount:null
 				},
-				optionList: [{
-						cuIcon: require("@/static/mine/已下单@3x.png"),
-						name: "已下单",
+				optionList: [
+					{
+						cuIcon: require("@/static/mine/已预约.png"),
+						name: "已预约",
 						countType:'newCount',
 						type:"New"
 					},
 					{
-						cuIcon: require("@/static/mine/已送达@3x.png"),
-						name: "已送达",
-						countType:'packagedCount',
+						cuIcon: require("@/static/mine/已接单.png"),
+						name: "已接单",
+						countType:'confirmCount',
 						type:"Confirm"
 					},
 					{
-						cuIcon: require("@/static/mine/维修中@3x.png"),
+						cuIcon: require("@/static/mine/已送达.png"),
+						name: "已送达",
+						countType:'packagedCount',
+						type:"Packaged"
+					},
+					{
+						cuIcon: require("@/static/mine/维修中.png"),
 						name: "维修中",
 						countType:'shippedCount',
 						type:"Shipped"
 					},
 					{
-						cuIcon: require("@/static/mine/待验收@3x.png"),
+						cuIcon: require("@/static/mine/待验收.png"),
 						name: "待验收",
 						countType:'checkCount',
 						type:"Check"
@@ -122,6 +136,7 @@
 		computed: mapState({
 			// 从state中拿到数据 
 			loginName: state => state.user.loginName,
+			name:state => state.user.name,
 			gmPhone: state => state.user.gmPhone,
 			// avatarUrl:state=>state.user.avatarUrl,
 			wxHead: state => state.user.wxHead,

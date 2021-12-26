@@ -1,7 +1,7 @@
 <template>
 	<view>
 
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<cu-custom :isBack="true" bgColor="bg-gradual-default">
 			<view slot="backText">返回</view>
 			<view slot="content">维修方案列表</view>
 		</cu-custom>
@@ -24,38 +24,40 @@
 						<view class="nav-item" style="margin-top:20rpx" :class="index==tabCur?'text-green cur':''"
 							v-for="(item,index) in list" :key="index" @tap="TabSelect" :data-item="{id:item.id,index}">
 							{{item.name}}
+							<view  v-if="item.count && item.count != 0" class='cu-tag badge'>{{item.count}}</view>
 						</view>
+						
 					</view>
 				</view>
 			</scroll-view>
 
 
-			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)"
+			<scroll-view class="VerticalMain" scroll-y scroll-with-animation
 				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
-				<view v-if="!showNull" class="padding-top padding-lr" v-for="(item,index) in forkMaintenance"
+				<view v-if="!showNull" class="padding-top padding-lr" >
+					<form v-for="(item,index) in forkMaintenance"
 					:key="index" :id="'main-'+index">
-					<form>
 						<view class="cu-form-group padding margin-bottom-sm round-card">
 							<view style="width: 100%;">
 								<view class="text-title"><text>{{item.title}}</text></view>
-								<view class="text-gray margin-top"><text>{{item.subTitle}}</text></view>
+								<view class="text-gray" style="margin-top:10rpx"><text>{{item.subTitle}}</text></view>
 								<view class="text-gray">
 									<div v-html="item.description"></div>
 								</view>
 								<view class="flex-container margin-top">
-									<view class="text-price"><text>{{item.salePrice}}</text></view>
-									<button v-if="!item.selected"  class="cu-btn cuIcon icon-add" style="font-weight: 900;"
+									<view class="text-price" style="color:#136169"><text>{{item.salePrice}}</text></view>
+									<button v-if="!item.selected"  class="cu-btn cuIcon icon-add"  style="font-weight: 900;height:50rpx;width:50rpx"
 										@click="addShopping(index,true)">
 										<text class="cuIcon-add"></text>
 									</button>
 									<button v-else class="cu-btn cuIcon icon-move"
+									style="font-weight: 900;height:50rpx;width:50rpx"
 										@click="addShopping(index,false)">
 										<text class="cuIcon-move"></text>
 									</button>
 								</view>
 							</view>
 						</view>
-
 					</form>
 				</view>
 				<view v-else class="padding margin-bottom-sm round-card">
@@ -71,13 +73,13 @@
 
 			<view class="round-left" style="position:sticky;bottom:0">
 				<!-- <view></view> -->
-				<view style="display: flex;justify-content: space-between;align-items: center;">
+				<view style="display: flex;justify-content: space-between;align-items: center;" @tap="showDetail = true">
 					<view style="position: relative;z-index: 999;">
 						<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">
 							{{selectedCount}}</view>
 						<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
 					</view>
-					<view style="flex-direction: column; align-items:center;width:70%">
+					<view style="flex-direction: column; align-items:center;width:70%" >
 						<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
 							<text 
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
@@ -93,6 +95,27 @@
 					:style="selectedCount==0?'background-color:#C6C6C6 !important':'background-color:#04D4C6 !important'"><text>{{selectedCount==0?'未选方案':'预约下单'}}</text></button>
 			</view>
 		</view>
+		<!-- 购物详情底部 -->
+		<view class="cu-modal bottom-modal" :class="showDetail ?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white">
+					<!-- <view class="action text-green">确定</view> -->
+					<view class="action text-blue" @tap="showDetail = false">取消</view>
+				</view>
+				<view class="padding-xl">
+					Modal 内容。
+				</view>
+			</view>
+		</view>
+
+		<!-- <view class="cu-bar bg-white margin-top">
+			<view class="action">
+				<text class="cuIcon-title text-orange "></text> 底部窗口
+			</view>
+			<view class="action">
+				<button class="cu-btn bg-green shadow" @tap="showModal" data-target="bottomModal">Bottom</button>
+			</view>
+		</view> -->
 
 	</view>
 </template>
@@ -101,6 +124,7 @@
 	import {
 		mapState
 	} from 'vuex' //引入mapState
+	import {deepClone} from '../../utils/debounce';
 	export default {
 		data() {
 			return {
@@ -118,6 +142,7 @@
 				currentGoodId: '',
 				forkMaintenance: [],
 				showNull: true,
+				showDetail:false,
 			};
 		},
 		onLoad(option) {
@@ -250,18 +275,24 @@
 				for (const key in this.forkMaintenance) {
 					coptList.push({
 						...this.forkMaintenance[key],
+						// parent:this.currentGoodId,
 						selected: key == index ? status : this.forkMaintenance[key].selected
 					})
+
+					// 增加
+					const copyList = deepClone(this.list);
+					if(copyList[this.tabCur].count){
+						copyList[this.tabCur].count += status ? 1 : -1;
+					}else{
+						copyList[this.tabCur].count = status ? 1 : 0;
+					}
+					this.$nextTick(()=>{
+						this.list = copyList
+					})
+
 					// alert(key == index ? status : false)
 				}
 				
-				
-				// let coptList = this.forkMaintenance.map(element=>{
-				// 	return {
-				// 		...element,
-
-				// 	}
-				// })
 				// 判断是否重复 重复的话则删除 下一步再添加
 				this.forkMaintenance = this.judgeRepeat(this.maintenanceList,coptList, true);
 
@@ -345,7 +376,10 @@
 				return Array.isArray(showForkData) ? showForkData : [showForkData]
 			},
 			getGoods(id) {
-				// console.log('ididididi',id)
+				uni.showLoading({
+					title: '加载中'
+				})
+				this.goodsList = [];
 				this.$request({
 					url: '/phoneReparisServer/service/rest/login.customerService/collection/getAllServiceGoods',
 					methods: 'POST',
@@ -353,20 +387,16 @@
 						page: 1,
 						rows: 20,
 						categoryId: id
-						// categoryId:'0136673507f5442a820c2742ee7e5c37'
-						// sort:'createTime',
-						// order:'desc'
 					}
 				}).then(res => {
+					uni.hideLoading();
 					// mockshuju
 					if (res.length === 0) {
 						this.showNull = true;
 						return;
 					}
 					this.showNull = false;
-					// const mockData = {"message":"成功","totalCount":7,"page":1,"pageSize":20,"data":"[{\"id\":\"2ca6245c588640b4a0e7748a282d84af\",\"createTime\":\"2021-10-27 20:14:50\",\"subTitle\":\"摄像头问题\",\"title\":\"摄像头问题\",\"price\":100,\"description\":\"<strong>保修一年<\\/strong>\",\"salePrice\":80,\"code\":\"00006140\",\"pictureId\":\"70e94e91c1e343529f6e3129a95d1fdf\"}]","javaClass":"com.caomei.xinxikeji.util.ResultInfo","code":0,"totalPage":1}
 					this.goodsList = res
-					// console.log('LOAD.....this.goodsListthis.goodsList',this.goodsList);
 					if (this.goodsList.length > 0) this.goodsList = this.goodsList.map(element => {
 						return {
 							...element,
@@ -374,7 +404,6 @@
 						}
 					})
 					this.forkMaintenance = this.judgeRepeat(this.maintenanceList, this.goodsList, false);
-					console.log('LOAD.....this.forkMaintenancethis.forkMaintenance', this.forkMaintenance)
 					// 如果购物车里面本地存在数据则拿购物车的数据 不更新数据
 				})
 			},
@@ -396,6 +425,7 @@
 	}
 
 	.VerticalNav.nav .nav-item {
+		position: relative;
 		width: 100%;
 		text-align: center;
 		background-color: #D9D9D9;
@@ -449,7 +479,7 @@
 	}
 
 	.text-title {
-		font-size: 0.9rem;
+		font-size: 36rpx;
 	}
 
 	.category-three {}
@@ -511,7 +541,8 @@
 	}
 
 	.text-price {
-		font-size: 1.1rem;
+		font-size: 40rpx;
+		font-weight:500;
 	}
 
 	.btn-bottom {

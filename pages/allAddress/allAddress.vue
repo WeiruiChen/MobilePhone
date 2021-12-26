@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :isBack="true" bgColor="bg-gradual-blue">
+		<cu-custom :isBack="true" bgColor="bg-gradual-default">
 			<view slot="backText">返回</view>
 			<view slot="content">我的地址</view>
 		</cu-custom>
@@ -95,7 +95,6 @@
 				})
 			},
 			setDefaultAddress(item) {
-				item.isDefault = true;
 				let that = this;
 				uni.showModal({
 					// title: '确认',
@@ -105,8 +104,9 @@
 							that.$request({
 								url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/setAddressById',
 								methods: 'POST',
-								data:item
+								data:{...item,isDefault:true}
 							}).then(res => {
+								item.isDefault = true;
 								console.log("setDefaultAddress:"+JSON.stringify(res));
 								uni.redirectTo({
 									url:'../allAddress/allAddress'

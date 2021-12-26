@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
+		<cu-custom bgColor="bg-gradual-default" ><block slot="content">首页</block></cu-custom>
 		<!-- 强制用户点击获取信息 -->
 		<!-- <swiper class="card-swiper square-dot"  :circular="true" :indicator-dots="true"
 		 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
@@ -11,10 +11,71 @@
 				</view>
 			</swiper-item>
 		</swiper> -->
+		<view class="cu-bar search" >
+			<view class="search-form round" style="background-color:#FFFFFF;text-align:center">
+				<text class="cuIcon-search"></text>
+				<input type="text" placeholder="搜索" @click="gotoSearch"></input>
+			</view>
+		</view>
+
+		<view v-if="isRecommend" style="background-color:#FFFFFF;text-align:center;height:100rpx;border-radius:20rpx;margin:0 10rpx 0 10rpx;display:flex;justify-content:center;align-items:center">
+				<image
+				src="../../static/first/nonePhone.png"
+				style="width: 80rpx;height: 80rpx;"
+				mode="scaleToFill"
+			/>
+			<view style="color:#136169;font-weight:bold">无法匹配当前手机型号</view>
+			<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx">手动选择其他手机型号
+				<text class="lg text-gray" :class="'cuIcon-right'" style="color:#136169"></text>
+			</view>
+		</view>
+
+		<view v-else style="background-color:#FFFFFF;boder-radius:20rpx;margin:0 10rpx 0 10rpx;">
+			<view style="display:flex;justify-content:space-between" >
+				<view style="display:flex;align-items:center">
+					<image
+					src="../../static/first/nonePhone.png"
+					style="width: 80rpx;height: 80rpx;margin:30rpx"
+					mode="scaleToFill"
+				/>
+					<view>
+						<view style="font-weight: bold;color:#136169;">手机型号</view>
+						<view style="color:#136169;">描述</view>
+					</view>
+				</view>
+
+				<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx;margin-top:30rpx">更换其他手机型号
+					<text class="lg text-gray" :class="'cuIcon-right'" style="color:#136169"></text>
+				</view>
+			</view>
+			<view>
+				<scroll-view scroll-x scroll-with-animation >
+					<view class="cu-card" style="display: inline-flex;">
+							<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
+								<view style="display: flex;;background-color: #E7F0F4;height: 210rpx;">
+									<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
+										<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
+										<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
+										<view style="display: inline-flex;align-items: center;">
+											<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
+											<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
+								</view>
+									</view>
+									<view style="position: relative;">
+										<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
+										<view style="position: absolute;top: 25rpx;left: 15rpx;color: #FFFFFF;font-weight: 700;font-size: 30rpx;">立即抢购</view>
+									</view>
+								</view>
+								
+							</view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
 
 			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:10rpx;heigth:50rpx"  @click="onClickHandler(item)">
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:20rpx;heigth:50rpx"  @click="onClickHandler(item)">
 				<view v-if="!item.fileId"></view>
 				<!-- {{item}} -->
 				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
@@ -41,36 +102,15 @@
 		
 		<view v-show="showStatic">
 			<view v-if="salesTimeList.length > 0">
-			<view class="cu-bar" style="margin-top: 20rpx;">
+			<!-- <view class="cu-bar" style="margin-top: 20rpx;">
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">限时优惠</text>
 				</view>
-			</view>
+			</view> -->
 		
-			<scroll-view scroll-x scroll-with-animation >
-				<view class="cu-card" style="display: inline-flex;">
-						<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
-							<view style="display: flex;;background-color: #E7F0F4;height: 210rpx;">
-								<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
-									<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
-									<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
-									<view style="display: inline-flex;align-items: center;">
-										<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
-										<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
-							<!--  -->		</view>
-								</view>
-								<view style="position: relative;">
-									<image src="../../static/first/lijiqianggou.png" style="width: 60rpx;height: 100%;"></image>
-									<view style="position: absolute;top: 25rpx;left: 15rpx;color: #FFFFFF;font-weight: 700;font-size: 30rpx;">立即抢购</view>
-								</view>
-							</view>
-							
-						</view>
-				</view>
-			</scroll-view>
 			</view>
-			<view class="cu-bar" style="margin-top: 20rpx;">
+			<view class="cu-bar" >
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务流程</text>
@@ -79,7 +119,7 @@
 		
 			<view class="cu-card">
 				<view class="cu-item shadow">
-					<view class="content" style="display: flex;justify-content: space-around;margin: 15rpx;">
+					<view class="content" style="display: flex;justify-content: space-around;margin: 40rpx 15rpx 40rpx 15rpx">
 						<view v-for="(item,index) in preferentialList" :key="index">
 							<view style="display: flex;margin: 0rpx 0 0 28rpx;">
 								<image style="width: 65rpx;height: 65rpx;" :src="item.cuIcon"></image>
@@ -89,19 +129,17 @@
 							</view>
 							<view style="font-weight: bold;">{{item.name}}</view>
 						</view>
-
 					</view>
 				</view>
 			</view>
 		
-			<view class="cu-bar" style="margin-top: 20rpx;">
+			<view class="cu-bar">
 				<view class="action">
 					<!-- src="../../static/first/服务优势icon@3x.png" -->
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/advanceicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务优势</text>
 				</view>
 			</view>
-			
 		</view>
 		
 		<!-- <view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)"> -->
@@ -113,10 +151,23 @@
 				</view>
 			</view>
 		</view>
-		<view  v-if="showStatic" style="display:flex;align-items: center;justify-content: center;" >
-			<text style="text-align: center;" @click="callPhone">24小时客服电话:{{cshPhone}}</text>
+		<view class="csh-show"  @click="callPhone" >
+			<image
+				src="../../static/first/121.png"
+				style="width: 80rpx;height: 80rpx;"
+				mode="scaleToFill"
+			/>
+			<view>
+				<view style="font-size:30rpx;font-weight:bold" >
+					24小时客服电话
+				</view>
+				<view style="font-color:#999999;font-size:20rpx">
+					如何预约？维修费用多少？保修多久?欢迎来电咨询。
+				</view>
+			</view>
+			<!-- <text style="text-align: center;">24小时客服电话:{{cshPhone}}</text> -->
 		</view>
-		<view style="height: 180rpx;"></view>
+		<view style="height: 150rpx;"></view>
 		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
@@ -128,6 +179,7 @@
 	export default {
 		data() {
 			return {
+				isRecommend:false,
 				gridCol: 4,
 				gridBorder: false,
 				preferentialList:[
@@ -165,6 +217,8 @@
 				// 静态图等资源加载完后再限时
 				showStatic:false,
 				showClickUser:true,
+				// 推荐手机型号
+				recommendGood:{}
 			}
 		},
 		components: {
@@ -193,6 +247,8 @@
 				 this.wxLogin()
 				 // 获取版本号
 				 this.getAppVersion()
+				 // 获取手机型号推荐数据
+				 
 			 }
 		},
 		// onShow(){
@@ -213,6 +269,19 @@
 			// uni.setStorageSync('login',false);
 		// },
 		methods: {
+			getRecommend(){
+
+			},
+			gotoPhoneType(){
+				uni.switchTab({
+							url:'../phoneModel/phoneModel'
+						})
+			},
+			gotoSearch(){
+				uni.navigateTo({
+					url:'./search',
+				})
+			},
 			//获取小程序版本号
 			getAppVersion(){
 				const accountInfo = wx.getAccountInfoSync();
@@ -252,53 +321,6 @@
 								})
 							}
 							// loginName
-							// 获取用户信息
-							// wx.getUserProfile({
-							// 	success: function(res) {
-							// 		const userInfo = res.userInfo
-							// 		const nickName = userInfo.nickName
-							// 		const avatarUrl = userInfo.avatarUrl
-							// 		const gender = userInfo.gender //性别 0：未知、1：男、2：女
-							// 		const province = userInfo.province
-							// 		const city = userInfo.city
-							// 		const country = userInfo.country
-
-							// 		console.log('UserInfoUserInfoUserInfoUserInfoUserInfo',JSON.stringify(userInfo))
-
-							// 		that.$store.dispatch('actionTrigger',{
-							// 			key:'loginName',value:nickName || '',
-							// 		})
-							// 		that.$store.dispatch('actionTrigger',{
-							// 			key:'avatarUrl',value:avatarUrl || '',
-							// 		})
-							// 		that.$store.dispatch('actionTrigger',{
-							// 			key:'gender',value:gender || '',
-							// 		})
-							// 			that.$store.dispatch('actionTrigger',{
-							// 			key:'province',value:province || '',
-							// 		})
-							// 			that.$store.dispatch('actionTrigger',{
-							// 			key:'city',value:city || '',
-							// 		})
-							// 			that.$store.dispatch('actionTrigger',{
-							// 			key:'country',value:country || '',
-							// 		})
-							// 	}
-							// })
-							// uni.getUserInfo({
-							// provider: 'weixin',
-							// success: function (infoRes) {
-							// 	// console.log('用户昵称为：' + JSON.stringify(infoRes));
-							// 	console.log('loginName' + infoRes.userInfo.loginName);
-							// 	console.log('avatarUrl' + infoRes.userInfo.avatarUrl);
-							// 		that.$store.dispatch('actionTrigger',{
-							// 			key:'loginName',value:infoRes.userInfo.nickName || '',
-							// 		})
-							// 		that.$store.dispatch('actionTrigger',{
-							// 			key:'avatarUrl',value:infoRes.userInfo.avatarUrl || '',
-							// 		})
-							// }
-							// });
 						}
 					});
 			},
@@ -478,5 +500,10 @@
 		  word-break: break-all;
 		  -webkit-box-orient: vertical;
 		  -webkit-line-clamp: 3;
+	}
+	/* 悬浮样式 */
+	.csh-show{
+		position: fixed;bottom:130rpx;display:flex;align-items: center;justify-content:flex-start;width:100%;background:#FFFFFF;border-radius:50rpx;
+		box-shadow:10rpx 10rpx 15rpx -10rpx;
 	}
 </style>

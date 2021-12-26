@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom  bgColor="bg-gradual-blue">
+		<cu-custom  bgColor="bg-gradual-default">
 			<view slot="backText">返回</view>
 			<view slot="content">下单成功</view>
 		</cu-custom>

@@ -54,6 +54,7 @@
 						Vue.prototype.CustomBar = e.statusBarHeight + 45;
 					};
 					// #endif
+					Vue.prototype.windowHeight = e.windowHeight;
 
 					// #ifdef MP-WEIXIN || MP-QQ
 					Vue.prototype.StatusBar = e.statusBarHeight;

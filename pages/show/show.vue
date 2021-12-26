@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-blue" ><block slot="content">首页</block></cu-custom>
+		<cu-custom bgColor="bg-gradual-default" ><block slot="content">首页</block></cu-custom>
 		<view class="cu-card case" :class="isCard?'no-card':''">
 			<view class="cu-item shadow">
 				<view class="image">

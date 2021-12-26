@@ -6,6 +6,10 @@
 			"style": {}
 		},
 		{
+			"path": "pages/first/search",
+			"style": {}
+		},
+		{
 			"path": "pages/maintenanceList/maintenanceList",
 			"style": {}
 		},

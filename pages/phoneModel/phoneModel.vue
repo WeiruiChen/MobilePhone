@@ -2,7 +2,7 @@
 	<view class="background bg-white">
 
 		<!-- <cu-custom :isBack="true" bgColor="bg-gradual-blue"> -->
-		<cu-custom bgColor="bg-gradual-blue">
+		<cu-custom bgColor="bg-gradual-default">
 			<view slot="backText" @click="backToFirst">首页</view>
 			<view slot="content">设备型号</view>
 		</cu-custom>
@@ -248,7 +248,7 @@
 	}
 
 	.visualHeight{
-		height: calc(100vh - 375upx);
+		height: calc(100vh - 340upx);
 	}
 
 	.VerticalNav.nav {
