@@ -260,14 +260,14 @@
 			})
 			// console.log('system',this.model);
 
-			//  if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
+			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData();
 				 this.getRecommend(systemInfo.model);
-			//  }else{
-			// 	 this.wxLogin()
-			// 	 // 获取版本号
-			// 	 this.getAppVersion()
-			//  }
+			 }else{
+				 this.wxLogin()
+				 // 获取版本号
+				 this.getAppVersion()
+			 }
 		},
 		methods: {
 			getRecommend(model){
