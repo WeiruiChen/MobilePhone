@@ -71,7 +71,7 @@
 	
 		</view>
 
-		<view class="btn-csh" style="bottom:170rpx;right:50rpx" @click="callPhone">
+		<view class="btn-csh" style="bottom:170rpx;right:50rpx;z-index:101" @click="callPhone">
 				<image src="../../static/maintenance/csh.png" 
 					style="width:80rpx;height:80rpx"
 				></image>
@@ -80,7 +80,7 @@
 		<view class="btn-bottom" style="z-index:9999">
 			<view class="round-left" style="position:sticky;bottom:0">
 				<view style="display: flex;justify-content: space-between;align-items: center;" @tap="()=>{if(selectedCount != 0 ) showDetail = !showDetail}">
-					<view style="position: relative;z-index: 999;">
+					<view style="position: relative;z-index: 100;">
 						<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">
 							{{selectedCount}}</view>
 						<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
@@ -109,11 +109,11 @@
 					<view class="action text-blue" @tap="showDetail = false">确认</view>
 				</view>
 				<view style="height:1rpx;background-color:#EDEDED"></view>
-				<view class="padding-xl bg-white">
+				<view class="padding-xl bg-white" style="margin-top:-40rpx">
 					<view v-for="item in selectedList" :key="item.id">
-						<view style="display:flex;justify-content:space-between;;margin-top:20rpx">
+						<view style="display:flex;justify-content:space-between;margin-top:40rpx">
 							<view style="color:#333333;font-weight:bold">
-								{{item.description ? item.description : item.title}}
+								{{item.title || item.subTitle}}
 							</view>
 							<view style="display:flex">
 								<view class="text-price" style="font-size:30rpx;color:#136169">
@@ -153,6 +153,7 @@
 	export default {
 		data() {
 			return {
+				isCallFresh:false,
 				list: [],
 				imageIcon: require("@/static/images/shopcart.png"),
 				tabCur: 0,
@@ -161,7 +162,8 @@
 				loaded: false,
 				phone: {
 					title: '苹果',
-					name: 'iphone12ProMax'
+					name: 'iphone12ProMax',
+					id:''
 				},
 				goodsList: [],
 				currentGoodId: '',
@@ -179,31 +181,38 @@
 				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
 				navigateParams['title'] = option.title || option.name
 				this.phone = navigateParams
+				this.getMaintanceList(this.phone.id);
 			}
-			this.getMaintanceList(this.phone.id);
 		},
 		onShow(){
 			// 获取跳转接口带来的id
 			const maintenance = uni.getStorageSync('maintenance');
 			if(maintenance && maintenance !== ''){
 				let navigateParams = JSON.parse(maintenance)
-				if(navigateParams.gotoValue.indexOf(',')){
-					this.option.id = navigateParams.gotoValue.split(',')[1]
-					this.tabCur = navigateParams.gotoValue.split(',')[2]
+				if(navigateParams.gotoValue.indexOf(',') != -1){
+					this.phone.id = navigateParams.gotoValue.split(',')[1]
+					this.tabCur = navigateParams.gotoValue.split(',')[2] || undefined;
+					// alert(this.option.id)
+					// alert(this.tabCur)
+					this.getMaintanceList(this.phone.id);
+					this.getGoods(this.tabCur);
+				}
+			}else{
+				if(!this.isCallFresh){
+					//重置菜单状态和购物车
+					this.getGoods(this.list[0].id);
+					// 更新购物车状态
+					let resultArray = deepClone(this.list)
+					this.list = resultArray.map(item=>{
+						return {
+							...item,
+							count:0
+						}
+					})
+					this.forkMaintenance = []
+					this.isCallFresh = false;
 				}
 			}
-			//重置菜单状态和购物车
-				this.getGoods(this.list[0].id);
-				// 更新购物车状态
-				let resultArray = deepClone(this.list)
-				this.list = resultArray.map(item=>{
-					return {
-						...item,
-						count:0
-					}
-				})
-
-				this.forkMaintenance = []
 		},
 		onReady() {
 			uni.hideLoading()
@@ -250,10 +259,13 @@
 				}).then(res => {
 					console.log(res)
 					this.list = res
+					this.phone.groupCnName = this.list[0].parentGroupCnName;
+					this.phone.name = this.list[0].parentName;
 					// 获取第一个四级信息
 					// if(this.list >)
-					this.tabCur = this.list[0].id;
-					this.getGoods(this.list[0].id)
+					if(!this.tabCur)
+						this.tabCur = this.list[0].id;
+					this.getGoods(this.tabCur);
 					
 				}).catch(e => {
 					console.log(e)
@@ -261,9 +273,11 @@
 			},
 			callPhone(){
 				console.log('callPhone')
+				this.isCallFresh = true;
 				uni.makePhoneCall({
 				  phoneNumber: this.gmPhone,
 				})
+				
 			},
 			backPhoneModel() {
 				// 清空购物车

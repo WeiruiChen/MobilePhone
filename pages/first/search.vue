@@ -7,7 +7,8 @@
         <view class="cu-bar search" >
 			<view class="search-form round" style="text-align:center">
 				<text class="cuIcon-search"></text>
-				<input v-model="value" type="text" placeholder="搜索" @input="getSearchList"></input>
+				<!-- <input v-model="value" type="text" placeholder="搜索" @input="getSearchList"/> -->
+                 <input v-model="value" type="text" placeholder="搜索" @confirm="getSearchList" @input="searchList"/> 
 			</view>
 		</view>
         <view v-if="searchList.length > 0" style="margin:0 50rpx 0 50rpx">
@@ -18,12 +19,18 @@
         </view>
         <view  v-else>
         <view style="margin-left:30rpx;color:#999999">搜索历史</view>
-            <view style="margin-left:33rpx;margin-top:30rpx">
-                <span class="search-item" v-for="item in historyList" :key="item.id" >
-                   苹果12
-                </span>
+            <view style="margin-left:33rpx;display:flex;flex-wrap: wrap;">
+                <view class="search-item" v-for="item in historyList" :key="item"  @click="onClickHot(item)">
+                    <view>{{item}}</view>
+                </view>
             </view>
-        <view style="margin-left:30rpx;color:#999999;margin-top:58rpx">热门搜索</view>
+    
+            <view style="margin-left:30rpx;color:#999999;margin-top:58rpx">热门搜索</view>
+                <view style="margin-left:33rpx;display:flex;flex-wrap: wrap;">
+                <view class="search-item" v-for="item in hotList" :key="item"  @click="onClickHot(item)">
+                    <view>{{item}}</view>
+                </view>
+            </view>
         </view>
 </view>
 </template>
@@ -34,16 +41,55 @@
 	export default {
 		data() {
 			return {
-                historyList:[1],
+                historyList:[],
                 hotList:[],
                 searchList:[],
                 value:''
 			}
 		},
-		onshow() {
-
+		onShow() {
+            this.historyList = uni.getStorageSync('historyList') || [];
+            if(this.historyList == 2) this.historyList = [];
+            this.hotSearch();
         },
         methods: {
+            // 热门搜索
+            hotSearch(){
+                this.$request({
+					url: '/phoneReparisServer/service/rest/nologin.productService/collection/getHotKeyword',
+					methods: 'POST'
+				}).then(res => {
+                    this.hotList = res[0].split('，') || [];
+				}).catch(e => {
+					console.log(e)
+				});
+            },
+            // 检查是否为空
+            checkNull(){
+                if(this.value == ''){
+                    this.searchList = [];
+                }
+            },
+            // 点击触发搜索
+            onConfirmSearch(){
+                  this.$request({
+					url: '/phoneReparisServer/service/rest/login.customerService/collection/searchCategory',
+					methods: 'POST',
+					data: {
+						keyWord: this.value
+					}
+				}).then(res => {
+                    if(this.historyList.length > 0){
+                        if(!this.historyList.includes(this.value))
+                            uni.setStorageSync('historyList',this.historyList.push(this.value));
+                    }else{
+                        uni.setStorageSync('historyList',[this.value]);
+                    }
+                    this.searchList = res
+				}).catch(e => {
+					console.log(e)
+				});
+            },
             // 实时触发搜索
             getSearchList:debounce(function(){
                  this.$request({
@@ -53,18 +99,28 @@
 						keyWord: this.value
 					}
 				}).then(res => {
+                    if(this.historyList.length > 0){
+                        uni.setStorageSync('historyList',this.historyList.push(this.value));
+                    }else{
+                        uni.setStorageSync('historyList',[this.value]);
+                    }
                     this.searchList = res
 				}).catch(e => {
 					console.log(e)
 				});
             }),
             gotoMaintance(item){
+                uni.navigateBack({ delta: 1 });
 				uni.setStorageSync('category',JSON.stringify({gotoValue:'root,'+item.id}));
                 uni.switchTab({
 					url: '../phoneModel/phoneModel'
 				})
+            },
+            onClickHot(item){
+                this.value = item;
+                this.onConfirmSearch();
             }
-            }
+        }
             // 获取历史搜索
 
 	}
@@ -75,8 +131,12 @@
         border-radius: 35rpx;
         border: 1rpx solid #02D5C7;
         text-align: center;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
         padding: 8rpx 14rpx 8rpx 14rpx;
         font-size:24rpx;
         color:#333333;
+        margin: 20rpx 0 0 30rpx;
     }
 </style>

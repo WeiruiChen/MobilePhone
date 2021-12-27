@@ -127,7 +127,7 @@
 				this.tabCur = undefined;
 				this.TabCur = undefined;
 			}
-			if(saveTabCur == '2'){
+			if(saveTabCur == 'root' || saveTabCur == '2'){
 				this.tabCur = savetabVar;
 			}
 			//清空右边

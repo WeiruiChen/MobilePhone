@@ -14,7 +14,7 @@
 		<view class="cu-bar search"  @click="gotoSearch">
 			<view class="search-form round" style="background-color:#FFFFFF;text-align:center">
 				<text class="cuIcon-search"></text>
-				<input type="text" placeholder="搜索"></input>
+				<input type="text" placeholder="搜索"/>
 			</view>
 		</view>
 
@@ -30,7 +30,7 @@
 			</view>
 		</view>
 
-		<view v-else style="background-color:#FFFFFF;boder-radius:20rpx;margin:0 10rpx 0 10rpx;">
+		<view v-else style="background-color:#FFFFFF;boder-radius:20rpx;margin:0 20rpx 0 20rpx;">
 			<view style="display:flex;justify-content:space-between" >
 				<view style="display:flex;align-items:center">
 					<image
@@ -72,12 +72,12 @@
 			</view>
 		</view>
 
-			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" style="margin: 0rpx 20rpx 0rpx 20rpx;" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius:20rpx;heigth:50rpx"  @click="onClickHandler(item)">
+			<swiper-item v-for="(item,index) in swiperList" :key="index"  @click="onClickHandler(item)">
 				<view v-if="!item.fileId"></view>
 				<!-- {{item}} -->
-				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
+				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx;"></image>
 			</swiper-item>
 		</swiper>
 		
@@ -92,8 +92,8 @@
 		</view> -->
 
 		<view style="background-color:#FFFFFF;border-radius:20rpx;display:flex;flex-wrap:wrap;margin:20rpx">
-			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index">
-				<image  @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 130rpx;height: 130rpx;"></image>
+			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index" @click="onClickHandler(item,index)">
+				<image  :src="imageUrl+item.fileId" style="width: 130rpx;height: 130rpx;"></image>
 				<view style="display:flex;flex-direction:column;justify-content:center;margin-left:10rpx">
 					<view>{{item.title}}</view>
 					<view style="font-size:20rpx">{{item.subTitle || ''}} </view>
@@ -116,7 +116,7 @@
 			<view v-if="salesTimeList.length > 0">
 		
 			</view>
-			<view class="cu-bar" >
+			<!-- <view class="cu-bar" >
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务流程</text>
@@ -137,26 +137,24 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		
-			<view class="cu-bar">
+			<!-- <view class="cu-bar">
 				<view class="action">
-					<!-- src="../../static/first/服务优势icon@3x.png" -->
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/advanceicon.png"></image>
 					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">服务优势</text>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		
-		<!-- <view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)"> -->
-		<view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)">
+		<!-- <view class="cu-card case" v-for="(item) in serviceProfitList" :key="item.fileId" @click="onClickHandler(item)">
 			<view class="cu-item shadow" style="position: relative;">
 				<view class="image">
 					<image :src="imageUrl+item.fileId"
 					 mode="widthFix" style="height: auto;"></image>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view  v-show="showStatic" style="margin:0rpx 20rpx 0rpx 20rpx">
 			<view class="csh-show"   @click="callPhone" >
 				<image
@@ -240,6 +238,8 @@
 			uni.hideTabBar({
 				animation: false
 			})
+			// 清空category
+			// uni.setStorageSync('category',undefined);
 		},
 		computed: mapState({
 			// 从state中拿到数据 
@@ -260,15 +260,14 @@
 			})
 			// console.log('system',this.model);
 
-			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
+			//  if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData();
 				 this.getRecommend(systemInfo.model);
-			 }else{
-				 this.wxLogin()
-				 // 获取版本号
-				 this.getAppVersion()
-
-			 }
+			//  }else{
+			// 	 this.wxLogin()
+			// 	 // 获取版本号
+			// 	 this.getAppVersion()
+			//  }
 		},
 		methods: {
 			getRecommend(model){
@@ -293,7 +292,7 @@
 				})
 			},
 			gotoSearch(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'./search',
 				})
 			},
@@ -340,6 +339,27 @@
 					});
 			},
 			onClickHandler(item,index=0){
+				// 清空购物车
+				this.$store.dispatch('shoppingTrigger', {
+						key: 'maintenanceList',
+						value: []
+				})
+				// 创建level跳转逻辑
+				const levelMap =  {
+					'3':function(){
+							uni.setStorageSync('maintenance',JSON.stringify(item));
+							uni.navigateTo({
+								url:'../maintenanceList/maintenanceList'
+						})
+					},
+					'4':function(){
+							uni.setStorageSync('maintenance',JSON.stringify(item));
+							uni.navigateTo({
+								url:'../maintenanceList/maintenanceList'
+						})
+					}
+				}
+
 				const pathMap = {
 					'panelMy':'/pages/mine/mine',
 					'createOrder':'/pages/orderList/orderList',
@@ -358,27 +378,25 @@
 						})
 					},
 					'Category':function(){
-						// 设置缓存供phonemodel使用
-						try {
-							uni.setStorageSync('category',JSON.stringify(item));
-						} catch (e) {
-							// error
-							console.log('缓存设置错误',e)
+						// 判断跳转页面
+						if(item.gotoValue.indexOf(',')){
+							let level = item.gotoValue.split(',')[0];
+							levelMap[level] ? levelMap[level]() : function(){
+									// 设置缓存供phonemodel使用
+									uni.setStorageSync('category',JSON.stringify(item));
+									uni.switchTab({
+										url:'../phoneModel/phoneModel'
+									})
+							}()
 						}
-						uni.switchTab({
-							url:'../phoneModel/phoneModel'
-						})
 					},
 					'Goods':function(){
 						uni.switchTab({
 							url:'../phoneModel/phoneModel'
-							// url:'../reserve/reserve?goods='+encodeURIComponent(JSON.stringify(item))
 						})
 					}
 				}
 				// 执行
-				// console.log('item.gotoType',item.gotoType)
-				// console.log(clickMap[item.gotoType])
 				clickMap[item.gotoType]()
 			
 			},
@@ -518,7 +536,7 @@
 	/* 悬浮样式 */
 	.csh-show{
 		display:flex;align-items: center;justify-content:flex-start;background:#FFFFFF;border-radius:50rpx;
-		box-shadow:10rpx 10rpx 5rpx -10rpx;
+		/* box-shadow:10rpx 10rpx 5rpx 0rpx; */
 		
 	}
 </style>
