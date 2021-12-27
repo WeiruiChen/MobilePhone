@@ -61,7 +61,7 @@
 					</view>
 				</view>
 
-				<view v-if="orderDetail.needPickUp" class="cu-form-group round-bottom-card">
+				<view v-if="orderDetail.needPickUp" class="cu-form-group">
 					<view class="flex-container">
 						<view>取件费用</view>
 						<view class="text_right">{{delivery.expressFee||''}}</view>
@@ -87,7 +87,6 @@
 <script>
 	import { mapState } from 'vuex'//引入mapState
 	export default {
-
 		// 下拉刷新
 		onPullDownRefresh(){
 			this.onLoadDetail();

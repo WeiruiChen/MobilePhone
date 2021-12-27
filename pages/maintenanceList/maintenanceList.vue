@@ -73,7 +73,7 @@
 
 		<view class="btn-csh" style="bottom:170rpx;right:50rpx;z-index:101" @click="callPhone">
 				<image src="../../static/maintenance/csh.png" 
-					style="width:80rpx;height:80rpx"
+					style="width:60rpx;height:60rpx"
 				></image>
 		</view>
 
@@ -109,9 +109,9 @@
 					<view class="action text-blue" @tap="showDetail = false">确认</view>
 				</view>
 				<view style="height:1rpx;background-color:#EDEDED"></view>
-				<view class="padding-xl bg-white" style="margin-top:-40rpx">
+				<view class="padding-xl bg-white" style="margin-top:-60rpx">
 					<view v-for="item in selectedList" :key="item.id">
-						<view style="display:flex;justify-content:space-between;margin-top:40rpx">
+						<view style="display:flex;justify-content:space-between;margin-top:60rpx">
 							<view style="color:#333333;font-weight:bold">
 								{{item.title || item.subTitle}}
 							</view>
@@ -647,7 +647,7 @@
 	
 	.btn-csh {
 		position: fixed;
-		bottom: 150rpx;
+		bottom: 170rpx;
 		display: flex;
 	}
 

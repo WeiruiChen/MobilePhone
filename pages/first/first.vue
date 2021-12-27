@@ -18,47 +18,48 @@
 			</view>
 		</view>
 
-		<view v-if="!isRecommend" style="background-color:#FFFFFF;text-align:center;height:100rpx;border-radius:20rpx;margin:10rpx 20rpx 10rpx 20rpx;display:flex;justify-content:center;align-items:center">
+		<view v-if="!isRecommend" style="border-radius:20rpx;background-color:#FFFFFF;text-align:center;height:120rpx;border-radius:20rpx;margin:10rpx 20rpx 10rpx 20rpx;display:flex;justify-content:center;align-items:center">
 				<image
 				src="../../static/first/nonePhone.png"
-				style="width: 80rpx;height: 80rpx;"
+				style="width: 60rpx;height: 80rpx;"
 				mode="scaleToFill"
 			/>
-			<view style="color:#136169;font-weight:bold">无法匹配当前手机型号</view>
-			<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx">手动选择其他手机型号
+			<view style="width: 20rpx"></view>
+			<view style="color:#136169;font-weight:bold;font-size:26rpx;">无法匹配当前手机型号</view>
+			<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx;font-size:26rpx">手动选择其他手机型号
 				<text class="lg text-gray" :class="'cuIcon-right'" style="color:#136169"></text>
 			</view>
 		</view>
 
-		<view v-else style="background-color:#FFFFFF;boder-radius:20rpx;margin:0 20rpx 0 20rpx;">
-			<view style="display:flex;justify-content:space-between" >
+		<view v-else style="background-color:#FFFFFF;border-radius:20rpx;margin:0 20rpx 0 20rpx;">
+			<view style="display:flex;justify-content:space-between;align-items:center" >
 				<view style="display:flex;align-items:center">
 					<image
-					src="../../static/first/nonePhone.png"
-					style="width: 80rpx;height: 80rpx;margin:30rpx"
+					:src="imageUrl+recommendData.pictureId"
+					style="width: 100rpx;height: 100rpx;margin:30rpx"
 					mode="scaleToFill"
 				/>
 					<view>
-						<view style="font-weight: bold;color:#136169;">{{model}}</view>
-						<view style="color:#136169;">{{recommendData.subTitle}}</view>
+						<view style="font-weight: bold;color:#136169;">{{recommendData.phoneType}}</view>
+						<view style="color:#136169;font-size:22rpx">免费预约 修好再付</view>
 					</view>
 				</view>
 
-				<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx;margin-top:30rpx">更换其他手机型号
+				<view @click="gotoPhoneType" style="color:#136169;margin-left:20rpx;margin-right:20rpx">更换其他手机型号
 					<text class="lg text-gray" :class="'cuIcon-right'" style="color:#136169"></text>
 				</view>
 			</view>
 			<view>
 				<scroll-view scroll-x scroll-with-animation >
 					<view class="cu-card" style="display: inline-flex;">
-							<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
+							<view class="cu-item-scroll" style="margin: 0rpx 30rpx 30rpx 30rpx" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
 								<view style="display: flex;;background-color: #F6FCFF;height: 210rpx;">
-									<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
-										<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
-										<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
+									<view style="margin: 20rpx;width: 230rpx;display: flex;flex-direction:column;justify-content: space-between;">
+										<view style="font-weight: 900;font-size: 35rpx;color:#136169">{{item.goods.title}}</view>
+										<view style="font-weight: 500;color:#136169" class="show-subTitle">{{item.goods.subTitle}}</view>
 										<view style="display: inline-flex;align-items: center;">
 											<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
-											<view style="text-decoration:line-through;margin-left:10rpx;">{{item.goods.price}}</view>
+											<view style="text-decoration:line-through;margin-left:10rpx;color:#669CA1">{{item.goods.price}}</view>
 								</view>
 									</view>
 									<view style="position: relative;">
@@ -93,7 +94,7 @@
 
 		<view style="background-color:#FFFFFF;border-radius:20rpx;display:flex;flex-wrap:wrap;margin:20rpx">
 			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index" @click="onClickHandler(item,index)">
-				<image  :src="imageUrl+item.fileId" style="width: 130rpx;height: 130rpx;"></image>
+				<image  :src="imageUrl+item.fileId" style="width: 140rpx;height: 140rpx;"></image>
 				<view style="display:flex;flex-direction:column;justify-content:center;margin-left:10rpx">
 					<view>{{item.title}}</view>
 					<view style="font-size:20rpx">{{item.subTitle || ''}} </view>
@@ -185,6 +186,7 @@
 	export default {
 		data() {
 			return {
+				systemInfo:{},
 				isRecommend:false,
 				// 推荐手机型号
 				recommendData:{
@@ -251,9 +253,16 @@
 			model:state => state.user.model
 		}),
 		onLoad(){
+			// 订阅消息
+			uni.requestSubscribeMessage({
+				tmplIds: ['ZD8LqBpL-yNXZTEHZmA0jvnQmX3g_2kPWq_-qOb0RpI','ZD8LqBpL-yNXZTEHZmA0jq_ggsfBENHwBce-wje0rrA'],
+				success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res)) },
+				fail(res){console.log('订阅消息接口失败:'+ JSON.stringify(res)) }
+			})
 			// 获取系统信息
-			console.log('system:'+JSON.stringify(uni.getSystemInfoSync()));
+			// console.log('system:'+JSON.stringify(uni.getSystemInfoSync()));
 			const systemInfo =  uni.getSystemInfoSync();
+			this.systemInfo = systemInfo;
 			this.$store.dispatch('actionTrigger',{
 					key:'model',
 					value: systemInfo.model
@@ -262,7 +271,7 @@
 
 			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData();
-				 this.getRecommend(systemInfo.model);
+				 this.getRecommend(this.systemInfo.model);
 			 }else{
 				 this.wxLogin()
 				 // 获取版本号
@@ -277,11 +286,12 @@
 					data:{
 						page:1,
 						rows:20,
-						phoneType:model
+						phoneType:model,
+						phoneName:this.systemInfo.brand
 					}
 				}).then(res=>{
 					this.isRecommend = true;
-					this.recommendData = res;
+					this.recommendData = res[0];
 				}).catch(error=>{
 					console.log('error',error)
 				})
@@ -420,6 +430,9 @@
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.locationService/collection/getDeliveryAddressList',
 					methods:'POST',
+					data:{
+
+					}
 				}).then(res=>{
 					this.cshPhone = res[0].phone
 					// console.log('getDeliveryAddressList:',JSON.stringify(res))
@@ -513,7 +526,7 @@
 					// 获取客户电话
 					this.getCSHText()
 					// 获取推荐型号
-				 	this.getRecommend(this.model);
+				 	this.getRecommend(this.systemInfo.model);
 					uni.hideLoading()
 				}).catch(error=>{
 					console.log('error',error)

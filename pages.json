@@ -21,7 +21,10 @@
 		},
 		{
 			"path": "pages/phoneModel/phoneModel",
-			"style": {}
+			"style": {
+				"backgroundColor":"#FFFFFF"
+			}
+			
 		},
 		{
 			"path": "pages/orderSuccess/orderSuccess",
