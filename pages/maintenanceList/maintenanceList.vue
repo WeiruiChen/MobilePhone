@@ -21,7 +21,7 @@
 					</view>
 
 					<view class="flex-vertical margin-top-xl">
-						<view class="nav-item" style="margin-top:20rpx" :class="index==tabCur?'text-green cur':''"
+						<view class="nav-item" style="margin-top:20rpx" :class="item.id==tabCur?'text-green cur':''"
 							v-for="(item,index) in list" :key="index" @tap="TabSelect" :data-item="{id:item.id,index}">
 							{{item.name}}
 							<view  v-if="item.count && item.count != 0" class='cu-tag badge'>{{item.count}}</view>
@@ -31,9 +31,8 @@
 				</view>
 			</scroll-view>
 
-
 			<scroll-view class="VerticalMain" scroll-y scroll-with-animation
-				:scroll-into-view="'main-'+mainCur" @scroll="VerticalMain">
+			 >
 				<view v-if="!showNull" class="padding-top padding-lr" >
 					<form v-for="(item,index) in forkMaintenance"
 					:key="index" :id="'main-'+index">
@@ -42,7 +41,7 @@
 								<view class="text-title"><text>{{item.title}}</text></view>
 								<view class="text-gray" style="margin-top:10rpx"><text>{{item.subTitle}}</text></view>
 								<view class="text-gray">
-									<div v-html="item.description"></div>
+									{{item.warranty}}
 								</view>
 								<view class="flex-container margin-top">
 									<view class="text-price" style="color:#136169"><text>{{item.salePrice}}</text></view>
@@ -66,14 +65,21 @@
 						<view style="color:#D9D9D9">暂无数据</view>
 					</view>
 				</view>
+
+				<view style="height:80rpx"></view>
 			</scroll-view>
+	
 		</view>
 
-		<view class="btn-bottom">
+		<view class="btn-csh" style="bottom:170rpx;right:50rpx" @click="callPhone">
+				<image src="../../static/maintenance/csh.png" 
+					style="width:80rpx;height:80rpx"
+				></image>
+		</view>
 
+		<view class="btn-bottom" style="z-index:9999">
 			<view class="round-left" style="position:sticky;bottom:0">
-				<!-- <view></view> -->
-				<view style="display: flex;justify-content: space-between;align-items: center;" @tap="showDetail = true">
+				<view style="display: flex;justify-content: space-between;align-items: center;" @tap="()=>{if(selectedCount != 0 ) showDetail = !showDetail}">
 					<view style="position: relative;z-index: 999;">
 						<view v-if="selectedCount" class='cu-tag badge' style="font-size:20rpx;z-index:999">
 							{{selectedCount}}</view>
@@ -97,13 +103,32 @@
 		</view>
 		<!-- 购物详情底部 -->
 		<view class="cu-modal bottom-modal" :class="showDetail ?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white">
-					<!-- <view class="action text-green">确定</view> -->
-					<view class="action text-blue" @tap="showDetail = false">取消</view>
+			<view class="cu-dialog" style="border-radius: 30rpx 30rpx 0rpx 0rpx">
+				<view class="cu-bar bg-white" >
+					<view class="action text-black" style="font-weight: bold">已选方案</view>
+					<view class="action text-blue" @tap="showDetail = false">确认</view>
 				</view>
-				<view class="padding-xl">
-					Modal 内容。
+				<view style="height:1rpx;background-color:#EDEDED"></view>
+				<view class="padding-xl bg-white">
+					<view v-for="item in selectedList" :key="item.id">
+						<view style="display:flex;justify-content:space-between;;margin-top:20rpx">
+							<view style="color:#333333;font-weight:bold">
+								{{item.description ? item.description : item.title}}
+							</view>
+							<view style="display:flex">
+								<view class="text-price" style="font-size:30rpx;color:#136169">
+									<text>{{item.salePrice}}</text>
+								</view>
+									<button class="cu-btn cuIcon icon-move"
+										style="font-weight: 900;height:40rpx;width:40rpx;margin-left:40rpx"
+											@click="addShopping(index,false,item.id)">
+									<text class="cuIcon-move"></text>
+								</button>
+							</view>
+						
+						</view>
+					</view>
+					<view style="height:150rpx"></view>
 				</view>
 			</view>
 		</view>
@@ -143,6 +168,8 @@
 				forkMaintenance: [],
 				showNull: true,
 				showDetail:false,
+				// 倒排索引数据
+				goodsMapIndex:{}
 			};
 		},
 		onLoad(option) {
@@ -150,35 +177,32 @@
 			// alert(option)
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.phone));
-				navigateParams['title'] = option.title
+				navigateParams['title'] = option.title || option.name
 				this.phone = navigateParams
 			}
-			uni.showLoading({
-				title: '加载中...',
-				mask: true
-			});
-			this.$request({
-				url: '/phoneReparisServer/service/rest/login.customerService/collection/getCategoryTwo',
-				methods: 'POST',
-				data: {
-					categoryId: this.phone.id
-				}
-			}).then(res => {
-				console.log(res)
-				this.list = res
-				// 获取第一个四级信息
-				// if(this.list >)
-				this.getGoods(this.list[0].id)
-				
-			}).catch(e => {
-				console.log(e)
-			})
+			this.getMaintanceList(this.phone.id);
 		},
 		onShow(){
+			// 获取跳转接口带来的id
+			const maintenance = uni.getStorageSync('maintenance');
+			if(maintenance && maintenance !== ''){
+				let navigateParams = JSON.parse(maintenance)
+				if(navigateParams.gotoValue.indexOf(',')){
+					this.option.id = navigateParams.gotoValue.split(',')[1]
+					this.tabCur = navigateParams.gotoValue.split(',')[2]
+				}
+			}
 			//重置菜单状态和购物车
-				this.tabCur = 0;
-				this.mainCur = 0;
-				this.getGoods(this.list[0].id)
+				this.getGoods(this.list[0].id);
+				// 更新购物车状态
+				let resultArray = deepClone(this.list)
+				this.list = resultArray.map(item=>{
+					return {
+						...item,
+						count:0
+					}
+				})
+
 				this.forkMaintenance = []
 		},
 		onReady() {
@@ -187,6 +211,10 @@
 		computed: mapState({
 			// 从state中拿到数据 
 			maintenanceList: state => state.goods.maintenanceList,
+			gmPhone: state => state.user.gmPhone,
+			selectedList(){
+				return this.maintenanceList.filter(item => item.selected === true);
+			},
 			selectedCount() {
 				return this.maintenanceList.filter(item => item.selected === true).length;
 			},
@@ -208,6 +236,35 @@
 			}
 		}),
 		methods: {
+			getMaintanceList(id){
+				uni.showLoading({
+				title: '加载中...',
+				mask: true
+				});
+				this.$request({
+					url: '/phoneReparisServer/service/rest/login.customerService/collection/getCategoryTwo',
+					methods: 'POST',
+					data: {
+						categoryId: id
+					}
+				}).then(res => {
+					console.log(res)
+					this.list = res
+					// 获取第一个四级信息
+					// if(this.list >)
+					this.tabCur = this.list[0].id;
+					this.getGoods(this.list[0].id)
+					
+				}).catch(e => {
+					console.log(e)
+				})
+			},
+			callPhone(){
+				console.log('callPhone')
+				uni.makePhoneCall({
+				  phoneNumber: this.gmPhone,
+				})
+			},
 			backPhoneModel() {
 				// 清空购物车
 				this.$store.dispatch('shoppingTrigger',{
@@ -248,6 +305,8 @@
 						}
 					}).then(res=>{
 						console.log("addShopCartByGoodsIds" + JSON.stringify(res))
+						uni.setStorageSync('maintenance',undefined);
+
 						uni.navigateTo({
 						url: '../reserve/reserve'
 						})
@@ -269,38 +328,63 @@
 						}
 					});
 			},
-			addShopping(index, status) {
-				// deepcopy
-				let coptList = []
-				for (const key in this.forkMaintenance) {
-					coptList.push({
-						...this.forkMaintenance[key],
-						// parent:this.currentGoodId,
-						selected: key == index ? status : this.forkMaintenance[key].selected
-					})
 
-					// 增加
-					const copyList = deepClone(this.list);
-					if(copyList[this.tabCur].count){
-						copyList[this.tabCur].count += status ? 1 : -1;
+			addShopping(index, status, goodsId = undefined) {
+				// deepcopy
+				let coptList = [];
+				let indexGoods = this.tabCur;
+				
+				if(goodsId){
+					// 更新购物车状态
+					let resultArray = deepClone(this.maintenanceList)
+					resultArray = resultArray.map(item=>{
+						return {
+							...item,
+							selected: item.id == goodsId ? status : item.selected
+						}
+					})
+					this.$store.dispatch('shoppingTrigger', {
+						key: 'maintenanceList',
+						value: resultArray
+					})
+				}
+
+				for (const key in this.forkMaintenance) {
+					if(!goodsId){
+						coptList.push({
+							...this.forkMaintenance[key],
+							selected: key == index ? status : this.forkMaintenance[key].selected
+						})
 					}else{
-						copyList[this.tabCur].count = status ? 1 : 0;
+						coptList.push({
+							...this.forkMaintenance[key],
+							selected: this.forkMaintenance[key].id == goodsId ? status : this.forkMaintenance[key].selected
+						})
+					}
+					this.goodsMapIndex[this.forkMaintenance[key].id] = this.tabCur;
+
+					// alert(JSON.stringify(this.goodsMapIndex));
+					if(goodsId) {
+						indexGoods = this.goodsMapIndex[goodsId];
+					}
+					// 增加并更新数据
+					const copyList = deepClone(this.list);
+					for (const listIndex in copyList) {
+						if (copyList[listIndex].id == indexGoods) {
+							copyList[listIndex].count ? copyList[listIndex].count += (status ? 1 : -1) : copyList[listIndex].count = status ? 1 : 0;
+						}
 					}
 					this.$nextTick(()=>{
 						this.list = copyList
 					})
-
-					// alert(key == index ? status : false)
 				}
 				
 				// 判断是否重复 重复的话则删除 下一步再添加
 				this.forkMaintenance = this.judgeRepeat(this.maintenanceList,coptList, true);
-
-				console.log('maintasds', this.maintenanceList)
 			},
 			TabSelect(e) {
-				this.tabCur = e.currentTarget.dataset.item.index;
-				this.mainCur = e.currentTarget.dataset.item.index;
+				this.tabCur = e.currentTarget.dataset.item.id;
+				this.mainCur = e.currentTarget.dataset.item.id;
 				this.verticalNavTop = (e.currentTarget.dataset.item.index - 1) * 50
 				this.currentGoodId = e.currentTarget.dataset.item.id
 				this.getGoods(this.currentGoodId)
@@ -492,6 +576,7 @@
 	.VerticalMain {
 		background-color: #f1f1f1;
 		flex: 1;
+		height:1024rpx;
 	}
 
 	.round-card {
@@ -545,12 +630,20 @@
 		font-weight:500;
 	}
 
+	
+	.btn-csh {
+		position: fixed;
+		bottom: 150rpx;
+		display: flex;
+	}
+
+
 	.btn-bottom {
 		position: fixed;
 		width: 100%;
 		padding-left: 2%;
 		padding-right: 2%;
-		bottom: 30px;
+		bottom: 50rpx;
 		text-align: center;
 		display: flex;
 	}

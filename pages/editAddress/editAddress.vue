@@ -30,7 +30,7 @@
 							{{region[0]}}，{{region[1]}}，{{region[2]}}
 						</view>
 					</picker>
-					<view style="margin-left: 10rpx;" @click="getLocationInfo">智能定位</view>
+					<view style="margin-left: 10rpx;color:#02D5C7" @click="getLocationInfo">智能定位</view>
 				</view>
 
 				<view class="cu-form-group ">

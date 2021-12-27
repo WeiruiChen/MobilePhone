@@ -11,14 +11,14 @@
 				</view>
 			</swiper-item>
 		</swiper> -->
-		<view class="cu-bar search" >
+		<view class="cu-bar search"  @click="gotoSearch">
 			<view class="search-form round" style="background-color:#FFFFFF;text-align:center">
 				<text class="cuIcon-search"></text>
-				<input type="text" placeholder="搜索" @click="gotoSearch"></input>
+				<input type="text" placeholder="搜索"></input>
 			</view>
 		</view>
 
-		<view v-if="isRecommend" style="background-color:#FFFFFF;text-align:center;height:100rpx;border-radius:20rpx;margin:0 10rpx 0 10rpx;display:flex;justify-content:center;align-items:center">
+		<view v-if="!isRecommend" style="background-color:#FFFFFF;text-align:center;height:100rpx;border-radius:20rpx;margin:10rpx 20rpx 10rpx 20rpx;display:flex;justify-content:center;align-items:center">
 				<image
 				src="../../static/first/nonePhone.png"
 				style="width: 80rpx;height: 80rpx;"
@@ -39,8 +39,8 @@
 					mode="scaleToFill"
 				/>
 					<view>
-						<view style="font-weight: bold;color:#136169;">手机型号</view>
-						<view style="color:#136169;">描述</view>
+						<view style="font-weight: bold;color:#136169;">{{model}}</view>
+						<view style="color:#136169;">{{recommendData.subTitle}}</view>
 					</view>
 				</view>
 
@@ -52,7 +52,7 @@
 				<scroll-view scroll-x scroll-with-animation >
 					<view class="cu-card" style="display: inline-flex;">
 							<view class="cu-item-scroll" style="margin: 10rpx;" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
-								<view style="display: flex;;background-color: #E7F0F4;height: 210rpx;">
+								<view style="display: flex;;background-color: #F6FCFF;height: 210rpx;">
 									<view style="margin: 20rpx;width: 250rpx;display: flex;flex-direction:column;justify-content: space-between;">
 										<view style="font-weight: 900;font-size: 35rpx;">{{item.goods.title}}</view>
 										<view style="font-weight: 500;" class="show-subTitle">{{item.goods.subTitle}}</view>
@@ -66,7 +66,6 @@
 										<view style="position: absolute;top: 25rpx;left: 15rpx;color: #FFFFFF;font-weight: 700;font-size: 30rpx;">立即抢购</view>
 									</view>
 								</view>
-								
 							</view>
 					</view>
 				</scroll-view>
@@ -81,16 +80,8 @@
 				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx"></image>
 			</swiper-item>
 		</swiper>
-
-		<!-- <swiper class="screen-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
-		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index">
-				<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
-				<video :src="item.url" autoplay loop muted :show-play-btn="false" :controls="false" objectFit="cover" v-if="item.type=='video'"></video>
-			</swiper-item>
-		</swiper> -->
 		
-		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
+		<!-- <view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index < gridCol*2">
 				<view style="display:flex;flex-direction:column;align-items:center">
 					<view v-if="!item.fileId"></view>
@@ -98,16 +89,31 @@
 					<view >{{item.title}}</view>
 				</view>
 			</view>
-		</view>
-		
+		</view> -->
+
+		<view style="background-color:#FFFFFF;border-radius:20rpx;display:flex;flex-wrap:wrap;margin:20rpx">
+			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index">
+				<image  @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 130rpx;height: 130rpx;"></image>
+				<view style="display:flex;flex-direction:column;justify-content:center;margin-left:10rpx">
+					<view>{{item.title}}</view>
+					<view style="font-size:20rpx">{{item.subTitle || ''}} </view>
+				</view>
+			</view>			
+		</view>		
+
+		<!-- <view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
+			<view  v-for="(item,index) in cuIconList" :key="index" v-if="index < gridCol*2">
+				<view style="display:flex;flex-direction:column;align-items:center">
+					<view v-if="!item.fileId"></view>
+					<image v-else @click="onClickHandler(item,index)" :src="imageUrl+item.fileId" style="width: 120rpx;height: 120rpx;"></image>
+					<view >{{item.title}}</view>
+				</view>
+			</view>
+		</view>  -->
+
+
 		<view v-show="showStatic">
 			<view v-if="salesTimeList.length > 0">
-			<!-- <view class="cu-bar" style="margin-top: 20rpx;">
-				<view class="action">
-					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/xianshiyouhuiicon.png"></image>
-					<text style="margin-left: 10rpx;font-weight: 900;font-size:40rpx">限时优惠</text>
-				</view>
-			</view> -->
 		
 			</view>
 			<view class="cu-bar" >
@@ -119,12 +125,12 @@
 		
 			<view class="cu-card">
 				<view class="cu-item shadow">
-					<view class="content" style="display: flex;justify-content: space-around;margin: 40rpx 15rpx 40rpx 15rpx">
+					<view class="content" style="display: flex;justify-content: space-around;margin: 40rpx 10rpx 40rpx 10rpx">
 						<view v-for="(item,index) in preferentialList" :key="index">
 							<view style="display: flex;margin: 0rpx 0 0 28rpx;">
 								<image style="width: 65rpx;height: 65rpx;" :src="item.cuIcon"></image>
 								<view style="display: absolute;">
-									<image v-if="index <3" style="left: 28rpx;top:20rpx;width: 50rpx;height: 10rpx;" src="../../static/first/线@3x.png"></image>
+									<image v-if="index <3" style="left: 28rpx;top:20rpx;width: 50rpx;height: 10rpx;" src="../../static/first/line.png"></image>
 								</view>
 							</view>
 							<view style="font-weight: bold;">{{item.name}}</view>
@@ -151,23 +157,24 @@
 				</view>
 			</view>
 		</view>
-		<view class="csh-show"  @click="callPhone" >
-			<image
-				src="../../static/first/121.png"
-				style="width: 80rpx;height: 80rpx;"
-				mode="scaleToFill"
-			/>
-			<view>
-				<view style="font-size:30rpx;font-weight:bold" >
-					24小时客服电话
-				</view>
-				<view style="font-color:#999999;font-size:20rpx">
-					如何预约？维修费用多少？保修多久?欢迎来电咨询。
+		<view  v-show="showStatic" style="margin:0rpx 20rpx 0rpx 20rpx">
+			<view class="csh-show"   @click="callPhone" >
+				<image
+					src="../../static/first/121.png"
+					style="width: 100rpx;height: 100rpx;"
+					mode="scaleToFill"
+				/>
+				<view style="margin-left:20rpx">
+					<view style="font-size:30rpx;font-weight:bold" >
+						24小时客服电话
+					</view>
+					<view style="font-color:#999999;font-size:20rpx">
+						如何预约？维修费用多少？保修多久?欢迎来电咨询。
+					</view>
 				</view>
 			</view>
-			<!-- <text style="text-align: center;">24小时客服电话:{{cshPhone}}</text> -->
 		</view>
-		<view style="height: 150rpx;"></view>
+		<view style="height: 130rpx;"></view>
 		<view-tabbar current="0"></view-tabbar>
 	</view>
 </template>
@@ -176,10 +183,16 @@
 	import { mapState } from 'vuex'//引入mapState
 	import Tabbar from '@/pages/tabBar/tabBar.vue'
 	
+
 	export default {
 		data() {
 			return {
 				isRecommend:false,
+				// 推荐手机型号
+				recommendData:{
+					title:'苹果iPhone 11',
+					subTitle:'免费预约,修好再付'
+				},
 				gridCol: 4,
 				gridBorder: false,
 				preferentialList:[
@@ -217,8 +230,7 @@
 				// 静态图等资源加载完后再限时
 				showStatic:false,
 				showClickUser:true,
-				// 推荐手机型号
-				recommendGood:{}
+				
 			}
 		},
 		components: {
@@ -236,46 +248,49 @@
 			imageUrl:state => state.user.imageBaseUrl,
 			openId:state => state.user.openId,
 			gmPhone:state => state.user.gmPhone,
-			wxHead:state => state.user.wxHead
+			model:state => state.user.model
 		}),
 		onLoad(){
 			// 获取系统信息
 			console.log('system:'+JSON.stringify(uni.getSystemInfoSync()));
+			const systemInfo =  uni.getSystemInfoSync();
+			this.$store.dispatch('actionTrigger',{
+					key:'model',
+					value: systemInfo.model
+			})
+			// console.log('system',this.model);
+
 			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
-				 this.getUserData()
+				 this.getUserData();
+				 this.getRecommend(systemInfo.model);
 			 }else{
 				 this.wxLogin()
 				 // 获取版本号
 				 this.getAppVersion()
-				 // 获取手机型号推荐数据
-				 
+
 			 }
 		},
-		// onShow(){
-			// // 登陆失效后重新加载
-			// const loginStatus = uni.getStorageSync('login');
-			// console.log('loginStatus',loginStatus)
-			// if(loginStatus){
-			// 	if(uni.getSystemInfoSync().platform == 'mac'){
-			// 	 	this.getUserData()
-			// 	}else{
-			// 		this.wxLogin()
-			// 		// 获取版本号
-			// 		this.getAppVersion()
-			// 	}
-			// 	this.getUserData()
-			// }
-			// // 清除登陆状态
-			// uni.setStorageSync('login',false);
-		// },
 		methods: {
-			getRecommend(){
-
+			getRecommend(model){
+					this.$request({
+					url:'/phoneReparisServer/service/rest/login.customerService/collection/getServiceGoodsByType',
+					methods:'POST',
+					data:{
+						page:1,
+						rows:20,
+						phoneType:model
+					}
+				}).then(res=>{
+					this.isRecommend = true;
+					this.recommendData = res;
+				}).catch(error=>{
+					console.log('error',error)
+				})
 			},
 			gotoPhoneType(){
 				uni.switchTab({
-							url:'../phoneModel/phoneModel'
-						})
+					url:'../phoneModel/phoneModel'
+				})
 			},
 			gotoSearch(){
 				uni.navigateTo({
@@ -464,9 +479,6 @@
 					this.$store.dispatch('actionTrigger',{
 						key:'deviceId',value:resFormat['deviceId'] || '',
 					})
-					// this.$store.dispatch('actionTrigger',{
-					// 	key:'loginName',value:resFormat['loginName'] || '',
-					// })
 					this.$store.dispatch('actionTrigger',{
 						key:'sessionID',value:resFormat['sessionID'] || '',
 					})
@@ -482,6 +494,8 @@
 					this.getFastClick()
 					// 获取客户电话
 					this.getCSHText()
+					// 获取推荐型号
+				 	this.getRecommend(this.model);
 					uni.hideLoading()
 				}).catch(error=>{
 					console.log('error',error)
@@ -503,7 +517,8 @@
 	}
 	/* 悬浮样式 */
 	.csh-show{
-		position: fixed;bottom:130rpx;display:flex;align-items: center;justify-content:flex-start;width:100%;background:#FFFFFF;border-radius:50rpx;
-		box-shadow:10rpx 10rpx 15rpx -10rpx;
+		display:flex;align-items: center;justify-content:flex-start;background:#FFFFFF;border-radius:50rpx;
+		box-shadow:10rpx 10rpx 5rpx -10rpx;
+		
 	}
 </style>

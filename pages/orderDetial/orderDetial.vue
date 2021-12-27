@@ -87,23 +87,18 @@
 <script>
 	import { mapState } from 'vuex'//引入mapState
 	export default {
+
+		// 下拉刷新
+		onPullDownRefresh(){
+			this.onLoadDetail();
+			uni.stopPullDownRefresh();
+		},
 		//
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.param));
-				this.$request({
-					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
-					methods:'POST',
-					data:{
-						orderId:navigateParams["orderId"]
-					}
-				}).then(res=>{
-					console.log("orderdetial res" + JSON.stringify(res))
-					this.orderDetail = res
-					// alert(this.orderDetail.needPickUp)
-				}).catch(e=>{
-					console.log(e)
-				})
+				this.orderId = navigateParams["orderId"]
+				this.onLoadDetail();
 			}
 		},
 		computed: mapState({
@@ -113,6 +108,7 @@
 		}),
 		data() {
 			return {
+				orderId:'',
 				sent: true,
 				orderDetail:{
 					goodsList:[{}]
@@ -149,6 +145,21 @@
 			}
 		},
 		methods: {
+			onLoadDetail(){
+				this.$request({
+					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
+					methods:'POST',
+					data:{
+						orderId:this.orderId
+					}
+				}).then(res=>{
+					console.log("orderdetial res" + JSON.stringify(res))
+					this.orderDetail = res
+					// alert(this.orderDetail.needPickUp)
+				}).catch(e=>{
+					console.log(e)
+				})
+			},
 			// navigateToDetail() {
 			// 	uni.navigateBack({
 			// 		url: '../maintenanceList/maintenanceList'

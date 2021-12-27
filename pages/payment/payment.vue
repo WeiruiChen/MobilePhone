@@ -86,24 +86,31 @@
 		mapState
 	} from 'vuex' //引入mapState
 	export default {
+
+		onPullDownRefresh(){
+			this.getOrderDetail(this.params);
+			uni.stopPullDownRefresh();
+		},
 		//
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				const navigateParams = JSON.parse(decodeURIComponent(option.param));
 				console.log("navigateParams:" + navigateParams)
-				this.$request({
-					url: '/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
-					methods: 'POST',
-					data: {
-						orderId: navigateParams
-					}
-				}).then(res => {
-					console.log("payment res" + JSON.stringify(res))
-					this.orderDetail = res
-					// alert(this.orderDetail.needPickUp)
-				}).catch(e => {
-					console.log(e)
-				})
+				this.params = navigateParams
+				this.getOrderDetail(navigateParams)
+				// this.$request({
+				// 	url: '/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
+				// 	methods: 'POST',
+				// 	data: {
+				// 		orderId: navigateParams
+				// 	}
+				// }).then(res => {
+				// 	console.log("payment res" + JSON.stringify(res))
+				// 	this.orderDetail = res
+				// 	// alert(this.orderDetail.needPickUp)
+				// }).catch(e => {
+				// 	console.log(e)
+				// })
 			}
 		},
 		computed: mapState({
@@ -112,6 +119,7 @@
 		}),
 		data() {
 			return {
+				params : {},
 				orderDetail: {
 					goodsList: [{}]
 				},
@@ -147,6 +155,21 @@
 			}
 		},
 		methods: {
+			getOrderDetail(navigateParams){
+				this.$request({
+					url: '/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',
+					methods: 'POST',
+					data: {
+						orderId: navigateParams
+					}
+				}).then(res => {
+					console.log("payment res" + JSON.stringify(res))
+					this.orderDetail = res
+					// alert(this.orderDetail.needPickUp)
+				}).catch(e => {
+					console.log(e)
+				})
+			},
 			callPhone(){
 				uni.makePhoneCall({
 				  phoneNumber: this.gmPhone,

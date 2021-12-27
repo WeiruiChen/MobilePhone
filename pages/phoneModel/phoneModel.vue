@@ -119,13 +119,16 @@
 				if(navigateParams.gotoValue.indexOf(',')){
 					this.tabCur = navigateParams.gotoValue.split(',')[1]
 					this.TabCur = navigateParams.gotoValue.split(',')[0]
-					this.getNavigate = true
 				}
 			}
-			if(this.TabCur == 'root'){
+			let saveTabCur = this.TabCur;
+			let savetabVar = this.tabCur;
+			if(this.TabCur == 'root' || this.TabCur == '1' || this.TabCur == '2'){
 				this.tabCur = undefined;
 				this.TabCur = undefined;
-				this.getNavigate = true;
+			}
+			if(saveTabCur == '2'){
+				this.tabCur = savetabVar;
 			}
 			//清空右边
 			this.deviceList=[]
@@ -140,13 +143,14 @@
 			}).then(res => {
 				this.FirstMenu = res
 				this.getSecondMenu(this.TabCur ? this.TabCur : this.FirstMenu[0].id)
-				if(!this.getNavigate)
+				if(!this.TabCur)
 					this.TabCur = this.FirstMenu[0].id;
+					
 			}).catch(e => {
 				console.log('getCategoryOne', e)
 			})
 			uni.setStorageSync('category',undefined);
-
+			uni.setStorageSync('maintenance',undefined);
 			// 清空购物车
 			this.$store.dispatch('shoppingTrigger',{
 						key:'maintenanceList',
@@ -188,14 +192,13 @@
 						categoryId: id
 					}
 				}).then(res => {
-					console.log('getCategoryTwo 手机型号', res)
 					this.list = res
 					// 初始化titlemap
 					for (const index in this.list) {
 						this.titleMap[index] = this.list[index].name
 					}
 					this.getThirdMenu(this.tabCur ? this.tabCur : this.list[0].id)
-					if(!this.getNavigate)
+					if(!this.tabCur)
 						this.tabCur = this.list[0].id;
 				}).catch(e => {
 					console.log('getCategoryTwo', e)
@@ -248,7 +251,7 @@
 	}
 
 	.visualHeight{
-		height: calc(100vh - 340upx);
+		height: calc(100vh - 360upx);
 	}
 
 	.VerticalNav.nav {

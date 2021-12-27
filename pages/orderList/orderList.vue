@@ -68,6 +68,12 @@
 		'已完成': 'Completed'
 	}
 	export default {
+			// 下拉刷新
+		onPullDownRefresh(){
+			this.getOrderList();
+			uni.stopPullDownRefresh();
+		},
+
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
 				console.log(option)

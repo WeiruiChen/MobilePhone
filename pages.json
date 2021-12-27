@@ -15,7 +15,9 @@
 		},
 		{
 			"path": "pages/orderList/orderList",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/phoneModel/phoneModel",
@@ -39,7 +41,9 @@
 		},
 		{
 			"path": "pages/orderDetial/orderDetial",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/mine/mine",
@@ -61,7 +65,9 @@
 		},
 		{
 			"path": "pages/payment/payment",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"enablePullDownRefresh":true,
@@ -92,7 +98,7 @@
 		"navigationBarBackgroundColor": "#0081ff",
 		"navigationBarTitleText": "ColorUi for UniApp",
 		"navigationStyle": "custom",
-		"navigationBarTextStyle": "white"
+		"navigationBarTextStyle": "black"
 	},
 	"usingComponts": true,
 	"condition": { //模式配置，仅开发期间生效
