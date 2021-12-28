@@ -268,7 +268,6 @@
 					value: systemInfo.model
 			})
 			// console.log('system',this.model);
-
 			 if(uni.getSystemInfoSync().platform == 'mac' || uni.getSystemInfoSync().platform == 'windows'){
 				 this.getUserData();
 				 this.getRecommend(this.systemInfo.model);
@@ -290,8 +289,10 @@
 						phoneName:this.systemInfo.brand
 					}
 				}).then(res=>{
-					this.isRecommend = true;
-					this.recommendData = res[0];
+					if(Array.isArray(res) && res.length > 0){
+						this.isRecommend = true;
+						this.recommendData = res[0];
+					}
 				}).catch(error=>{
 					console.log('error',error)
 				})

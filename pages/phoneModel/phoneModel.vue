@@ -9,7 +9,7 @@
 
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="item.id == TabCur?'text-orange cur':''"
+				<view class="cu-item flex-sub" :class="item.id == TabCur?'text-orange update-item':''"
 					v-for="(item,index) in FirstMenu" :key="index" @tap="tabSelect" :data-item="{id:item.id,index}">
 					{{item.text}}
 				</view>
@@ -30,7 +30,7 @@
 				<view  v-if="flag">
 				<view v-for="(item,indexs) in deviceList" :key="indexs">
 					<view class="text-center margin">
-						<text>——{{item.groupName}}——</text>
+						<text style="font-weight: 500;">——{{item.groupName}}——</text>
 					</view>
 					<view class="grid margin-bottom text-center col-3">
 						<view class="padding-sm" v-for="(item) in item.goodsList" :key="item.pictureId"
@@ -310,5 +310,11 @@
 		flex-direction: column;
 		justify-content: space-around;
 		align-items: center;
+	}
+	.update-item {
+		    border-top: 4rpx solid #F1F1F1;
+			font-size:34rpx;
+			color:#000000;
+			font-weight: 500;
 	}
 </style>

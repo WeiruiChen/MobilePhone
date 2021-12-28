@@ -39,10 +39,13 @@
 								<view class="flex">
 									<view class="margin-tb-sm margin-left-sm" v-for="item in phoneColorList" :key="item.color" >
 										<template v-if="orderDetail.goodsList[0].quickMemo === item.name">
-											<view class="round phone-color-border" >
-											<view class="round phone-color cuIcon-check"  :style="'background-color:'+item.color"></view>
-										</view>
-										<view class="margin-tb-sm">{{item.name}}</view>
+											<view style="display:flex;flex-direction:column;align-items: center">
+												<view class="round phone-color-border">
+													<view class="round phone-color"
+														:style="'background-color:'+item.color"/>
+												</view>
+												<view class="margin-tb-sm">{{item.name}}</view>
+											</view>
 										</template>
 										
 									</view>
@@ -90,6 +93,7 @@
 		// 下拉刷新
 		onPullDownRefresh(){
 			this.onLoadDetail();
+			this.initShow();
 			uni.stopPullDownRefresh();
 		},
 		//
@@ -99,6 +103,9 @@
 				this.orderId = navigateParams["orderId"]
 				this.onLoadDetail();
 			}
+		},
+		onShow() {
+			this.initShow();
 		},
 		computed: mapState({
 			imageUrl:state => state.user.imageBaseUrl,
@@ -125,25 +132,31 @@
 					'Completed': '已完成'
 				},
 				phoneColorList:[
-					{
-						name:'白色',
-						color:'#FFFFFF',
-						isCheck:true,
-					},
-					{
-						name:'黑色',
-						color:'#000000',
-						isCheck:false
-					},
-						{
-						name:'金色',
-						color:'#D9D919',
-						isCheck:false
-					}
 				],
 			}
 		},
 		methods: {
+				initShow(){
+				this.phoneColorList = []
+				this.$request({
+						url:'/phoneReparisServer/service/rest/login.shoppingCart/collection/getShopCart',
+						methods:'POST',
+					}).then(res=>{
+						this.phoneColorList = [];
+						// 获取单个商品
+						let item =  res.items[0];
+						let  colors = item.colors.split(',');
+						let  colorsValue = item.colorsValue.split(',');
+						for (const index in colors) {
+							this.phoneColorList.push({
+								name: colors[index],
+								color: colorsValue[index]
+							})
+						}
+					}).catch(e=>{
+						console.log(e)
+				})
+				},
 			onLoadDetail(){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/login.orderService/collection/getOrderDetail',

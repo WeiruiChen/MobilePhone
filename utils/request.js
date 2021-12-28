@@ -59,6 +59,11 @@ const request = function({
 				}else{
 					content = reponseData.message
 				}
+
+				if(reponseData.code == -2){
+					reject(reponseData.message);
+					return;
+				}
 				uni.showModal({
 					content: content,
 					showCancel: false,

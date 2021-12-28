@@ -70,7 +70,7 @@
 	export default {
 			// 下拉刷新
 		onPullDownRefresh(){
-			this.getOrderList();
+			this.getOrderList(this.NavMap[this.TabCur]);
 			uni.stopPullDownRefresh();
 		},
 
