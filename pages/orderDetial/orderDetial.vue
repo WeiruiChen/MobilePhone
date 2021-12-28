@@ -93,7 +93,7 @@
 		// 下拉刷新
 		onPullDownRefresh(){
 			this.onLoadDetail();
-			this.initShow();
+			// this.initShow();
 			uni.stopPullDownRefresh();
 		},
 		//
@@ -105,7 +105,8 @@
 			}
 		},
 		onShow() {
-			this.initShow();
+			this.onLoadDetail();
+			// this.initShow();
 		},
 		computed: mapState({
 			imageUrl:state => state.user.imageBaseUrl,

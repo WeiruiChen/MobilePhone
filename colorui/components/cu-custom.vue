@@ -52,6 +52,13 @@
 		},
 		methods: {
 			BackPage() {
+				// uni.setStorageSync('back',false);
+				let pages = getCurrentPages();
+				let currentPage = pages[pages.length - 1];
+				if(currentPage.route.indexOf('pages/reserve/reserve') !== -1){
+					console.log('set');
+					uni.setStorageSync('back',true);
+				}
 				if (getCurrentPages().length < 2 && 'undefined' !== typeof __wxConfig) {
 					let url = '/' + __wxConfig.pages[0]
 					return uni.redirectTo({url})

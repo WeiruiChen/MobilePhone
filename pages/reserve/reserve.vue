@@ -87,7 +87,7 @@
 							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix'
 								style="height: auto;"></image>
 							<view>
-								<view class="margin-lr-sm"><text>{{fanganList[0].phoneType}}</text></view>
+								<view class="margin-lr-sm"><text>{{phoneType}}</text></view>
 								<view v-if="phoneColorList.length > 0" class="flex">
 									<view class="margin-tb-sm margin-left-sm"  v-for="item in phoneColorList"
 										:key="item.color">
@@ -167,13 +167,11 @@
 	import {
 		formatDateTime,
 		getNextDayDate,
-		compareTimeStr,
-		formatFullTime,
-		formatTime
 	} from '../../utils/time'
 	export default {
 		data() {
 			return {
+				phoneType:'',
 				sent: true,
 				chooseAddress: {
 					label: "",
@@ -245,7 +243,6 @@
 					totalSale += list[item].salePrice;
 				}
 				// alert(JSON.stringify(list));
-				console.log('JSON.stringify(list):'+JSON.stringify(list));
 
 				return totalSale
 			}
@@ -261,15 +258,20 @@
 						this.phoneColorList = [];
 						// 获取单个商品
 						let item =  res.items[0];
+						this.phoneType = item.phoneType;
 						let  colors = item.colors.split(',');
 						let  colorsValue = item.colorsValue.split(',');
 						for (const index in colors) {
 							this.phoneColorList.push({
 								name: colors[index],
 								color: colorsValue[index],
-								isCheck: index == 0 ? true :false
+								isCheck: false
 							})
 						}
+
+						// 默认选择第一项
+						this.onSelectType(this.phoneColorList[0].name,true);
+						
 					}).catch(e=>{
 						console.log(e)
 				})

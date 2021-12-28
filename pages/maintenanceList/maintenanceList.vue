@@ -185,6 +185,7 @@
 			}
 		},
 		onShow(){
+		
 			// 获取跳转接口带来的id
 			const maintenance = uni.getStorageSync('maintenance');
 			if(maintenance && maintenance !== ''){
@@ -198,20 +199,15 @@
 					this.getGoods(this.tabCur);
 				}
 			}else{
-				if(!this.isCallFresh){
-					//重置菜单状态和购物车
-					this.getGoods(this.list[0].id);
-					// 更新购物车状态
-					let resultArray = deepClone(this.list)
-					this.list = resultArray.map(item=>{
-						return {
-							...item,
-							count:0
-						}
-					})
-					this.forkMaintenance = []
-					this.isCallFresh = false;
+				let back = uni.getStorageSync('back');
+				if(!back){
+					this.initLitsCount()
 				}
+				if(!this.isCallFresh && (back == undefined || !back)){
+					console.log('excute1:')
+					this.initLitsCount()
+				}
+				
 			}
 		},
 		onReady() {
@@ -245,6 +241,21 @@
 			}
 		}),
 		methods: {
+			initLitsCount(){
+					//重置菜单状态和购物车
+					this.getGoods(this.list[0].id);
+					// 更新购物车状态
+					let resultArray = deepClone(this.list)
+					this.list = resultArray.map(item=>{
+						return {
+							...item,
+							count:0
+						}
+					})
+					this.forkMaintenance = []
+					this.isCallFresh = false;
+					uni.setStorageSync('back',true);
+			},
 			getMaintanceList(id){
 				uni.showLoading({
 				title: '加载中...',
