@@ -59,7 +59,7 @@
 						</view>
 					</form>
 				</view>
-				<view v-else class="padding margin-bottom-sm round-card">
+				<view v-else class="padding margin-bottom-sm round-card" style="margin-top:200rpx">
 					<view style="display:flex;flex-direction:column;align-items:center;height:370rpx">
 						<image style="width:100%" src="../../static/maintenance/null.png"></image>
 						<view style="color:#D9D9D9">暂无数据</view>
