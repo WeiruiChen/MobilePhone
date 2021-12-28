@@ -253,12 +253,7 @@
 			model:state => state.user.model
 		}),
 		onLoad(){
-			// 订阅消息
-			uni.requestSubscribeMessage({
-				tmplIds: ['ZD8LqBpL-yNXZTEHZmA0jvnQmX3g_2kPWq_-qOb0RpI','ZD8LqBpL-yNXZTEHZmA0jq_ggsfBENHwBce-wje0rrA'],
-				success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res)) },
-				fail(res){console.log('订阅消息接口失败:'+ JSON.stringify(res)) }
-			})
+			
 			// 获取系统信息
 			// console.log('system:'+JSON.stringify(uni.getSystemInfoSync()));
 			const systemInfo =  uni.getSystemInfoSync();

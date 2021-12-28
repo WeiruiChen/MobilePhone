@@ -332,6 +332,14 @@
 						console.log("addShopCartByGoodsIds" + JSON.stringify(res))
 						uni.setStorageSync('maintenance',undefined);
 
+						// 订阅消息
+						uni.requestSubscribeMessage({
+							tmplIds: ['TApX0nzOBpQaeMX_OFpulONC5URpuAENp7h7LG5sSt4','7Mx2zEoystvOf4Ny4vIDDk4UdtBhJxtawOaVFQwvVFQ','yHv5ZLbuETM8c1ck9fTJLexhBe7mbjvd6LwrAN_W-fg'],
+							success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res)) },
+							fail(res){console.log('订阅消息接口失败:'+ JSON.stringify(res)) }
+						})
+
+
 						uni.navigateTo({
 						url: '../reserve/reserve'
 						})
