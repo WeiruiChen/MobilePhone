@@ -590,7 +590,7 @@
 	.VerticalMain {
 		background-color: #f1f1f1;
 		flex: 1;
-		height:1024rpx;
+		height:1200rpx;
 	}
 
 	.round-card {

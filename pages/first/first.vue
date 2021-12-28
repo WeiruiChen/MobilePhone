@@ -302,7 +302,7 @@
 				})
 			},
 			gotoSearch(){
-				uni.redirectTo({
+				uni.navigateTo({
 					url:'./search',
 				})
 			},

@@ -8,12 +8,12 @@
 			<view class="search-form round" style="text-align:center">
 				<text class="cuIcon-search"></text>
 				<!-- <input v-model="value" type="text" placeholder="搜索" @input="getSearchList"/> -->
-                 <input v-model="value" type="text" placeholder="搜索" @confirm="getSearchList" @input="searchList"/> 
+                 <input v-model="value" type="text" placeholder="搜索" @confirm="getSearchList" @input="checkNull"/> 
 			</view>
 		</view>
         <view v-if="searchList.length > 0" style="margin:0 50rpx 0 50rpx">
             <view v-for="item in searchList" :key="item.id">
-                <view style="color:#333333;font-size:30rpx" @click="gotoMaintance(item)" >{{item.name}}</view>
+                <view style="color:#333333;font-size:32rpx;margin:12rpx 0rpx 12rpx 0rpx" @click="gotoMaintance(item)" >{{item.name}}</view>
                  <view style="height:2rpx;background-color:#999999"></view>
             </view>
         </view>
@@ -110,11 +110,16 @@
 				});
             }),
             gotoMaintance(item){
-                uni.navigateBack({ delta: 1 });
-				uni.setStorageSync('category',JSON.stringify({gotoValue:'root,'+item.id}));
-                uni.switchTab({
-					url: '../phoneModel/phoneModel'
-				})
+				uni.setStorageSync('maintenance',JSON.stringify({gotoValue:'root,'+item.id}));
+                uni.navigateBack({ delta: 1,success: function(){
+                     uni.navigateTo({
+                         	url: '../maintenanceList/maintenanceList',
+                            success: function(res){
+                                console.log('success:'+JSON.stringify(res));
+                            },
+                     });
+
+                }});
             },
             onClickHot(item){
                 this.value = item;
@@ -129,7 +134,7 @@
 <style>
 	.search-item{
         border-radius: 35rpx;
-        border: 1rpx solid #02D5C7;
+        border: 2rpx solid #02D5C7;
         text-align: center;
         display:flex;
         flex-direction: column;
