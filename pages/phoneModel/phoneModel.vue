@@ -7,14 +7,14 @@
 			<view slot="content">设备型号</view>
 		</cu-custom>
 
-		<scroll-view scroll-x class="bg-white nav">
+		<!-- <scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
 				<view class="cu-item flex-sub" :class="item.id == TabCur?'text-orange update-item':''"
 					v-for="(item,index) in FirstMenu" :key="index" @tap="tabSelect" :data-item="{id:item.id,index}">
 					{{item.text}}
 				</view>
 			</view>
-		</scroll-view>
+		</scroll-view> -->
 
 		<view class="VerticalBox container visualHeight">
 			<scroll-view class="VerticalNav nav" scroll-y scroll-with-animation :scroll-top="verticalNavTop">
@@ -237,6 +237,12 @@
 		},
 	}
 </script>
+<style>
+page {
+	background-color : #FFFFFF;
+    height: 100%;
+}
+</style>
 
 <style>
 	.background {
@@ -251,7 +257,7 @@
 	}
 
 	.visualHeight{
-		height: calc(100vh - 360upx);
+		height: calc(100vh - 300upx);
 	}
 
 	.VerticalNav.nav {

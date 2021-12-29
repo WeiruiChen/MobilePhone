@@ -1,5 +1,5 @@
 <template>
-<view style="background-color:#FFFFFF;height:100vh">
+<view>
 		<cu-custom :isBack="true" bgColor="bg-gradual-default" >
 			<!-- <view slot="backText">返回</view> -->
 			<view slot="content">搜索</view>
@@ -14,8 +14,9 @@
         <view v-if="searchList.length > 0" style="margin:0 50rpx 0 50rpx">
             <view v-for="item in searchList" :key="item.id">
                 <view style="color:#333333;font-size:32rpx;margin:12rpx 0rpx 12rpx 0rpx" @click="gotoMaintance(item)" >{{item.name}}</view>
-                 <view style="height:2rpx;background-color:#999999"></view>
+                 <view style="height:1rpx;background-color:#999999"></view>
             </view>
+            <view style="height:30rpx"></view>
         </view>
         <view  v-else>
         <view style="margin-left:30rpx;color:#999999">搜索历史</view>
@@ -130,6 +131,12 @@
 
 	}
 </script>
+<style>
+page {
+	background-color : #FFFFFF;
+    height: 100%;
+}
+</style>
 
 <style>
 	.search-item{

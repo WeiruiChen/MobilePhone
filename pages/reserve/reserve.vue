@@ -386,11 +386,11 @@
 			// 	this.chooseAddress.address = this.addressList[this.index]
 			// 	this.defaultAddress.id = this.orginList[this.index].id
 			// },
-			addAddress() {
-				uni.navigateTo({
-					url: '../allAddress/allAddress'
-				})
-			},
+			// addAddress() {
+			// 	uni.navigateTo({
+			// 		url: '../allAddress/allAddress'
+			// 	})
+			// },
 			timeChange(e) {
 				this.timeIndex = e.detail.value
 				this.time = this.timeList[this.timeIndex]
@@ -421,18 +421,18 @@
 						url: '/phoneReparisServer/service/rest/login.customer.addressService/collection/getDefaultaddress',
 						methods: 'POST',
 					}).then(res => {
-						if (res.length === 0) {
+						// if (res.length === 0) {
 							// this.haveDefaultAddress = false;
 							// 没有默认地址时强制跳转
-							that.gotoSelectAddress();
+							// that.gotoSelectAddress();
 							
-						}
+						// }
 						let selectAdrress = uni.getStorageSync("selectAdrress");
 						if(selectAdrress && selectAdrress !== ''){
 							selectAdrress = JSON.parse(selectAdrress);
 							this.defaultAddress = selectAdrress;
 						}else{
-							this.defaultAddress = res[0] || {};
+							this.defaultAddress = res[0] || '暂无地址';
 						}
 						this.chooseAddress.address = this.defaultAddress.address;
 						this.getByDelivery();
@@ -506,6 +506,7 @@
 					}
 				}
 
+
 				let param_orderParams = {};
 				param_orderParams["receiverId"] = this.defaultAddress.id || ''; //地址id
 				param_orderParams["points"] = 0; //暂时固定 0
@@ -548,10 +549,25 @@
 					let order = {};
 					order["orderId"] = res[0]["orderId"];
 					console.log("create order success:" + JSON.stringify(res[0]));
-					uni.redirectTo({
+
+					
+					// 获取订阅
+					uni.requestSubscribeMessage({
+						tmplIds: ['TApX0nzOBpQaeMX_OFpulONC5URpuAENp7h7LG5sSt4','7Mx2zEoystvOf4Ny4vIDDk4UdtBhJxtawOaVFQwvVFQ','yHv5ZLbuETM8c1ck9fTJLexhBe7mbjvd6LwrAN_W-fg'],
+						success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res));
+						uni.redirectTo({
 						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
 							order))
+						})
+					 },
+						fail(res){console.log('订阅消息接口失败:'+ JSON.stringify(res));
+						uni.redirectTo({
+						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
+							order))
+					}) }
 					})
+
+					
 				}).catch(e => {
 					console.log(e)
 				})

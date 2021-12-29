@@ -16,7 +16,7 @@
 	</cover-view>
 </template> -->
 <template>
-	<view class="tabbar" :style="{'padding-bottom': paddingBottomHeight + 'rpx'}">
+	<view class="tabbar">
 		<view class="tabbar-item" v-for="(item, index) in list" :key="index" @click="tabbarChange(item.path)">
 			<view>
 				<image class="item-img item-img" :src="item.icon_a" v-if="current == index"></image>
@@ -28,14 +28,15 @@
 			</view> -->
 			<view class="item-name" :class="{'tabbarActive': current == index}" v-if="item.text">{{item.text}}
 			</view>
-
 		</view>
+		<view v-if="isIphone" style="height:20rpx"></view>
 	</view>
 </template>
 
 <script>
 	export default {
 		props: {
+			isIphone:false,
 			current: String
 		},
 		data() {
@@ -70,7 +71,8 @@
 					model.forEach(item => {
 						//适配iphoneX以上的底部，给tabbar一定高度的padding-bottom
 						if (res.model.indexOf(item) != -1 && res.model.indexOf('iPhone') != -1) {
-							that.paddingBottomHeight = 0;
+							// that.paddingBottomHeight = 30;
+							that.isIphone = true;
 						}
 					})
 				}

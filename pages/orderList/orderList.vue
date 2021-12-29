@@ -27,12 +27,14 @@
 							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'
 								style="height: auto;">
 							</image>
-							<view>
+							<view style="display:flex;justify-content: space-between;">
 								<view>
-									<text>{{item.goodsList[0].phoneType}}</text>
+									<text style="font-weight:bold">{{item.goodsList[0].phoneType}}</text>
 								</view>
-								<view v-for="(subItem) in item.goodsList" :key="subItem.title">
-									<text>{{subItem.title}}x{{subItem.count}}</text>
+								<view>
+									<view v-for="(subItem) in item.goodsList" :key="subItem.title">
+										<text style="font-size:24rpx">{{subItem.title}}x{{subItem.count}}</text>
+									</view>
 								</view>
 							</view>
 						</view>

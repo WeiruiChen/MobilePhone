@@ -7,7 +7,9 @@
 		},
 		{
 			"path": "pages/first/search",
-			"style": {}
+			"style": {
+				"background":"#FFFFFF"
+			}
 		},
 		{
 			"path": "pages/maintenanceList/maintenanceList",
@@ -22,7 +24,7 @@
 		{
 			"path": "pages/phoneModel/phoneModel",
 			"style": {
-				"backgroundColor":"#FFFFFF"
+				"background":"#FFFFFF"
 			}
 			
 		},

@@ -19,7 +19,8 @@ const state = {
 	"wxHead":'',
 	'name':'',
 	'delivery':{},
-	'deliveryList':[]
+	'deliveryList':[],
+	'model':''
 
 }
 

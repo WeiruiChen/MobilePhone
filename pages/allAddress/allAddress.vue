@@ -7,8 +7,8 @@
 
 		<view class="container">
 			<form>
-				<view v-for="(item,index) in addressList" :key="index" @click="isSelect ? onSelectAddrress(index) : ()=>{}">
-					<view class="cu-form-group padding-top padding-bottom round-top-card">
+				<view v-for="(item,index) in addressList" :key="index" >
+					<view class="cu-form-group padding-top padding-bottom round-top-card" @click="isSelect ? onSelectAddrress(index) : ()=>{}">
 						<view class="content">
 							<view>{{item.name}} {{item.phone}}</view>
 							<view>{{item.address}}</view>

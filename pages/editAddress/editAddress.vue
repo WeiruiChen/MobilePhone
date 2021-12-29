@@ -18,8 +18,13 @@
 					<input  name="phonenumber" v-model="address.phone"></input>
 				</view>
 				<view class="cu-form-group ">
-					<view class="title">备用手机号</view>
-					<input  name="phonenumber" v-model="address.sparePhone"></input>
+					<view style="display:flex;flex-direction:column;width:100%">
+						<view style="display:flex;justify-content: center;align-items: center;">
+							<view class="title">备用手机号</view>
+							<input  name="phonenumber" v-model="address.sparePhone"/>
+						</view>
+						<view style="font-size:20rpx;color:#999999">请确保手机送修后,能联系上机主本人。</view>
+					</view>
 				</view>
 
 				<view class="cu-form-group">
@@ -186,11 +191,11 @@
 								    icon: "none"
 								})
 							}).catch(e => {
-								console.log('addNewAddress', e)
-								uni.showToast({
-								    title: "提交失败",
-								    icon: "none"
-								})
+								// console.log('addNewAddress', e)
+								// uni.showToast({
+								//     title: "提交失败",
+								//     icon: "none"
+								// })
 							})
 						} else if (e.cancel) {
 							uni.showToast({

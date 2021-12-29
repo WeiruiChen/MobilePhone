@@ -52,14 +52,14 @@
 			<view>
 				<scroll-view scroll-x scroll-with-animation >
 					<view class="cu-card" style="display: inline-flex;">
-							<view class="cu-item-scroll" style="margin: 0rpx 30rpx 30rpx 30rpx" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
+							<view class="cu-item-scroll" style="margin: 0rpx 17rpx 30rpx 17rpx" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
 								<view style="display: flex;;background-color: #F6FCFF;height: 210rpx;">
 									<view style="margin: 20rpx;width: 230rpx;display: flex;flex-direction:column;justify-content: space-between;">
-										<view style="font-weight: 900;font-size: 35rpx;color:#136169">{{item.goods.title}}</view>
-										<view style="font-weight: 500;color:#136169" class="show-subTitle">{{item.goods.subTitle}}</view>
+										<view style="font-weight: 900;font-size: 30rpx;color:#136169">{{item.title}}</view>
+										<view style="font-weight: 500;color:#136169;font-size: 26rpx" class="show-subTitle">{{item.subTitle}}</view>
 										<view style="display: inline-flex;align-items: center;">
-											<view style="font-size: 40rpx;color: #E05A28;font-weight: 700;">{{item.goods.salePrice}}</view>
-											<view style="text-decoration:line-through;margin-left:10rpx;color:#669CA1">{{item.goods.price}}</view>
+											<view style="font-size: 55rpx;color: #E05A28;font-weight: 700;">{{item.salePrice}}</view>
+											<view style="text-decoration:line-through;margin-left:10rpx;color:#669CA1">{{item.price}}</view>
 								</view>
 									</view>
 									<view style="position: relative;">
@@ -73,12 +73,11 @@
 			</view>
 		</view>
 
-			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" style="margin: 0rpx 20rpx 0rpx 20rpx;" :indicator-dots="true" :circular="true"
+			<swiper class="screen-swiper"  :class="true?'square-dot':'round-dot'" style="margin: 20rpx 20rpx 0rpx 20rpx;min-height:200rpx;height:200rpx" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
-			<swiper-item v-for="(item,index) in swiperList" :key="index"  @click="onClickHandler(item)">
+			<swiper-item v-for="(item,index) in swiperList" :key="index" style="border-radius: 8rpx" @click="onClickHandler(item)">
 				<view v-if="!item.fileId"></view>
-				<!-- {{item}} -->
-				<image v-else alt="error" :src="imageUrl+item.fileId" mode="aspectFill" style="padding:10rpx;"></image>
+				<image alt="error" :src="imageUrl+item.fileId" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		
@@ -96,8 +95,8 @@
 			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index" @click="onClickHandler(item,index)">
 				<image  :src="imageUrl+item.fileId" style="width: 140rpx;height: 140rpx;"></image>
 				<view style="display:flex;flex-direction:column;justify-content:center;margin-left:10rpx">
-					<view>{{item.title}}</view>
-					<view style="font-size:20rpx">{{item.subTitle || ''}} </view>
+					<view style="font-size:32rpx;font-weight:bold">{{item.title}}</view>
+					<view style="font-size:24rpx;color:#999999;margin-top:8rpx">{{item.subTitle || ''}} </view>
 				</view>
 			</view>			
 		</view>		
@@ -114,9 +113,9 @@
 
 
 		<view v-show="showStatic">
-			<view v-if="salesTimeList.length > 0">
+			<!-- <view v-if="salesTimeList.length > 0">
 		
-			</view>
+			</view> -->
 			<!-- <view class="cu-bar" >
 				<view class="action">
 					<image style="width: 50rpx;height: 50rpx;" src="../../static/first/processicon.png"></image>
@@ -167,7 +166,7 @@
 					<view style="font-size:30rpx;font-weight:bold" >
 						24小时客服电话
 					</view>
-					<view style="font-color:#999999;font-size:20rpx">
+					<view style="font-color:#999999;font-size:20rpx;letter-spacing: 2rpx">
 						如何预约？维修费用多少？保修多久?欢迎来电咨询。
 					</view>
 				</view>
@@ -287,6 +286,7 @@
 					if(Array.isArray(res) && res.length > 0){
 						this.isRecommend = true;
 						this.recommendData = res[0];
+						this.salesTimeList = res;
 					}
 				}).catch(error=>{
 					console.log('error',error)
@@ -360,6 +360,8 @@
 					},
 					'4':function(){
 							uni.setStorageSync('maintenance',JSON.stringify(item));
+							// 设置选择商品
+							uni.setStorageSync('selectGood',item.id || undefined);
 							uni.navigateTo({
 								url:'../maintenanceList/maintenanceList'
 						})
@@ -409,11 +411,14 @@
 			cardSwiper(e) {
 				this.cardCur = e.detail.current
 			},
-			getFastClick(){
+			getFastClick(model){
 				this.$request({
 					url:'/phoneReparisServer/service/rest/nologin.homeService/collection/getFastClick',
 					methods:'POST',
-					data:{}
+					data:{
+						phoneType:model,
+						phoneName:this.systemInfo.brand
+					}
 				}).then(res=>{
 					this.cuIconList = res
 					console.log('resres',res)
@@ -464,9 +469,9 @@
 						if(data['typeSetting'] === 'One'){
 							this.swiperList = data.itemList
 						}
-						if(data['typeSetting'] === 'Six'){
-							this.salesTimeList = data.itemList
-						}
+						// if(data['typeSetting'] === 'Six'){
+						// 	this.salesTimeList = data.itemList
+						// }
 						if(data['typeSetting'] === 'Two'){
 							this.serviceProfitList = data.itemList
 						}
@@ -518,11 +523,12 @@
 					// 获取轮播图等信息
 					this.getHomeBannerData()
 					// 获取Goods
-					this.getFastClick()
+					this.getFastClick(this.systemInfo.model);
 					// 获取客户电话
 					this.getCSHText()
 					// 获取推荐型号
 				 	this.getRecommend(this.systemInfo.model);
+					// 获取推荐限时栏
 					uni.hideLoading()
 				}).catch(error=>{
 					console.log('error',error)
@@ -547,5 +553,22 @@
 		display:flex;align-items: center;justify-content:flex-start;background:#FFFFFF;border-radius:50rpx;
 		/* box-shadow:10rpx 10rpx 5rpx 0rpx; */
 		
+	}
+	/* 显示一行 */
+	.one-line{
+		 white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		word-break: break-all;
+	}
+	/* 显示二行 */
+	.two-line{
+		 text-overflow: -o-ellipsis-lastline;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
 	}
 </style>

@@ -31,7 +31,7 @@
 				</view>
 			</scroll-view>
 
-			<scroll-view class="VerticalMain" scroll-y scroll-with-animation
+			<scroll-view class="VerticalMain" style="height:calc(100vh - 375upx)" scroll-y scroll-with-animation 
 			 >
 				<view v-if="!showNull" class="padding-top padding-lr" >
 					<form v-for="(item,index) in forkMaintenance"
@@ -73,7 +73,7 @@
 
 		<view class="btn-csh" style="bottom:170rpx;right:50rpx;z-index:101" @click="callPhone">
 				<image src="../../static/maintenance/csh.png" 
-					style="width:60rpx;height:60rpx"
+					style="width:70rpx;height:70rpx"
 				></image>
 		</view>
 
@@ -88,7 +88,7 @@
 					<view style="flex-direction: column; align-items:center;width:70%" >
 						<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
 							<text 
-								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
+								style="margin-left:10rpx;text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
 						<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
 					</view>
@@ -185,7 +185,6 @@
 			}
 		},
 		onShow(){
-		
 			// 获取跳转接口带来的id
 			const maintenance = uni.getStorageSync('maintenance');
 			if(maintenance && maintenance !== ''){
@@ -331,15 +330,6 @@
 					}).then(res=>{
 						console.log("addShopCartByGoodsIds" + JSON.stringify(res))
 						uni.setStorageSync('maintenance',undefined);
-
-						// 订阅消息
-						uni.requestSubscribeMessage({
-							tmplIds: ['TApX0nzOBpQaeMX_OFpulONC5URpuAENp7h7LG5sSt4','7Mx2zEoystvOf4Ny4vIDDk4UdtBhJxtawOaVFQwvVFQ','yHv5ZLbuETM8c1ck9fTJLexhBe7mbjvd6LwrAN_W-fg'],
-							success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res)) },
-							fail(res){console.log('订阅消息接口失败:'+ JSON.stringify(res)) }
-						})
-
-
 						uni.navigateTo({
 						url: '../reserve/reserve'
 						})
@@ -522,11 +512,28 @@
 					})
 					this.forkMaintenance = this.judgeRepeat(this.maintenanceList, this.goodsList, false);
 					// 如果购物车里面本地存在数据则拿购物车的数据 不更新数据
+					const selectGood = uni.getStorageSync('selectGood');
+					let index = undefined;
+					// 如果存在商品则循环
+					if(selectGood)
+						for(let key in this.forkMaintenance){
+							if(this.forkMaintenance[key].id == selectGood){
+								index = key;
+							}
+						}
+					setTimeout(() => {
+						if(index != undefined){
+							this.addShopping(index,true);
+							this.showDetail = true;
+						}
+						uni.setStorageSync('selectGood',undefined);
+					});
 				})
 			},
 		},
 	}
 </script>
+
 
 <style>
 	.container {
@@ -609,7 +616,6 @@
 	.VerticalMain {
 		background-color: #f1f1f1;
 		flex: 1;
-		height:1200rpx;
 	}
 
 	.round-card {
