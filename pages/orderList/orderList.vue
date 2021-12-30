@@ -22,12 +22,12 @@
 							<view class="cu-btn round sm" >{{item.orderStateName}}</view>
 						</view>
 						<view v-if="item.goodsList.length == 0">暂无商品信息</view>
-						<view v-else style="display: flex;align-items: center;">
+						<view v-else style="display: flex;">
 						
 							<image :src="imageUrl + item.goodsList[0].pictureId" class="reverse_1" mode='widthFix'
 								style="height: auto;">
 							</image>
-							<view style="display:flex;justify-content: space-between;">
+							<view style="display:flex;flex-direction:column;justify-content: space-around;">
 								<view>
 									<text style="font-weight:bold">{{item.goodsList[0].phoneType}}</text>
 								</view>

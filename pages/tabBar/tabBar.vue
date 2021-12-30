@@ -28,8 +28,9 @@
 			</view> -->
 			<view class="item-name" :class="{'tabbarActive': current == index}" v-if="item.text">{{item.text}}
 			</view>
+			<view style="height:20rpx;color:#FFFFFF">0</view>
 		</view>
-		<view v-if="isIphone" style="height:20rpx"></view>
+	
 	</view>
 </template>
 
@@ -71,7 +72,7 @@
 					model.forEach(item => {
 						//适配iphoneX以上的底部，给tabbar一定高度的padding-bottom
 						if (res.model.indexOf(item) != -1 && res.model.indexOf('iPhone') != -1) {
-							// that.paddingBottomHeight = 30;
+							// that.paddingBottomHeight = 40;
 							that.isIphone = true;
 						}
 					})
@@ -103,7 +104,7 @@
 		left: 0;
 		right: 0;
 		width: 100%;
-		height: 120rpx;
+		height: 140rpx;
 		background-color: #ffffff;
 		display: flex;
 		justify-content: space-around;

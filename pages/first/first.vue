@@ -49,10 +49,10 @@
 					<text class="lg text-gray" :class="'cuIcon-right'" style="color:#136169"></text>
 				</view>
 			</view>
-			<view>
-				<scroll-view scroll-x scroll-with-animation >
+			<view style="margin: 0rpx 20rpx 30rpx 20rpx">
+				<scroll-view scroll-x scroll-with-animation style="padding-bottom:30rpx">
 					<view class="cu-card" style="display: inline-flex;">
-							<view class="cu-item-scroll" style="margin: 0rpx 17rpx 30rpx 17rpx" v-for="(item,index) in salesTimeList" :key="index" @click="onClickHandler(item)">
+							<view class="cu-item-scroll"  v-for="(item,index) in salesTimeList" style="margin-right:14rpx"   :key="index" @click="onClickHandler(item)">
 								<view style="display: flex;;background-color: #F6FCFF;height: 210rpx;">
 									<view style="margin: 20rpx;width: 230rpx;display: flex;flex-direction:column;justify-content: space-between;">
 										<view style="font-weight: 900;font-size: 30rpx;color:#136169">{{item.title}}</view>
@@ -92,11 +92,11 @@
 		</view> -->
 
 		<view style="background-color:#FFFFFF;border-radius:20rpx;display:flex;flex-wrap:wrap;margin:20rpx">
-			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666"  v-for="(item,index) in cuIconList" :key="index" @click="onClickHandler(item,index)">
-				<image  :src="imageUrl+item.fileId" style="width: 140rpx;height: 140rpx;"></image>
+			<view style="width:50%;display:flex;margin:10rpx 0 10rpx 0;color:#666666;align-items:center"  v-for="(item,index) in cuIconList" :key="index" @click="onClickHandler(item,index)">
+				<image  :src="imageUrl+item.fileId" style="width: 100rpx;height: 100rpx;"></image>
 				<view style="display:flex;flex-direction:column;justify-content:center;margin-left:10rpx">
-					<view style="font-size:32rpx;font-weight:bold">{{item.title}}</view>
-					<view style="font-size:24rpx;color:#999999;margin-top:8rpx">{{item.subTitle || ''}} </view>
+					<view style="font-size:30rpx;font-weight:bold">{{item.title}}</view>
+					<view style="font-size:22rpx;color:#999999;margin-top:8rpx">{{item.subTitle || ''}} </view>
 				</view>
 			</view>			
 		</view>		

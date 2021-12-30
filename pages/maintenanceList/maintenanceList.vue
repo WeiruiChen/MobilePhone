@@ -86,7 +86,7 @@
 						<image style="width: 40px;height: 40px;" :src="imageIcon"></image>
 					</view>
 					<view style="flex-direction: column; align-items:center;width:70%" >
-						<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice}}
+						<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice.toFixed(2)}}
 							<text 
 								style="margin-left:10rpx;text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
@@ -204,6 +204,9 @@
 				}
 				if(!this.isCallFresh && (back == undefined || !back)){
 					console.log('excute1:')
+					this.initLitsCount()
+				}
+				if(selectedCount == 0){
 					this.initLitsCount()
 				}
 				

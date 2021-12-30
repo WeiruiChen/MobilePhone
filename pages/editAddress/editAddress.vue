@@ -9,26 +9,30 @@
 			<form>
 
 				<view class="cu-form-group round-top-card ">
-					<view class="title">收货人</view>
-					<input name="name" v-model="address.name"></input>
+					<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
+					<view class="title" style="margin-left:20rpx">收货人</view>
+					<input name="name" v-model="address.name"/>
 				</view>
 
 				<view class="cu-form-group ">
-					<view class="title">手机号</view>
+						<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
+					<view class="title" style="margin-left:20rpx">手机号</view>
 					<input  name="phonenumber" v-model="address.phone"></input>
 				</view>
 				<view class="cu-form-group ">
+					<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
 					<view style="display:flex;flex-direction:column;width:100%">
 						<view style="display:flex;justify-content: center;align-items: center;">
-							<view class="title">备用手机号</view>
+							<view class="title" style="margin-left:20rpx">备用手机号</view>
 							<input  name="phonenumber" v-model="address.sparePhone"/>
 						</view>
-						<view style="font-size:20rpx;color:#999999">请确保手机送修后,能联系上机主本人。</view>
+						<view style="font-size:20rpx;color:#999999;margin-left:32rpx">请确保手机送修后,能联系上机主本人。</view>
 					</view>
 				</view>
 
 				<view class="cu-form-group">
-					<view class="title">地址选择</view>
+						<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
+					<view class="title" style="margin-left:20rpx">地址选择</view>
 					<!-- 增加是否需要地址定位点击事件 -->
 					<picker mode="region" @change="RegionChange" :value="region">
 						<view class="picker">
@@ -39,12 +43,14 @@
 				</view>
 
 				<view class="cu-form-group ">
-					<view class="title">详细地址</view>
+						<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
+					<view class="title" style="margin-left:20rpx"> 详细地址</view>
 					<input  name="addressDetial" v-model="address.address"></input>
 				</view>
 
 				<view class="cu-form-group round-bottom-card ">
-					<view class="title">门牌号</view>
+						<view style="border-radius:50%;height:12rpx;width:12rpx;background: red;"></view>
+					<view class="title" style="margin-left:20rpx">门牌号</view>
 					<input name="address" v-model="address.houseNumber"></input>
 				</view>
 
@@ -176,6 +182,20 @@
 					// title: '确认',
 					content: '确认提交地址',
 					success: function(e) {
+						// 校验参数是否正确
+						let checkList = [{key:'name',value:'收货人'},{key:'phone',value:'手机号'},{key:'sparePhone',value:'备用手机号'},{key:"region",value:'地址选择'},{key:"address",value:'详情地址'},{key:"houseNumber",value:'门牌号'}];
+						for (const obj of checkList) {
+							if(that.address[obj.key] == '' || !that.address[obj.key]){
+									uni.showModal({
+										content: '您有必填项未填写',
+										showCancel: false,
+										success: function(res) {
+										}
+									});
+								return;
+							}
+						}
+
 						if (e.confirm) {
 							that.$request({
 								url: url,
