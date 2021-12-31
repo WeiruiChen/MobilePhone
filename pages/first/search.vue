@@ -13,7 +13,7 @@
 		</view>
         <view v-if="searchList.length > 0" style="margin:0 50rpx 0 50rpx">
             <view v-for="item in searchList" :key="item.id">
-                <view style="color:#999999;font-size:32rpx;margin:12rpx 0rpx 12rpx 0rpx;padding-bottom: 8rpx;border-bottom:2rpx solid #999999; " @click="gotoMaintance(item)" >{{item.name}}</view>
+                <view style="color:#333333;font-size:32rpx;margin:12rpx 0rpx 12rpx 0rpx;padding-bottom: 8rpx;border-bottom:2rpx solid #F5F5F5; " @click="gotoMaintance(item)" >{{item.name}}</view>
                  <!-- <view style="height:2rpx;background-color:#333333"></view> -->
             </view>
             <view style="height:30rpx"></view>
