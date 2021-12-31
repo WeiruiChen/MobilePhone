@@ -21,7 +21,7 @@
 										<!-- </picker> -->
 									</view>
 									<view style="font-weight: bold;" v-if="!changeType">
-										{{chooseAddress.label}}:{{chooseAddress.address}}
+										{{chooseAddress.label}}:{{chooseAddress.address || '暂无地址'}}
 									</view>
 									<view style="color: gray;margin-top: 5rpx;">{{name}} {{phone}}</view>
 								</view>
@@ -481,19 +481,21 @@
 			
 			},
 			submitOrder() {
+				if(!this.changeType){
 				if (!this.defaultAddress.id&&this.addressList.length==0) {
-					uni.showModal({
-						content: '目前没有地址,请选择或者新增地址后再进行下单',
-						showCancel: false,
-						success: function(res) {
-							if (res.confirm) {
-								// console.log('用户点击确定');
-							} else if (res.cancel) {
-								// console.log('用户点击取消');
+						uni.showModal({
+							content: '目前没有地址,请选择或者新增地址后再进行下单',
+							showCancel: false,
+							success: function(res) {
+								if (res.confirm) {
+									// console.log('用户点击确定');
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
 							}
-						}
-					});
-					return;
+						});
+						return;
+					}
 				}
 				
 				if(this.changeType){
