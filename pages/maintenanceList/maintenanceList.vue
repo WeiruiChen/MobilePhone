@@ -157,15 +157,14 @@
           <view style="flex-direction: column; align-items: center; width: 70%">
             <view style="color: #ffffff">
               预估费用： {{ totalSalePrice.toFixed(2) }}
-              <text
+              <!-- <text
                 style="
                   margin-left: 10rpx;
                   text-decoration: line-through;
                   color: #767676;
                   font-size: 12px;
                 "
-                >{{ totalPrice }}</text
-              >
+                >{{ totalPrice }}</text -->
             </view>
             <view style="color: #04d4c6"> 免费预约 修好付款 </view>
           </view>
