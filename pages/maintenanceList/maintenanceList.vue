@@ -41,7 +41,7 @@
 								<view class="text-title"><text>{{item.title}}</text></view>
 								<view class="text-gray" style="margin-top:10rpx"><text>{{item.subTitle}}</text></view>
 								<view class="text-gray">
-									{{item.warranty}}
+									{{item.warranty || ''}}
 								</view>
 								<view class="flex-container margin-top">
 									<view class="text-price" style="color:#136169"><text>{{item.salePrice}}</text></view>
@@ -87,8 +87,8 @@
 					</view>
 					<view style="flex-direction: column; align-items:center;width:70%" >
 						<view style="color: #FFFFFF;"> 预估费用： {{totalSalePrice.toFixed(2)}}
-							<text 
-								style="margin-left:10rpx;text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
+							<!-- <text 
+								style="margin-left:10rpx;text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text> -->
 						</view>
 						<view style="color: #04D4C6;"> 免费预约 修好付款 </view>
 					</view>

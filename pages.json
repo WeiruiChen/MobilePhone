@@ -12,6 +12,11 @@
 			}
 		},
 		{
+			"path": "pages/noService/noService",
+			"style": {
+			}
+		},
+		{
 			"path": "pages/maintenanceList/maintenanceList",
 			"style": {}
 		},

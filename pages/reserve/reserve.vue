@@ -79,28 +79,32 @@
 				</view>
 
 				<view class="cu-item cu-form-group padding-top padding-bottom round-top-card">
-					<view class="content">
+					<view class="content" style="width:100%">
 						<view class="">
 							<text>维修方案</text>
 						</view>
 						<view style="display:flex;align-items:flex-end">
 							<image :src="baseImageUrl + fanganList[0]['pictureId']" class="reverse_1" mode='widthFix'
 								style="height: auto;"></image>
-							<view>
+							<view style="width:440rpx">
 								<view class="margin-lr-sm"><text>{{phoneType}}</text></view>
 								<view v-if="phoneColorList.length > 0" class="flex">
-									<view class="margin-tb-sm margin-left-sm"  v-for="item in phoneColorList"
-										:key="item.color">
-									<view style="display:flex;flex-direction:column;align-items: center">
-										<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
-											<!-- <text> </text> -->
-											<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
-											<view class="round phone-color" :class="item.isCheck ? 'cuIcon-check' : ''"
-												:style="'background-color:'+item.color"></view>
+									<scroll-view scroll-x scroll-with-animation>
+										<view style="display:flex;">
+										<view class="margin-tb-sm margin-left-sm"  v-for="item in phoneColorList"
+											:key="item.color">
+											<view style="display:flex;flex-direction:column;align-items: center;width:130rpx">
+												<view class="round phone-color-border" @tap="onSelectType(item.name,true)">
+													<!-- <text> </text> -->
+													<!-- <text class="lg text-gray" :class="'cuIcon-check'"></text> -->
+													<view class="round phone-color" :class="item.isCheck ? 'cuIcon-check' : ''"
+														:style="'background-color:'+item.color"></view>
+												</view>
+												<view class="margin-tb-sm">{{item.name}}</view>
+											</view>
 										</view>
-										<view class="margin-tb-sm">{{item.name}}</view>
-									</view>
-									</view>
+										</view>
+									</scroll-view>
 								</view>
 							</view>
 						</view>
@@ -578,29 +582,29 @@
 
 <style>
 	.container {
-		margin-top: 10px;
-		margin-left: 10px;
-		margin-right: 10px;
+		margin-top: 20rpx;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
 	}
 
 	.round-card {
-		margin-top: 10px;
-		border-radius: 8px;
+		margin-top: 20rpx;
+		border-radius: 16rpx;
 	}
 
 	.round-bottom-card {
-		border-bottom-right-radius: 8px;
-		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 16rpx;
+		border-bottom-left-radius: 16rpx;
 	}
 
 	.round-top-card {
-		margin-top: 10px;
-		border-top-right-radius: 8px;
-		border-top-left-radius: 8px;
+		margin-top: 20rpx;
+		border-top-right-radius: 16rpx;
+		border-top-left-radius: 16rpx;
 	}
 
 	.reverse_1 {
-		width: 100px;
+		width: 200rpx;
 	}
 
 	.flex-container {
@@ -616,8 +620,8 @@
 
 	.ps-text {
 		color: #A6A6A6;
-		padding-top: 40px;
-		padding-bottom: 40px;
+		padding-top: 80rpx;
+		padding-bottom: 80rpx;
 	}
 
 	.text-grey {
@@ -625,34 +629,33 @@
 	}
 
 	.phone-color-border {
-		border: 1px solid #04D4C6;
-		width: 26px;
-		height: 26px;
+		border: 2rpx solid #04D4C6;
+		width: 52rpx;
+		height: 52rpx;
 	}
 
 	.phone-color {
-		width: 20px;
-		height: 20px;
-		margin: 2px;
+		height: 40rpx;
+		margin: 4rpx;
 		background-color: #CCE6FF;
 		/* border: 1px solid #04D4C6; */
 	}
 
 	.round-left {
-		border-top-left-radius: 17px;
-		border-bottom-left-radius: 17px;
+		border-top-left-radius: 34rpx;
+		border-bottom-left-radius: 34rpx;
 		background-color: #FFFFFF;
-		width: 59px;
-		height: 34px;
+		width: 118rpx;
+		height: 68rpx;
 		text-align: center;
 	}
 
 	.round-right {
-		border-top-right-radius: 17px;
-		border-bottom-right-radius: 17px;
+		border-top-right-radius: 34rpx;
+		border-bottom-right-radius: 34rpx;
 		background-color: #FFFFFF;
-		width: 59px;
-		height: 34px;
+		width: 118rpx;
+		height: 68rpx;
 		text-align: center;
 	}
 

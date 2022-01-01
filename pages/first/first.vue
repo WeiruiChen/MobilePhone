@@ -374,6 +374,12 @@
 					'pageAddress':'/pages/allAddress/allAddress'
 				}
 				const clickMap = {
+					'Nothing':function(){},
+					'customerService':function(){
+						uni.navigateTo({
+							url:'/pages/noService/noService'
+						})
+					},
 					// gototype为ClientPage则跳转
 					'ClientPage':function(){
 						uni.navigateTo({
