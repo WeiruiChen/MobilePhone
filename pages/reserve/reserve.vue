@@ -149,7 +149,7 @@
 
 				<view class="cu-form-group padding-top padding-bottom" style="position:fixed;bottom:0;width:100%">
 					<view>
-						<view> 预估费用：{{!changeType ? totalSalePrice.toFixed(2) : totalSalePrice.toFixed(2) + (parseFloat(this.delivery.expressFee) || 0)}} <text class="margin-left"
+						<view> 预估费用：{{!changeType ? totalSalePrice : totalSalePrice + (parseFloat(this.delivery.expressFee) || 0)}} <text class="margin-left"
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
@@ -248,7 +248,8 @@
 				}
 				// alert(JSON.stringify(list));
 
-				return totalSale
+
+				return totalSale%1 == 0 ? totalSale : totalSale.toFixed(2);
 			}
 		}),
 		methods: {

@@ -156,7 +156,7 @@
           </view>
           <view style="flex-direction: column; align-items: center; width: 70%">
             <view style="color: #ffffff">
-              预估费用： {{ totalSalePrice.toFixed(2) }}
+              预估费用： {{ totalSalePrice }}
               <!-- <text
                 style="
                   margin-left: 10rpx;
@@ -351,7 +351,7 @@ export default {
       for (let item in list) {
         totalSale += list[item].salePrice;
       }
-      return totalSale;
+      return  totalSale%1 == 0 ? totalSale : totalSale.toFixed(2);;
     },
   }),
   methods: {
