@@ -4,7 +4,7 @@
 
 	</view>
 	<view>
-		<button v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="debounce(getWxUserProfile)">
+		<button   v-if="wxHead == ''" style="position:fixed;width: 100%;height:100%;z-index:9999;opacity:0;" @click="getWxUserProfile">
 			登陆
 		</button>
 
@@ -167,8 +167,12 @@
 			getWxUserProfile(){
 				wx.getUserProfile({
 				desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+				fail: function(res){
+					console.log(res);
+				},	
 				success: (res) => {
-					console.log(res)
+						console.log('getWxUserProfile111');
+						console.log(res)
 						const userInfo = res.userInfo
 						const nickName = userInfo.nickName
 						const avatarUrl = userInfo.avatarUrl
@@ -178,6 +182,9 @@
 						const country = userInfo.country
 						this.$store.dispatch('actionTrigger',{
 							key:'loginName',value:nickName || '',
+						})
+						this.$store.dispatch('actionTrigger',{
+							key:'name',value:nickName || '',
 						})
 						this.$store.dispatch('actionTrigger',{
 							key:'avatarUrl',value:avatarUrl || '',

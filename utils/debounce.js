@@ -1,11 +1,13 @@
-export function debounce(callBack, time = 1000) {
-	let timer;
-	return function() {
-		if (timer) clearTimeout(timer)
-		timer = setTimeout(() => {
-			callBack.apply(this)
-		}, time)
-	}
+export  function debounce(func, wait) {
+    let timer;
+    return function() {
+        let context = this; // 注意 this 指向
+        let args = arguments; // arguments中存着e
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args)
+        }, wait) 
+    }
 }
 // 节流函数
 export function throttle(fn, delay) {

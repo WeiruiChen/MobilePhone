@@ -16,7 +16,7 @@
 									<view v-if="changeType">
 										<!-- <picker @change="PickerChange" :value="index" :range="addressList"> -->
 											<view style="font-weight: bold;"  @click="gotoSelectAddress">
-												{{chooseAddress.label}}:{{defaultAddress.region}}
+												{{chooseAddress.label}}:{{defaultAddress.region || '暂无地址'}}
 											</view>
 										<!-- </picker> -->
 									</view>
@@ -37,14 +37,14 @@
 
 						<view style="display:flex;justify-content:flex-end">
 							<view class="outer round"
-								style="width: 120px;height: 36px;border: 1px solid #04D6C8;display: flex; font-size: 0.6rem;">
+								style="width: 240rpx;height: 80rpx;border: 1px solid #04D6C8;display: flex; font-size: 0.7rem;">
 								<view :class="changeType ? 'inner-left round-left' :'inner-left round-left active'"
 									@tap="sentBySelf">
-									<text style="width: 59px;line-height: 34px;">自行送修</text>
+									<text style="width: 118rpx;line-height: 76rpx;">自行送修</text>
 								</view>
 								<view :class="changeType ? 'inner-left round-right active' :'inner-left round-right'"
 									@tap="getByDelivery">
-									<text style="width: 59px;line-height: 34px;">上门取件</text>
+									<text style="width: 118rpx;line-height: 76rpx;">上门取件</text>
 								</view>
 							</view>
 						</view>
@@ -145,11 +145,12 @@
 					</view>
 				</view>
 
-				<view style="height:150rpx"></view>
-
-				<view class="cu-form-group padding-top padding-bottom" style="position:fixed;bottom:0;width:100%">
+				<view style="height:80rpx"></view>
+			</form>
+		</view>
+		<view class="cu-form-group padding-top padding-bottom" style="position:fixed;bottom:0;width:100%">
 					<view>
-						<view> 预估费用：{{!changeType ? totalSalePrice : totalSalePrice + (parseFloat(this.delivery.expressFee) || 0)}} <text class="margin-left"
+						<view> 预估费用：{{totalSalePrice}} <text class="margin-left"
 								style="text-decoration: line-through;color: #767676;font-size: 12px;">{{totalPrice}}</text>
 						</view>
 						<view class="text-grey"> 免费预约 修好付款 </view>
@@ -158,8 +159,6 @@
 						<button @click="submitOrder" class="cu-btn  shadow lg bg-green submit-btn round">预约下单</button>
 					</view>
 				</view>
-			</form>
-		</view>
 	</view>
 </template>
 
@@ -215,9 +214,9 @@
 		},
 		onLoad(option) {
 			if (Object.keys(option).length > 0) {
-				const navigateParams = JSON.parse(decodeURIComponent(option.goods));
-				console.log('navigateParamsnavigateParamsnavigateParamsnavigateParamsnavigateParams', navigateParams);
-				this.fanganList = [navigateParams.goods];
+				// const navigateParams = JSON.parse(decodeURIComponent(option.goods));
+				// console.log('navigateParamsnavigateParamsnavigateParamsnavigateParamsnavigateParams', navigateParams);
+				// this.fanganList = [navigateParams.goods];
 				this.isShopping = true;
 			}
 		},
@@ -238,7 +237,9 @@
 				for (let item in list) {
 					total += list[item].price;
 				}
-				return total;
+				console.log('fanganList'+JSON.stringify(list));
+				console.log('totalPrice:'+total);
+				return total.toFixed(2);
 			},
 			totalSalePrice() {
 				let list = this.fanganList;
@@ -246,10 +247,12 @@
 				for (let item in list) {
 					totalSale += list[item].salePrice;
 				}
+
+				if(this.changeType){
+					totalSale += parseFloat(this.delivery.expressFee  || 0 );
+				}
 				// alert(JSON.stringify(list));
-
-
-				return totalSale%1 == 0 ? totalSale : totalSale.toFixed(2);
+				return Math.floor(totalSale) == totalSale  ? totalSale : totalSale.toFixed(2);
 			}
 		}),
 		methods: {
@@ -274,6 +277,9 @@
 							})
 						}
 
+						// 获取售货商品
+						this.fanganList = res.items;
+
 						// 默认选择第一项
 						this.onSelectType(this.phoneColorList[0].name,true);
 						
@@ -289,9 +295,9 @@
 				this.changeTimeList()
 				
 				//从本地获取方案列表和图片url
-				if (!this.isShopping)
-					this.fanganList = this.maintenanceList.filter(item => item.selected == true);
-				console.log("fanganList" + JSON.stringify(this.fanganList));
+				// if (!this.isShopping)
+				// 	this.fanganList = this.maintenanceList.filter(item => item.selected == true);
+				// console.log("fanganList" + JSON.stringify(this.fanganList));
 				// this.imageUrl = this.baseImageUrl;
 				console.log(this.imageUrl);
 
@@ -339,9 +345,11 @@
 				]
 				let list = []
 				let t2 = this.date.toString().split("-")[2]
+				let compareDate = t.getDate() < 10 ? '0' + t.getDate().toString() : t.getDate().toString();
 				
+			
 				// 如果当前日期等于送修日期改变timelist,getDate()一月中的一天
-				if(t.getDate().toString()==t2){
+				if(compareDate==t2){
 					for(let j in timeList1){
 						//当前时间小于时间段结束时间
 						if(this.compareTime(t1,timeList1[j])){
@@ -560,7 +568,7 @@
 					
 					// 获取订阅
 					uni.requestSubscribeMessage({
-						tmplIds: ['TApX0nzOBpQaeMX_OFpulONC5URpuAENp7h7LG5sSt4','7Mx2zEoystvOf4Ny4vIDDk4UdtBhJxtawOaVFQwvVFQ','yHv5ZLbuETM8c1ck9fTJLexhBe7mbjvd6LwrAN_W-fg'],
+						tmplIds: ['TApX0nzOBpQaeMX_OFpulONC5URpuAENp7h7LG5sSt4','7Mx2zEoystvOf4Ny4vIDDk4UdtBhJxtawOaVFQwvVFQ','0dp1eQ2CaVXZbMsPJQOa3NHz2hyYFX0mURV8dIOAIN8'],
 						success (res) { console.log('订阅消息接口成功:'+ JSON.stringify(res));
 						uni.redirectTo({
 						url: '../orderSuccess/orderSuccess?param=' + encodeURIComponent(JSON.stringify(
@@ -645,20 +653,20 @@
 	}
 
 	.round-left {
-		border-top-left-radius: 34rpx;
-		border-bottom-left-radius: 34rpx;
+		border-top-left-radius: 42rpx;
+		border-bottom-left-radius: 42rpx;
 		background-color: #FFFFFF;
 		width: 118rpx;
-		height: 68rpx;
+		height: 76rpx;
 		text-align: center;
 	}
 
 	.round-right {
-		border-top-right-radius: 34rpx;
-		border-bottom-right-radius: 34rpx;
+		border-top-right-radius: 42rpx;
+		border-bottom-right-radius: 42rpx;
 		background-color: #FFFFFF;
 		width: 118rpx;
-		height: 68rpx;
+		height: 76rpx;
 		text-align: center;
 	}
 

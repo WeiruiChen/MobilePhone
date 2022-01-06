@@ -11,7 +11,7 @@
         scroll-y
         scroll-with-animation
         :scroll-top="verticalNavTop"
-        style="height: calc(100vh - 375upx)"
+        style="height: calc(100vh - 395upx)"
       >
         <view style="display: flex; flex-direction: column">
           <view class="text-left margin-top-xl margin-left">
@@ -48,7 +48,7 @@
 
       <scroll-view
         class="VerticalMain"
-        style="height: calc(100vh - 375upx)"
+        style="height: calc(100vh - 395upx)"
         scroll-y
         scroll-with-animation
       >
@@ -318,7 +318,7 @@ export default {
         console.log("excute1:");
         this.initLitsCount();
       }
-      if (selectedCount == 0) {
+      if (this.selectedCount == 0) {
         this.initLitsCount();
       }
     }
@@ -351,7 +351,7 @@ export default {
       for (let item in list) {
         totalSale += list[item].salePrice;
       }
-      return  totalSale%1 == 0 ? totalSale : totalSale.toFixed(2);;
+      return  Math.floor(totalSale) == totalSale ? totalSale : totalSale.toFixed(2);
     },
   }),
   methods: {

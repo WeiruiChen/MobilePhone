@@ -187,7 +187,22 @@
 						for (const obj of checkList) {
 							if(that.address[obj.key] == '' || !that.address[obj.key]){
 									uni.showModal({
-										content: '您有必填项未填写',
+										content: '您有必填项未填写!',
+										showCancel: false,
+										success: function(res) {
+										}
+									});
+								return;
+							}
+						}
+						// 正则校验
+						// 手机号码正则
+						let checkReg = [{key:'phone',value:'手机号'},{key:'sparePhone',value:'备用手机号'}];
+						let phoneReg =  /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+						for (const obj of checkReg) {
+							if(!phoneReg.test(that.address[obj.key])){
+									uni.showModal({
+										content: obj.value + '输入不合法!',
 										showCancel: false,
 										success: function(res) {
 										}

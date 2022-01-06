@@ -28,7 +28,7 @@
 			</view> -->
 			<view class="item-name" :class="{'tabbarActive': current == index}" v-if="item.text">{{item.text}}
 			</view>
-			<view style="height:20rpx;color:#FFFFFF">0</view>
+			<view style="height:60rpx;color:#FFFFFF">0</view>
 		</view>
 	
 	</view>
@@ -121,8 +121,8 @@
 	}
 
 	.item-img {
-		width: 46rpx;
-		height: 46rpx;
+		width: 44rpx;
+		height: 44rpx;
 		margin-bottom: 4rpx;
 	}
 
@@ -132,7 +132,7 @@
 	} */
 
 	.item-name {
-		font-size: 26rpx;
+		font-size: 22rpx;
 		padding-left: 26rpx;
 		padding-right: 26rpx;
 		color: #A3A3A3;

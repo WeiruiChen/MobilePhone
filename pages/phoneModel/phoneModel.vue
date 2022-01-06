@@ -257,7 +257,7 @@ page {
 	}
 
 	.visualHeight{
-		height: calc(100vh - 300upx);
+		height: calc(100vh - 340upx);
 	}
 
 	.VerticalNav.nav {
