@@ -13,10 +13,10 @@
 				</view>
 			</swiper-item>
 		</swiper> -->
-    <view class="cu-bar search" @click="gotoSearch">
+    <view class="cu-bar search"  @click="gotoSearch">
       <view
         class="search-form round"
-        style="background-color: #ffffff; text-align: center"
+        style="background-color: #ffffff; text-align: center;margin-top:20rpx"
       >
         <text class="cuIcon-search"></text>
         <input type="text" placeholder="搜索" />
@@ -37,14 +37,15 @@
           display: flex;
           justify-content: center;
           align-items: center;
+          padding-top: 40rpx;
+          padding-bottom: 20rpx;
         "
       >
         <image
           src="../../static/first/nonePhone.png"
-          style="width: 60rpx; height: 80rpx"
+          style="width: 80rpx; height: 100rpx"
           mode="scaleToFill"
         />
-        <view style="width: 20rpx"></view>
         <view style="color: #136169; font-weight: bold; font-size: 26rpx"
           >无法匹配当前手机型号</view
         >
@@ -95,7 +96,7 @@
             ></text>
           </view>
         </view>
-        <view style="margin: 0rpx 20rpx 30rpx 20rpx">
+        <view style="margin: 20rpx 20rpx 30rpx 20rpx">
           <scroll-view scroll-x scroll-with-animation>
             <view class="cu-card" style="display: inline-flex">
               <view
@@ -229,14 +230,14 @@
           border-radius: 20rpx;
           display: flex;
           flex-wrap: wrap;
-          margin: 20rpx 0rpx 20rpx 0rpx;
+          margin: 10rpx 0rpx 10rpx 0rpx;
         "
       >
         <view
           style="
             width: 50%;
             display: flex;
-            margin: 10rpx 0 10rpx 0;
+            margin: 20rpx 0 20rpx 0;
             color: #666666;
             align-items: center;
           "
@@ -264,7 +265,9 @@
             </view>
           </view>
         </view>
+      
       </view>
+        <view style="height:10rpx"></view>
     </view>
 
     <!-- <view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
@@ -321,14 +324,14 @@
 			</view>
 		</view> -->
     <view v-show="showStatic">
-      <view class="csh-show" @click="callPhone">
+      <view class="csh-show" @click="callPhone" style="margin: 20rpx 20rpx 0rpx 20rpx;">
         <image
           src="../../static/first/121.png"
-          style="width: 100rpx; height: 100rpx"
+          style="width: 114rpx; height: 114rpx"
           mode="scaleToFill"
         />
         <view style="margin-left: 20rpx">
-          <view style="font-size: 30rpx; font-weight: bold">
+          <view style="font-size: 32rpx; font-weight: bold;letter-spacing: 4rpx">
             24小时客服电话
           </view>
           <view

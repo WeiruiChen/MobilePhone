@@ -1625,9 +1625,9 @@ button.cuIcon.lg {
 
 .cu-bar .search-form {
 	background-color: #f5f5f5;
-	line-height: 64upx;
-	height: 64upx;
-	font-size: 24upx;
+	line-height: 80upx;
+	height: 80upx;
+	font-size: 26upx;
 	color: #333333;
 	flex: 1;
 	display: flex;
